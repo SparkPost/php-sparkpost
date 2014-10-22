@@ -15,9 +15,6 @@ class RoboFile extends \Robo\Tasks
     	// print message when tests passed
     	if ($res->wasSuccessful()) $this->say("All tests passed");
     	
-    	// alternatively
-    	if ($res()) $this->say("All tests passed");
-    	
 //     	$coverage->stop();
 //     	$writer = new PHP_CodeCoverage_Report_HTML;
 //     	$writer->process($coverage, 'test/output/report');

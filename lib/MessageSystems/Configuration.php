@@ -13,10 +13,16 @@ class Configuration {
 			'version'=>'v1'	
 		];
 	
+	/**
+	 * Enforce that this object can't be instansiated
+	 */
+	private function __construct(){}
 	
-	private function __constructor(){
-	}
-	
+	/**
+	 * Allows the user to pass in values to override the defaults and set their API key
+	 * @param Array $configMap - Hashmap that contains config values for the SDK to connect to SparkPost
+	 * @throws \Exception
+	 */
 	public static function setConfig($configMap) {
 		//check for API key because its required	
 		if (!isset($configMap['key']) || empty(trim($configMap['key']))){
@@ -24,10 +30,16 @@ class Configuration {
 		}
 		self::$config = self::$defaults;
 		foreach ($configMap as $configOption => $configValue) {
-			self::$config[$configOption] = $configValue;
+			if(key_exists($configOption, self::$config)) {
+				self::$config[$configOption] = $configValue;
+			}
 		}
 	}
 	
+	/**
+	 * Retrieves the configuration that was previously setup by the user
+	 * @throws \Exception
+	 */
 	public static function getConfig() {
 		if (self::$config === null) {	
 			throw new \Exception('No configuration has been provided');

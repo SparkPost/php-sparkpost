@@ -61,5 +61,9 @@ class TransmissionTest extends PHPUnit_Framework_TestCase {
 // 		$this->client->getEmitter()->attach($mock);
 // 		$this->assertEquals(['test'=>'This is a test'], self::getMethod('fetch')->invokeArgs($this->transmission, [null]));
 // 	}
+	
+	public function testSend() {
+		//$this->transmission
+	}
 }
 ?>
