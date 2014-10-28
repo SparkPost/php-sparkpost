@@ -1,16 +1,15 @@
 <?php
-require_once 'vendor/autoload.php';
+namespace SparkPost\Test;
 
 use MessageSystems\Configuration;
 
-
-class ConfigurationTest extends PHPUnit_Framework_TestCase {
+class ConfigurationTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @desc Ensures that the configuration class is not instantiable.
 	 */
 	public function testConstructorCannotBeCalled() {
-		$class = new ReflectionClass('\MessageSystems\Configuration');
+		$class = new \ReflectionClass('\MessageSystems\Configuration');
 		$this->assertFalse($class->isInstantiable()); 
 	}
 	

@@ -18,10 +18,9 @@
         "codegyre/robo": "0.4.6"
     },
     "autoload": {
-    	"psr-0": {
-    		"MessageSystems": "lib/",
-    		"SparkPost": "index.php"
-    		
+    	"psr-4": {
+    		"MessageSystems\\": "lib/MessageSystems/",
+    		"SparkPost\\": "lib/"
     	}
     }
 }

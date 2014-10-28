@@ -1,6 +1,5 @@
 <?php
-
-require_once 'vendor/autoload.php'; // Autoload files using Composer autoload
+namespace SparkPost;
 
 use MessageSystems\Transmission;
 use MessageSystems\Configuration;
@@ -11,7 +10,11 @@ class SparkPost {
 	
 	public function __construct($globalOpts) {
 		Configuration::setConfig($globalOpts);
-		$this->transmission = new Transmission(); 
+	}
+	
+	public function Transmission(Array $options = null) {
+		$this->transmission = new Transmission($options);
+		return $this->transmission;
 	}
 }
 ?>

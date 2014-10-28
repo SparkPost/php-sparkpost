@@ -10,7 +10,7 @@ class RoboFile extends \Robo\Tasks
 //     	$coverage = new PHP_CodeCoverage();
 //     	$coverage->start('PHP-SDK Unit Tests');
 //     	$this->taskPHPUnit('./test/unit/')->run();
-    	$res = $this->taskExec('phpunit --coverage-html test/output/report --bootstrap ./vendor/autoload.php ./test/unit')->run();
+    	$res = $this->taskExec('phpunit --coverage-html test/output/report --bootstrap test/unit/bootstrap.php ./test/unit')->run();
     	
     	// print message when tests passed
     	if ($res->wasSuccessful()) $this->say("All tests passed");
