@@ -57,7 +57,7 @@ try {
 
 ## Tips and Tricks
 ### General
-* You _must_ provide at least an API key when instantiating the SparkPost Library - `{ key: '184ac5480cfdd2bb2859e4476d2e5b1d2bad079bf' }`
+* You _must_ provide at least an API key when instantiating the SparkPost Library - `[ 'key'=>'184ac5480cfdd2bb2859e4476d2e5b1d2bad079bf' ]`
 * The SDK's features are namespaced under the various SparkPost API names.
 * There are two ways to provide values to each namespace of the SDK:
     - On instantiation, you pass in a well-formed object (See examples).
