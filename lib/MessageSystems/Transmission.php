@@ -420,7 +420,7 @@ class Transmission {
 	 * @param array $headers Key-value pairs of headers to add to the content of a Transmission
 	 * @return \MessageSystems\Transmission Object
 	 */
-	public function setContentHeaders (Array $headers) {
+	public function setContentHeaders (array $headers) {
 		$this->model['content']['headers'] = $headers;
 		return $this;
 	}
@@ -439,7 +439,7 @@ class Transmission {
 	 * @param array $recipient An associative array of recipient data to send a Transmission
 	 * @return \MessageSystems\Transmission Object
 	 */
-	public function addRecipient (Array $recipient) {
+	public function addRecipient (array $recipient) {
 		if(!is_array($this->model['recipients'])) {
 			$this->model['recipients'] = [];
 		}
@@ -460,7 +460,7 @@ class Transmission {
 	 * @param array $recipients An array of associative arrays containing recipient data
 	 * @return \MessageSystems\Transmission Object
 	 */
-	public function addRecipients (Array $recipients) {
+	public function addRecipients (array $recipients) {
 		if(!is_array($this->model['recipients'])) {
 			$this->model['recipients'] = [];
 		}

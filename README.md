@@ -75,9 +75,9 @@ try {
 ## Development
 
 ### Setup
-We use [Robo](http://robo.li/) for our task runner, please follow the instructions on their website to install Robo.
+We use [Robo](http://robo.li/) for our task runner.
 
-Run `composer install` inside the directory to install dependecies and development tools.
+Run `composer install` inside the directory to install dependecies and development tools including Robo.
 
 ### Testing
 Once all the dependencies are installed, you can execute the unit tests using `vendor\bin\robo test`

@@ -23,7 +23,7 @@ class Configuration {
 	 * @param Array $configMap - Hashmap that contains config values for the SDK to connect to SparkPost
 	 * @throws \Exception
 	 */
-	public static function setConfig($configMap) {
+	public static function setConfig(array $configMap) {
 		//check for API key because its required	
 		if (!isset($configMap['key']) || empty(trim($configMap['key']))){
 			throw new \Exception('You must provide an API key');

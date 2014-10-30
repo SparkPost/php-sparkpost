@@ -1,5 +1,5 @@
 /vendor/
 .project
 .settings
-.buildPath
+.buildpath
 test/output/

@@ -65,16 +65,16 @@
         },
         {
             "name": "guzzlehttp/ringphp",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/RingPHP.git",
-                "reference": "bdb67d6da3e2af33dee5c85c971203d4503c8540"
+                "reference": "86df4c0ea5459b292ff8c519f8db1513ea41ca9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/bdb67d6da3e2af33dee5c85c971203d4503c8540",
-                "reference": "bdb67d6da3e2af33dee5c85c971203d4503c8540",
+                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/86df4c0ea5459b292ff8c519f8db1513ea41ca9b",
+                "reference": "86df4c0ea5459b292ff8c519f8db1513ea41ca9b",
                 "shasum": ""
             },
             "require": {
@@ -111,7 +111,7 @@
                     "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "time": "2014-10-26 21:10:50"
+            "time": "2014-10-29 02:00:14"
         },
         {
             "name": "guzzlehttp/streams",
