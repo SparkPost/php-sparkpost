@@ -1,7 +1,7 @@
 <?php
 namespace MessageSystems;
 
-class Configuration {
+class SparkPost {
 	
 	private static $config;
 	private static $defaults = [

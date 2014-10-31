@@ -19,8 +19,7 @@
     },
     "autoload": {
     	"psr-4": {
-    		"MessageSystems\\": "lib/MessageSystems/",
-    		"SparkPost\\": "lib/"
+    		"MessageSystems\\": "lib/MessageSystems/"
     	}
     }
 }

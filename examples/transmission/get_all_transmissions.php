@@ -2,15 +2,14 @@
 namespace Examples\Transmisson;
 	require_once (dirname(__FILE__).'/../bootstrap.php');
 	
-	use SparkPost\SparkPost;
+	use MessageSystems\SparkPost;
+	use MessageSystems\Transmission;
 	
-	$key = 'YOURAPIKEY';
-	$sdk = new SparkPost(['key'=>$key]);
-	
-	$transmission = $sdk->Transmission();
+	$key = 'YOURAPIKEY'; 
+	SparkPost::setConfig(['key'=>$key]);
 	
 	try {
-		$results = $transmission->all();
+		$results = Transmission::all();
 		echo 'Congrats you can use your SDK!';
 	} catch (\Exception $exception) {
 		echo $exception->getMessage();

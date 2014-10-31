@@ -1,15 +1,15 @@
 <?php
 namespace SparkPost\Test;
 
-use MessageSystems\Configuration;
+use MessageSystems\SparkPost;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase {
+class SparkPostTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @desc Ensures that the configuration class is not instantiable.
 	 */
 	public function testConstructorCannotBeCalled() {
-		$class = new \ReflectionClass('\MessageSystems\Configuration');
+		$class = new \ReflectionClass('\MessageSystems\SparkPost');
 		$this->assertFalse($class->isInstantiable()); 
 	}
 	
@@ -20,7 +20,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage No configuration has been provided
 	 */
 	public function testGetConfigEmptyException() {
-		Configuration::getConfig();
+		SparkPost::getConfig();
 	}
 	
 	/**
@@ -29,7 +29,7 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage You must provide an API key
 	 */
 	public function testSetConfigAPIKeyNotSetException() {
-		Configuration::setConfig(['something'=>'other than an API Key']);
+		SparkPost::setConfig(['something'=>'other than an API Key']);
 	}
 	
 	/**
@@ -38,16 +38,16 @@ class ConfigurationTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage You must provide an API key
 	 */
 	public function testSetConfigAPIKeyEmptyException() {
-		Configuration::setConfig(['key'=>'']);
+		SparkPost::setConfig(['key'=>'']);
 	}
 	
 	/**
 	 * @desc Tests overridable values are set while invalid values are ignored
 	 */
 	public function testSetConfigMultipleValuesAndGetConfig() {
-		Configuration::setConfig(['key'=>'lala', 'version'=>'v8', 'port'=>1024, 'someOtherValue'=>'fakeValue']);
+		SparkPost::setConfig(['key'=>'lala', 'version'=>'v8', 'port'=>1024, 'someOtherValue'=>'fakeValue']);
 		
-		$testConfig = Configuration::getConfig();
+		$testConfig = SparkPost::getConfig();
 		$this->assertEquals('lala', $testConfig['key']);
 		$this->assertEquals('v8', $testConfig['version']);
 		$this->assertEquals(1024, $testConfig['port']);
