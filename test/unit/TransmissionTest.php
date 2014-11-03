@@ -8,14 +8,18 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
 
 
-/**
- * 
- *
- */
 class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	
 	private $client = null;
 	
+	/**
+	 * Allows access to private methods in the Transmission class
+	 * 
+	 * This is needed to mock the GuzzleHttp\Client responses
+	 * 
+	 * @param string $name
+	 * @return ReflectionMethod
+	 */
 	private static function getMethod($name) {
 		$class = new \ReflectionClass('\MessageSystems\Transmission');
 		$method = $class->getMethod($name);
@@ -35,6 +39,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	
 	/**
 	 * @desc Ensures that the configuration class is not instantiable.
+	 * @covers Transmission::__construct
 	 */
 	public function testConstructorCannotBeCalled() {
 		$class = new \ReflectionClass('\MessageSystems\Transmission');
@@ -42,7 +47,8 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * 
+	 * @desc tests happy path
+	 * @covers Transmission::all
 	 */
 	public function testAllWithGoodResponse() {
 		$mock = new Mock([new Response(200, [], Stream::factory('{"results":[{"test":"This is a test"}, {"test":"two"}]}'))]);
@@ -52,7 +58,8 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * 
+	 * @desc tests happy path
+	 * @covers Transmission::find
 	 */
 	public function testFindWithGoodResponse() {
 		$mock = new Mock([new Response(200, [], Stream::factory('{"results":[{"test":"This is a test"}]}'))]);
@@ -62,7 +69,8 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 *
+	 * @desc tests 404 bad response
+	 * @covers Transmission::find
 	 */
 	public function testFindWith404Response() {
 		$mock = new Mock([new Response(404, [])]);
@@ -77,7 +85,8 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 *
+	 * @desc tests unknown bad response
+	 * @covers Transmission::find
 	 */
 	public function testFindWithOtherBadResponse() {
 		$mock = new Mock([new Response(400, [])]);
@@ -92,7 +101,8 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * 
+	 * @desc tests happy path
+	 * @covers Transmission::send
 	 */
 	public function testSuccessfulSend() {
 		$body = ["result"=>["transmission_id"=> "11668787484950529"], "status"=>["message"=> "ok","code"=> "1000"]];
@@ -103,7 +113,8 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * 
+	 * @desc tests bad response
+	 * @covers Transmission::send
 	 */
 	public function testSendForRequestException() {
 		$body = ['errors'=>['This is a fake error']];

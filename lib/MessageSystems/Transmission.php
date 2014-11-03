@@ -7,8 +7,16 @@ use GuzzleHttp\Exception\RequestException;
  * @desc SDK interface for managing transmissions
  */
 class Transmission {
+	/**
+	 * @desc singleton holder to create a guzzle http client 
+	 * @var \GuzzleHttp\Client
+	 */
 	private static $request;
 	
+	/**
+	 * @desc Mapping for values passed into the send method to the values needed for the Transmission API 
+	 * @var array
+	 */
 	private static $parameterMappings = [
 		'campaign'=>'campaign_id',
 		'metadata'=>'metadata',
@@ -30,6 +38,10 @@ class Transmission {
 		'useDraftTemplate'=>'use_draft_template'
 	];
 	
+	/**
+	 * @desc Sets up default structure and default values for the model that is acceptable by the API
+	 * @var array
+	 */
 	private static $structure = [
 		'return_path'=>"default@sparkpostmail.com",
 		'content'=>[
@@ -49,6 +61,10 @@ class Transmission {
 	 */
 	private function __construct() {}
 
+	/**
+	 * @desc Creates and returns a guzzle http client.
+	 * @return \GuzzleHttp\Client
+	 */
 	private static function getHttpClient() {
 		if(!isset(self::$request)) {
 			self::$request = new Client();
@@ -86,8 +102,25 @@ class Transmission {
 	 * @desc Method for issuing POST request to the Transmissions API
 	 *
 	 *  This method assumes that all the appropriate fields have
-	 *  been populated by the user through configuration or calling
-	 *  helper methods
+	 *  been populated by the user through configuration.  Acceptable 
+	 *  configuration values are: 
+	 *  'campaign': string, 
+	 *	'metadata': array,
+	 *	'substitutionData': array,
+	 *	'description': string,
+	 *	'replyTo': string,
+	 *	'subject': string,
+	 *	'from': string,
+	 *	'html': string,
+	 *	'text': string,
+	 *	'rfc822Part': string,
+	 *	'headers': array,
+	 *	'recipients': array,
+	 *	'recipientList': string,
+	 *	'template': string,
+	 *	'openTracking': boolean,
+	 *	'clickTracking': boolean,
+	 *	'useDraftTemplate': boolean 
 	 *
 	 * @return array API repsonse represented as key-value pairs
 	 */
