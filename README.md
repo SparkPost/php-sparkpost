@@ -55,7 +55,7 @@ try {
 * The SDK's features are namespaced under the various SparkPost API names.
 
 ### Transmissions
-* If you specify a stored recipient list and inline recipients in a Transmission, whichever was provided last will be used.
+* If you specify a stored recipient list and inline recipients in a Transmission, you will recieve an error.
 * If you specify HTML and/or Plain Text content and then provide RFC-822 encoded content, you will receive an error.
     * RFC-822 content is not valid with any other content type.
 * If you specify a stored template and also provide inline content via `html` or `text`, you will receive an error.
