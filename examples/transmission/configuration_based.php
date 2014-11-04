@@ -24,8 +24,6 @@ try {
     	]
 	]);
 	echo 'Congrats you can use your SDK!';
-	
-	var_dump(Transmission::$structure);
 } catch (\Exception $exception) {
 	echo $exception->getMessage();
 }

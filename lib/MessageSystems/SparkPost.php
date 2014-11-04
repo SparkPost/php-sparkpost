@@ -5,7 +5,7 @@ class SparkPost {
 	
 	private static $config;
 	private static $defaults = [
-			'host'=>'app.cloudplaceholder.com',
+			'host'=>'api.sparkpost.com',
 			'protocol'=>'https',
 			'port'=>443,
 			'strictSSL'=>true,
