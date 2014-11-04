@@ -47,7 +47,7 @@ try {
 ## Learn More
 * For more detailed examples, check our examples:
     * [Transmissions](https://github.com/MessageSystems/php-sdk/tree/master/examples/transmission/)
-* Read our REST API documentation - <http://docs.thecloudplaceholderapiv1.apiary.io/>
+* Read our REST API documentation - <http://www.sparkpost.com/docs/introduction>
 
 ## Tips and Tricks
 ### General
