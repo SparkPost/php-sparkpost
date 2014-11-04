@@ -1,5 +1,4 @@
 # SparkPost PHP SDK
-=======
 The official PHP binding for your favorite SparkPost APIs!
 
 Before using this library, you must have a valid API Key.
@@ -7,7 +6,6 @@ Before using this library, you must have a valid API Key.
 To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
 
 ## Installation
-============
 The recommended way to install the SparkPost PHP SDK is through composer.
 ```
 # Install Composer
