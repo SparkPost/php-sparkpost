@@ -1,0 +1,5 @@
+/vendor/
+.project
+.settings
+.buildpath
+test/output/
