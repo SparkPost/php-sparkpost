@@ -1,11 +1,10 @@
 {
-    "name": "sparkpost/php-sdk",
-    "description": "SDK for interfacing with messagesystems APIs",
+    "name": "sparkpost/php-sparkpost",
+    "description": "SDK for interfacing with SparkPost APIs",
     "license": "Apache 2.0",
     "authors": [
         {
-            "name": "Message Systems, Inc.",
-            "email": "info@messagesystems.com"
+            "name": "Message Systems, Inc."
         }
     ],
     "minimum-stability": "stable",

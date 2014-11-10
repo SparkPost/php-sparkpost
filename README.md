@@ -13,7 +13,7 @@ curl -sS https://getcomposer.org/installer | php
 ```
 Next, run the Composer command to install the SparkPost PHP SDK: 
 ```
-composer require messagesystems/php-sdk
+composer require sparkpost/php-sparkpost
 ```
 After installing, you need to require Composer's autoloader:
 ```
@@ -44,7 +44,7 @@ try {
 
 ## Learn More
 * For more detailed examples, check our examples:
-    * [Transmissions](https://github.com/MessageSystems/php-sdk/tree/master/examples/transmission/)
+    * [Transmissions](https://github.com/SparkPost/php-sparkpost/tree/master/examples/transmission)
 * Read our REST API documentation - <http://www.sparkpost.com/docs/introduction>
 
 ## Field Descriptions
