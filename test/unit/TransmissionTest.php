@@ -1,8 +1,8 @@
 <?php
 namespace SparkPost\Test;
 
-use MessageSystems\Transmission;
-use MessageSystems\SparkPost;
+use SparkPost\Transmission;
+use SparkPost\SparkPost;
 use GuzzleHttp\Subscriber\Mock;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\Stream;
@@ -21,7 +21,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	 * @return ReflectionMethod
 	 */
 	private static function getMethod($name) {
-		$class = new \ReflectionClass('\MessageSystems\Transmission');
+		$class = new \ReflectionClass('\SparkPost\Transmission');
 		$method = $class->getMethod($name);
 		$method->setAccessible(true);
 		return $method;
@@ -41,7 +41,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	 * @desc Ensures that the configuration class is not instantiable.
 	 */
 	public function testConstructorCannotBeCalled() {
-		$class = new \ReflectionClass('\MessageSystems\Transmission');
+		$class = new \ReflectionClass('\SparkPost\Transmission');
 		$this->assertFalse($class->isInstantiable());
 	}
 	

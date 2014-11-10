@@ -1,8 +1,8 @@
 <?php
 namespace Examples\Transmisson;
 require_once (dirname(__FILE__).'/../bootstrap.php');
-use MessageSystems\SparkPost;
-use MessageSystems\Transmission;
+use SparkPost\SparkPost;
+use SparkPost\Transmission;
 
 $key = 'YOURAPIKEY';
 SparkPost::setConfig(['key'=>$key]);
@@ -19,11 +19,11 @@ try{
 	  ],
 	  "description"=>"my description",
 	  "replyTo"=>"reply@test.com",
-	  "headers"=>[
+	  "CustomHeaders"=>[
 	    "X-Custom-Header"=>"Sample Custom Header"
 	  ],
-	  "openTracking"=>false,
-	  "clickTracking"=>false,
+	  "trackOpens"=>false,
+	  "trackClicks"=>false,
 	  "from"=>"From Envelope <from@example.com>",
 	  "html"=>"<p>Hello World! Your name is: {{name}}</p>",
 	  "text"=>"Hello World!",

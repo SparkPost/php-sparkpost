@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "25bb67c57c5a357f0cc9873a717dfd51",
+    "hash": "f50d7f6f0ceb190ba8f8489f4cffeabe",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -65,16 +65,16 @@
         },
         {
             "name": "guzzlehttp/ringphp",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/RingPHP.git",
-                "reference": "86df4c0ea5459b292ff8c519f8db1513ea41ca9b"
+                "reference": "e7c28f96c5ac12ab0e63412cfc15989756fcb964"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/86df4c0ea5459b292ff8c519f8db1513ea41ca9b",
-                "reference": "86df4c0ea5459b292ff8c519f8db1513ea41ca9b",
+                "url": "https://api.github.com/repos/guzzle/RingPHP/zipball/e7c28f96c5ac12ab0e63412cfc15989756fcb964",
+                "reference": "e7c28f96c5ac12ab0e63412cfc15989756fcb964",
                 "shasum": ""
             },
             "require": {
@@ -111,7 +111,7 @@
                     "homepage": "https://github.com/mtdowling"
                 }
             ],
-            "time": "2014-10-29 02:00:14"
+            "time": "2014-11-04 07:01:14"
         },
         {
             "name": "guzzlehttp/streams",

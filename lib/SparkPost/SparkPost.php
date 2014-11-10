@@ -1,5 +1,5 @@
 <?php
-namespace MessageSystems;
+namespace SparkPost;
 
 class SparkPost {
 	

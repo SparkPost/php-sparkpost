@@ -1,7 +1,7 @@
 <?php
 namespace SparkPost\Test;
 
-use MessageSystems\SparkPost;
+use SparkPost\SparkPost;
 
 class SparkPostTest extends \PHPUnit_Framework_TestCase {
 	
@@ -9,7 +9,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
 	 * @desc Ensures that the configuration class is not instantiable.
 	 */
 	public function testConstructorCannotBeCalled() {
-		$class = new \ReflectionClass('\MessageSystems\SparkPost');
+		$class = new \ReflectionClass('\SparkPost\SparkPost');
 		$this->assertFalse($class->isInstantiable()); 
 	}
 	

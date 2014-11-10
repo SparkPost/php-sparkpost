@@ -2,8 +2,8 @@
 namespace Examples\Transmisson;
 require_once (dirname(__FILE__).'/../bootstrap.php');
 
-use MessageSystems\SparkPost;
-use MessageSystems\Transmission;
+use SparkPost\SparkPost;
+use SparkPost\Transmission;
 
 $key = 'YOURAPIKEY'; 
 SparkPost::setConfig(['key'=>$key]);

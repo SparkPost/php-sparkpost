@@ -1,5 +1,5 @@
 <?php
-namespace MessageSystems;
+namespace SparkPost;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 
@@ -29,12 +29,12 @@ class Transmission {
 		'html'=>'content.html',
 		'text'=>'content.text',
 		'rfc822Part'=>'content.email_rfc822',
-		'headers'=>'content.headers',
+		'customHeaders'=>'content.headers',
 		'recipients'=>'recipients',
 		'recipientList'=>'recipients.list_id',
 		'template'=>'content.template_id',
-		'openTracking'=>'options.open_tracking',
-		'clickTracking'=>'options.click_tracking',
+		'trackOpens'=>'options.open_tracking',
+		'trackClicks'=>'options.click_tracking',
 		'useDraftTemplate'=>'use_draft_template'
 	];
 	
@@ -114,12 +114,12 @@ class Transmission {
 	 *	'html': string,
 	 *	'text': string,
 	 *	'rfc822Part': string,
-	 *	'headers': array,
+	 *	'customHeaders': array,
 	 *	'recipients': array,
 	 *	'recipientList': string,
 	 *	'template': string,
-	 *	'openTracking': boolean,
-	 *	'clickTracking': boolean,
+	 *	'trackOpens': boolean,
+	 *	'trackClicks': boolean,
 	 *	'useDraftTemplate': boolean 
 	 *
 	 * @return array API repsonse represented as key-value pairs
