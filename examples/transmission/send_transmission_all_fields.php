@@ -19,7 +19,7 @@ try{
 	  ],
 	  "description"=>"my description",
 	  "replyTo"=>"reply@test.com",
-	  "CustomHeaders"=>[
+	  "customHeaders"=>[
 	    "X-Custom-Header"=>"Sample Custom Header"
 	  ],
 	  "trackOpens"=>false,
