@@ -4,14 +4,14 @@ namespace SparkPost;
 class SparkPost {
 	
 	private static $config;
-	private static $defaults = [
+	private static $defaults = array(
 			'host'=>'api.sparkpost.com',
 			'protocol'=>'https',
 			'port'=>443,
 			'strictSSL'=>true,
 			'key'=>'',
 			'version'=>'v1'	
-		];
+		);
 	
 	/**
 	 * Enforce that this object can't be instansiated

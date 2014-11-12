@@ -5,7 +5,7 @@ use SparkPost\SparkPost;
 use SparkPost\Transmission;
 
 $key = 'YOURAPIKEY'; 
-SparkPost::setConfig(['key'=>$key]);
+SparkPost::setConfig(array('key'=>$key));
 
 try {
 	$results = Transmission::find('Your Transmission Id');

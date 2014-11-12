@@ -17,7 +17,7 @@ class Transmission {
 	 * @desc Mapping for values passed into the send method to the values needed for the Transmission API 
 	 * @var array
 	 */
-	private static $parameterMappings = [
+	private static $parameterMappings = array(
 		'campaign'=>'campaign_id',
 		'metadata'=>'metadata',
 		'substitutionData'=>'substitution_data',
@@ -28,7 +28,7 @@ class Transmission {
 		'from'=>'content.from',
 		'html'=>'content.html',
 		'text'=>'content.text',
-		'rfc822Part'=>'content.email_rfc822',
+		'rfc822'=>'content.email_rfc822',
 		'customHeaders'=>'content.headers',
 		'recipients'=>'recipients',
 		'recipientList'=>'recipients.list_id',
@@ -36,25 +36,25 @@ class Transmission {
 		'trackOpens'=>'options.open_tracking',
 		'trackClicks'=>'options.click_tracking',
 		'useDraftTemplate'=>'use_draft_template'
-	];
+	);
 	
 	/**
 	 * @desc Sets up default structure and default values for the model that is acceptable by the API
 	 * @var array
 	 */
-	private static $structure = [
+	private static $structure = array(
 		'return_path'=>"default@sparkpostmail.com",
-		'content'=>[
+		'content'=>array(
 			'html'=>null, 
 			'text'=>null,
 			'email_rfc822'=>null
-		],
-		'options'=>[
+		),
+		'options'=>array(
 			'open_tracking'=>true, 
 			'click_tracking'=>true
-		],
+		),
 		'use_draft_template'=>false
-	];
+	);
 	
 	/**
 	 * @desc Ensure that this class cannot be instansiated
@@ -113,7 +113,7 @@ class Transmission {
 	 *	'from': string,
 	 *	'html': string,
 	 *	'text': string,
-	 *	'rfc822Part': string,
+	 *	'rfc822': string,
 	 *	'customHeaders': array,
 	 *	'recipients': array,
 	 *	'recipientList': string,
@@ -136,15 +136,16 @@ class Transmission {
 		
 		//send the request
 		try {
-			$response = $request->post(self::getBaseUrl($hostConfig), [
+			$response = $request->post(self::getBaseUrl($hostConfig), array(
 				'json'=>$model,
-				"headers"=>['authorization' => $hostConfig['key']],
+				"headers"=>array('authorization' => $hostConfig['key']),
 				"verify"=>$hostConfig['strictSSL']
-			]);
+			));
 			return $response->json();
 		} catch (RequestException $exception) {
 			$response = $exception->getResponse();
-			throw new \Exception(json_encode($response->json()['errors']));
+			$responseArray = $response->json();
+			throw new \Exception(json_encode($responseArray['errors']));
 		} catch (\Exception $exception) {
 			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
 		}
@@ -174,10 +175,10 @@ class Transmission {
 		
 		//make request
 		try {	
-			$response = $request->get($url, [
-				"headers"=>['authorization' => $hostConfig['key']],
+			$response = $request->get($url, array(
+				"headers"=>array('authorization' => $hostConfig['key']),
 				"verify"=>$hostConfig['strictSSL']
-			]);
+			));
 			return $response->json();
 		} catch (RequestException $exception) {
 			$response = $exception->getResponse();
