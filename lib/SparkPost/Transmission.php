@@ -148,7 +148,7 @@ class Transmission {
 		
 		//send the request
 		try {
-			$response = $request->post(self::getBaseUrl($hostConfig), array('authorization' => $hostConfig['key']), $model, array("verify"=>$hostConfig['strictSSL']))->send();
+			$response = $request->post(self::getBaseUrl($hostConfig), array('authorization' => $hostConfig['key']), json_encode($model), array("verify"=>$hostConfig['strictSSL']))->send();
 			return $response->json();
 		} catch (RequestException $exception) {
 			$response = $exception->getResponse();
