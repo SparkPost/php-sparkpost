@@ -151,8 +151,8 @@ class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(array('X-header'=>$value), $this->email->model['customHeaders']);
 	}
 	
-	public function testToMsysTransmission() {
-		$this->assertInternalType('array', $this->email->toMsysTransmission());
+	public function testToSparkPostTransmission() {
+		$this->assertInternalType('array', $this->email->toSparkPostTransmission());
 	}
 }
 

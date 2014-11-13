@@ -4,10 +4,20 @@ namespace SparkPost\SendGridCompatibility;
 class Email {
 	public $model;
 	
+	
+	/**
+	 * @desc Sets up the model for saving the configuration
+	 */
 	public function __construct() {
 		$this->model = array();
 	}
 	
+	/**
+	 * @desc adds addresses as recipients
+	 * @param string $address
+	 * @param string $name optional
+	 * @return \SparkPost\SendGridCompatibility\Email
+	 */
 	public function addTo($address, $name = null) {
 		if (!isset($this->model['recipients'])) {
 			$this->model['recipients'] = array();
@@ -23,13 +33,18 @@ class Email {
 		return $this;
 	}
 	
+	/**
+	 * @desc explicitly sets a list of addresses
+	 * @param array $addresses
+	 * @return \SparkPost\SendGridCompatibility\Email
+	 */
 	public function setTos(array $addresses) {
 		$this->model['recipients'] = $addresses;
 		return $this;
 	}
 	
 	/**
-	 * 
+	 * @desc sets the from address
 	 * @param string $address
 	 * @return \MessageSystems\SendGridCompatibility\Email
 	 */
@@ -39,6 +54,7 @@ class Email {
 	}
 	
 	/**
+	 * @desc sets the name for the from address
 	 * @param string $name
 	 */
 	public function setFromName($name) {
@@ -50,7 +66,7 @@ class Email {
 	}
 	
 	/**
-	 * 
+	 * @desc sets the reply to field
 	 * @param string $address
 	 * @return \MessageSystems\SendGridCompatibility\Email
 	 */
@@ -60,6 +76,8 @@ class Email {
 	}
 	
 	/**
+	 * @desc throws an error because bcc fields are not yet implemented.
+	 * @throws \Exception
 	 * @param string $address
 	 * @return \MessageSystems\SendGridCompatibility\Email
 	 */
@@ -67,31 +85,48 @@ class Email {
 		throw new \Exception('Adding bcc recipients is not yet supported, try adding them as a "to" address');
 	}
 	
+	/**
+	 * @desc sets the subject header
+	 * @param string $subject
+	 * @return \SparkPost\SendGridCompatibility\Email
+	 */
 	public function setSubject($subject) {
 		$this->model['subject'] = $subject;
 		return $this;
 	}
 	
+	/**
+	 * @desc sets the text body
+	 * @param string $text
+	 * @return \SparkPost\SendGridCompatibility\Email
+	 */
 	public function setText($text) {
 		$this->model['text'] = $text;
 		return $this;
 	}
 	
+	/**
+	 * @desc sets the html body
+	 * @param string $html
+	 * @return \SparkPost\SendGridCompatibility\Email
+	 */
 	public function setHtml($html) {
 		$this->model['html'] = $html;
 		return $this;
 	}
 	
+	/**
+	 * @desc Throws an exception since adding categories is not yet supported
+	 * @throws \Exception
+	 * @param string $category
+	 * @throws \Exception
+	 */
 	public function addCategory($category) {
-		if (!isset($this->model['tags'])) {
-			$this->model['tags'] = array();
-		}
-		array_push($this->model['tags'], $category);
-		return $this;
+		throw new \Exception('Adding categories is not yet supported');
 	}
 	
 	/**
-	 * 
+	 * @desc Throws an exception since adding attachments is not yet supported
 	 * @throws Exception
 	 * @param mixed $attachment
 	 */
@@ -100,8 +135,10 @@ class Email {
 	}
 	
 	/**
-	 * @desc Sets the name attribute on the most recent set email address
+	 * @desc Adds transmission level substitution data
 	 * @param string $name
+	 * @param mixed $values
+	 * @return \SparkPost\SendGridCompatibility\Email
 	 */
 	public function addSubstitution($name, $values) {
 		if (!isset($this->model['substitutionData'])) {
@@ -112,29 +149,38 @@ class Email {
 		return $this;
 	}
 	
+	/**
+	 * @desc Adds transmission level substitution data
+	 * @param string $name
+	 * @param mixed $values
+	 */
 	public function addSection($name, $values) {
 		$this->addSubstitution($name, $values);
 	}
 	
 	/**
-	 *
+	 * @desc Throws an exception because arguments for third party systems is not supported
 	 * @throws Exception
-	 * @param mixed $attachment
+	 * @param mixed $value
 	 */
 	public function addUniqueArg($key, $value) {
 		throw new \Exception('Adding Unique Arguments is not yet supported');
 	}
 	
 	/**
-	 *
+	 * @desc Throws an exception because arguments for third party systems is not supported
 	 * @throws Exception
-	 * @param mixed $attachment
+	 * @param mixed $values
 	 */
 	public function setUniqueArgs(array $values) {
 		throw new \Exception('Setting Unique Arguments is not yet supported');
 	}
 	
-	
+	/**
+	 * @desc Adds custom headers to the email header 
+	 * @param string $name
+	 * @param string $value
+	 */
 	public function addHeader($name, $value) {
 		if (!isset($this->model['customHeaders'])) {
 			$this->model['customHeaders'] = array();
@@ -142,7 +188,11 @@ class Email {
 		$this->model['customHeaders'][$name] = $value;
 	}
 	
-	public function toMsysTransmission() {
+	/**
+	 * @desc converts this object to a configuration for a SparkPost transmission
+	 * @return array
+	 */
+	public function toSparkPostTransmission() {
 		return $this->model;
 	}
 }

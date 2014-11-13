@@ -6,8 +6,6 @@ use SparkPost\SendGridCompatibility\Email;
 use SparkPost\Configuration;
 
 class SendGrid{
-	private $sparkPost;
-	
 	public function __construct($username, $password, $options = null) {
 		//username isn't used in our system
 		$opts = array('key'=>$password);
@@ -18,7 +16,7 @@ class SendGrid{
 	}
 	
 	public function send(Email $email) {
-		Trasmission::send($email->toMsysTransmission());
+		Trasmission::send($email->toSparkPostTransmission());
 	}
 }
 ?>
