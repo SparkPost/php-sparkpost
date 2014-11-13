@@ -3,9 +3,8 @@ namespace SparkPost\Test;
 
 use SparkPost\Transmission;
 use SparkPost\SparkPost;
-use GuzzleHttp\Subscriber\Mock;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
+use Guzzle\Plugin\Mock\MockPlugin;
+use Guzzle\Http\Message\Response;
 
 
 class TransmissionTest extends \PHPUnit_Framework_TestCase {
@@ -49,50 +48,45 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	 * @desc tests happy path
 	 */
 	public function testAllWithGoodResponse() {
-		$mock = new Mock(array(new Response(200, array(), Stream::factory('{"results":[{"test":"This is a test"}, {"test":"two"}]}'))));
-		$this->client->getEmitter()->attach($mock);
+		$mock = new MockPlugin();
+		$mock->addResponse(new Response(200, array(), '{"results":[{"test":"This is a test"}, {"test":"two"}]}'));
+		$this->client->addSubscriber($mock);
 		$this->assertEquals(array("results"=>array(array('test'=>'This is a test'), array('test'=>'two'))), Transmission::all());
-		$this->client->getEmitter()->detach($mock);
 	}
 	
 	/**
 	 * @desc tests happy path
 	 */
 	public function testFindWithGoodResponse() {
-		$mock = new Mock(array(new Response(200, array(), Stream::factory('{"results":[{"test":"This is a test"}]}'))));
-		$this->client->getEmitter()->attach($mock);
+		$mock = new MockPlugin();
+		$mock->addResponse(new Response(200, array(), '{"results":[{"test":"This is a test"}]}'));
+		$this->client->addSubscriber($mock);
+		
 		$this->assertEquals(array("results"=>array(array('test'=>'This is a test'))), Transmission::find('someId'));
-		$this->client->getEmitter()->detach($mock);
 	}
 	
 	/**
 	 * @desc tests 404 bad response
+	 * @expectedException Exception
+	 * @expectedExceptionMessage The specified Transmission ID does not exist
 	 */
 	public function testFindWith404Response() {
-		$mock = new Mock(array(new Response(404, array())));
-		$this->client->getEmitter()->attach($mock);
-		try {
-			Transmission::find('someId');
-		} catch (\Exception $e) {
-			$this->assertEquals('The specified Transmission ID does not exist', $e->getMessage());
-		} finally {
-			$this->client->getEmitter()->detach($mock);
-		}
+		$mock = new MockPlugin();
+		$mock->addResponse(new Response(404, array()));
+		$this->client->addSubscriber($mock);
+		Transmission::find('someId');
 	}
 	
 	/**
 	 * @desc tests unknown bad response
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Received bad response from Transmission API: 400
 	 */
 	public function testFindWithOtherBadResponse() {
-		$mock = new Mock(array(new Response(400, array())));
-		$this->client->getEmitter()->attach($mock);
-		try {
-			Transmission::find('someId');
-		} catch (\Exception $e) {
-			$this->assertEquals('Received bad response from Transmission API: 400', $e->getMessage());
-		} finally {
-			$this->client->getEmitter()->detach($mock);
-		}
+		$mock = new MockPlugin();
+		$mock->addResponse(new Response(400, array()));
+		$this->client->addSubscriber($mock);
+		Transmission::find('someId');
 	}
 	
 	/**
@@ -100,26 +94,25 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	 */
 	public function testSuccessfulSend() {
 		$body = array("result"=>array("transmission_id"=>"11668787484950529"), "status"=>array("message"=> "ok","code"=> "1000"));
-		$mock = new Mock(array(new Response(200, array(), Stream::factory(json_encode($body)))));
-		$this->client->getEmitter()->attach($mock);
+		$mock = new MockPlugin();
+		$mock->addResponse(new Response(200, array(), json_encode($body)));
+		$this->client->addSubscriber($mock);
+		
+		
 		$this->assertEquals($body, Transmission::send(array('text'=>'awesome email')));
-		$this->client->getEmitter()->detach($mock);
 	}
 	
 	/**
 	 * @desc tests bad response
+	 * @expectedException Exception
+	 * @expectedExceptionMessage ["This is a fake error"]
 	 */
 	public function testSendForRequestException() {
 		$body = array('errors'=>array('This is a fake error'));
-		$mock = new Mock(array(new Response(400, array(), Stream::factory(json_encode($body)))));
-		$this->client->getEmitter()->attach($mock);
-		try {
-			Transmission::send(array('text'=>'awesome email'));
-		} catch (\Exception $e) {
-			$this->assertEquals('["This is a fake error"]', $e->getMessage());
-		} finally {
-			$this->client->getEmitter()->detach($mock);
-		}
+		$mock = new MockPlugin();
+		$mock->addResponse(new Response(400, array(), json_encode($body)));
+		$this->client->addSubscriber($mock);
+		Transmission::send(array('text'=>'awesome email'));
 	}
 	
 }

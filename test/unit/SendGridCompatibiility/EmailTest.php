@@ -68,12 +68,12 @@ class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase {
 	
 		$this->assertEquals('test@email.com', $this->email->model['replyTo']);
 	}
-	
-	
+	/**
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Adding bcc recipients is not yet supported, try adding them as a "to" address
+	 */ 
 	public function testAddBcc() {
 		$this->email->addBcc('test@email.com');
-	
-		$this->assertEquals(array('test@email.com'), $this->email->model['bcc']);
 	}
 	
 	public function testSetSubject() {
@@ -140,7 +140,7 @@ class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage Setting Unique Arguments is not yet supported
 	 */
 	public function testSetUniqueArgs() {
-		$this->email->setUniqueArgs(['blah', 'andBlah']);
+		$this->email->setUniqueArgs(array('blah', 'andBlah'));
 	}
 	
 	

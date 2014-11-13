@@ -1,7 +1,7 @@
 <?php
 namespace SparkPost;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+use Guzzle\Http\Client;
+use Guzzle\Http\Exception\RequestException;
 
 /**
  * @desc SDK interface for managing transmissions
@@ -99,6 +99,18 @@ class Transmission {
 	}
 	
 	/**
+	 * Helper function for extracting the response status code out of request thrown exceptions
+	 * @param string $exceptionMessage
+	 * @return number
+	 */
+	private static function getStatusCode ($exceptionMessage) {
+		$messageParts = explode("\n", $exceptionMessage);
+		$codeLine = explode('] ', $messageParts[1]);
+		$code = trim($codeLine[1]);
+		return (int)$code;
+	}
+	
+	/**
 	 * @desc Method for issuing POST request to the Transmissions API
 	 *
 	 *  This method assumes that all the appropriate fields have
@@ -136,11 +148,7 @@ class Transmission {
 		
 		//send the request
 		try {
-			$response = $request->post(self::getBaseUrl($hostConfig), array(
-				'json'=>$model,
-				"headers"=>array('authorization' => $hostConfig['key']),
-				"verify"=>$hostConfig['strictSSL']
-			));
+			$response = $request->post(self::getBaseUrl($hostConfig), array('authorization' => $hostConfig['key']), $model, array("verify"=>$hostConfig['strictSSL']))->send();
 			return $response->json();
 		} catch (RequestException $exception) {
 			$response = $exception->getResponse();
@@ -149,7 +157,6 @@ class Transmission {
 		} catch (\Exception $exception) {
 			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
 		}
-		
 	}
 	
 	/**
@@ -175,20 +182,17 @@ class Transmission {
 		
 		//make request
 		try {	
-			$response = $request->get($url, array(
-				"headers"=>array('authorization' => $hostConfig['key']),
-				"verify"=>$hostConfig['strictSSL']
-			));
+			$response = $request->get($url, array('authorization' => $hostConfig['key']), array("verify"=>$hostConfig['strictSSL']))->send();
 			return $response->json();
-		} catch (RequestException $exception) {
-			$response = $exception->getResponse();
-			if($response->getStatusCode() === '404') {
-				throw new \Exception("The specified Transmission ID does not exist", 404);
-			} else {
-				throw new \Exception("Received bad response from Transmission API: ". $response->getStatusCode());
-			}
 		} catch (\Exception $exception) {
-			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
+			$statusCode = self::getStatusCode($exception->getMessage());
+			if($statusCode === 404) {
+				throw new \Exception("The specified Transmission ID does not exist", 404);
+			}else if ($statusCode !== null){
+				throw new \Exception("Received bad response from Transmission API: ". $statusCode);
+			} else {
+				throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
+			}
 		}
 	}
 	

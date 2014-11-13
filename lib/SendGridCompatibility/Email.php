@@ -60,18 +60,11 @@ class Email {
 	}
 	
 	/**
-	 * TODO: Does this work?
-	 * 
-	 * 
 	 * @param string $address
 	 * @return \MessageSystems\SendGridCompatibility\Email
 	 */
 	public function addBcc($address) {
-		if (!isset($this->model['bcc'])) {
-			$this->model['bcc'] = array();
-		}
-		array_push($this->model['bcc'], $address);
-		return $this;
+		throw new \Exception('Adding bcc recipients is not yet supported, try adding them as a "to" address');
 	}
 	
 	public function setSubject($subject) {

@@ -25,7 +25,12 @@ class SparkPost {
 	 */
 	public static function setConfig(array $configMap) {
 		//check for API key because its required	
-		if (!isset($configMap['key']) || empty(trim($configMap['key']))){
+		if (isset($configMap['key'])){
+			$key = trim($configMap['key']);
+			if(empty($key)){
+				throw new \Exception('You must provide an API key');
+			}
+		} else {
 			throw new \Exception('You must provide an API key');
 		}
 		self::$config = self::$defaults;
