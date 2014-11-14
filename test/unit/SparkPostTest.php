@@ -29,7 +29,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage You must provide an API key
 	 */
 	public function testSetConfigAPIKeyNotSetException() {
-		SparkPost::setConfig(['something'=>'other than an API Key']);
+		SparkPost::setConfig(array('something'=>'other than an API Key'));
 	}
 	
 	/**
@@ -38,14 +38,14 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage You must provide an API key
 	 */
 	public function testSetConfigAPIKeyEmptyException() {
-		SparkPost::setConfig(['key'=>'']);
+		SparkPost::setConfig(array('key'=>''));
 	}
 	
 	/**
 	 * @desc Tests overridable values are set while invalid values are ignored
 	 */
 	public function testSetConfigMultipleValuesAndGetConfig() {
-		SparkPost::setConfig(['key'=>'lala', 'version'=>'v8', 'port'=>1024, 'someOtherValue'=>'fakeValue']);
+		SparkPost::setConfig(array('key'=>'lala', 'version'=>'v8', 'port'=>1024, 'someOtherValue'=>'fakeValue'));
 		
 		$testConfig = SparkPost::getConfig();
 		$this->assertEquals('lala', $testConfig['key']);

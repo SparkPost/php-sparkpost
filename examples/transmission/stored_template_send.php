@@ -5,20 +5,20 @@ use SparkPost\SparkPost;
 use SparkPost\Transmission;
 
 $key = 'YOURAPIKEY'; 
-SparkPost::setConfig(['key'=>$key]);
+SparkPost::setConfig(array('key'=>$key));
 
 try {
-	$results = Transmission::send([
+	$results = Transmission::send(array(
 		"from"=>"From Envelope <from@example.com>",
-		"recipients"=>[
-			[
-			"address"=>[
+		"recipients"=>array(
+			array(
+			"address"=>array(
 					"email"=>"john.doe@sample.com"
-				]
-			]
-		],
+				)
+			)
+		),
 		"template"=>"my-template"
-	]);
+	));
 	echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
 	echo $exception->getMessage();

@@ -26,14 +26,14 @@ SparkPost::setConfig(["key"=>"YOUR API KEY"]);
 
 try {
 	// Build your email and send it!
-	Transmission::send(['campaign'=>'first-mailing', 
+	Transmission::send(array('campaign'=>'first-mailing', 
 		'from'=>'you@your-company.com',
 	    'subject'=>'First SDK Mailing',
 	    'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
 	    'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
-	    'substitutionData'=>['name'=>'YOUR FIRST NAME'],
-	    'recipients'=>[['address'=>['name'=>'YOUR FULL NAME', 'email'=>'YOUR EMAIL ADDRESS' ]]]
-    ]);
+	    'substitutionData'=>array('name'=>'YOUR FIRST NAME'),
+	    'recipients'=>array(array('address'=>array('name'=>'YOUR FULL NAME', 'email'=>'YOUR EMAIL ADDRESS' )))
+    ));
 
     echo 'Woohoo! You just sent your first mailing!';
 } catch (Exception $err) {
@@ -87,12 +87,12 @@ try {
 ## Development
 
 ### Setup
-We use [Robo](http://robo.li/) for our task runner.
-
-Run `composer install` inside the directory to install dependecies and development tools including Robo.
+Run `composer install` inside the directory to install dependecies and development tools.
 
 ### Testing
-Once all the dependencies are installed, you can execute the unit tests using `vendor\bin\robo test`
+Once all the dependencies are installed, you can execute the unit tests using `vendor/bin/phpunit --bootstrap test/unit/bootstrap.php ./test/unit`.
+
+If you're interested in code coverage, you can add the `--coverage` flag for phpunit like so: ```phpunit --coverage-html test/output/report --bootstrap test/unit/bootstrap.php ./test/unit```
 
 ### Contributing
 Guidelines for adding issues
