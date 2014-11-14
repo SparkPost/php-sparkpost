@@ -1,17 +1,17 @@
 <?php
-namespace MessageSystems;
+namespace SparkPost;
 
 class SparkPost {
 	
 	private static $config;
-	private static $defaults = [
+	private static $defaults = array(
 			'host'=>'api.sparkpost.com',
 			'protocol'=>'https',
 			'port'=>443,
 			'strictSSL'=>true,
 			'key'=>'',
 			'version'=>'v1'	
-		];
+		);
 	
 	/**
 	 * Enforce that this object can't be instansiated
@@ -25,7 +25,12 @@ class SparkPost {
 	 */
 	public static function setConfig(array $configMap) {
 		//check for API key because its required	
-		if (!isset($configMap['key']) || empty(trim($configMap['key']))){
+		if (isset($configMap['key'])){
+			$key = trim($configMap['key']);
+			if(empty($key)){
+				throw new \Exception('You must provide an API key');
+			}
+		} else {
 			throw new \Exception('You must provide an API key');
 		}
 		self::$config = self::$defaults;

@@ -1,7 +1,7 @@
 <?php
-namespace MessageSystems;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\RequestException;
+namespace SparkPost;
+use Guzzle\Http\Client;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 
 /**
  * @desc SDK interface for managing transmissions
@@ -17,7 +17,7 @@ class Transmission {
 	 * @desc Mapping for values passed into the send method to the values needed for the Transmission API 
 	 * @var array
 	 */
-	private static $parameterMappings = [
+	private static $parameterMappings = array(
 		'campaign'=>'campaign_id',
 		'metadata'=>'metadata',
 		'substitutionData'=>'substitution_data',
@@ -28,33 +28,33 @@ class Transmission {
 		'from'=>'content.from',
 		'html'=>'content.html',
 		'text'=>'content.text',
-		'rfc822Part'=>'content.email_rfc822',
-		'headers'=>'content.headers',
+		'rfc822'=>'content.email_rfc822',
+		'customHeaders'=>'content.headers',
 		'recipients'=>'recipients',
 		'recipientList'=>'recipients.list_id',
 		'template'=>'content.template_id',
-		'openTracking'=>'options.open_tracking',
-		'clickTracking'=>'options.click_tracking',
+		'trackOpens'=>'options.open_tracking',
+		'trackClicks'=>'options.click_tracking',
 		'useDraftTemplate'=>'use_draft_template'
-	];
+	);
 	
 	/**
 	 * @desc Sets up default structure and default values for the model that is acceptable by the API
 	 * @var array
 	 */
-	private static $structure = [
+	private static $structure = array(
 		'return_path'=>"default@sparkpostmail.com",
-		'content'=>[
+		'content'=>array(
 			'html'=>null, 
 			'text'=>null,
 			'email_rfc822'=>null
-		],
-		'options'=>[
+		),
+		'options'=>array(
 			'open_tracking'=>true, 
 			'click_tracking'=>true
-		],
+		),
 		'use_draft_template'=>false
-	];
+	);
 	
 	/**
 	 * @desc Ensure that this class cannot be instansiated
@@ -113,13 +113,13 @@ class Transmission {
 	 *	'from': string,
 	 *	'html': string,
 	 *	'text': string,
-	 *	'rfc822Part': string,
-	 *	'headers': array,
+	 *	'rfc822': string,
+	 *	'customHeaders': array,
 	 *	'recipients': array,
 	 *	'recipientList': string,
 	 *	'template': string,
-	 *	'openTracking': boolean,
-	 *	'clickTracking': boolean,
+	 *	'trackOpens': boolean,
+	 *	'trackClicks': boolean,
 	 *	'useDraftTemplate': boolean 
 	 *
 	 * @return array API repsonse represented as key-value pairs
@@ -136,19 +136,23 @@ class Transmission {
 		
 		//send the request
 		try {
-			$response = $request->post(self::getBaseUrl($hostConfig), [
-				'json'=>$model,
-				"headers"=>['authorization' => $hostConfig['key']],
-				"verify"=>$hostConfig['strictSSL']
-			]);
+			$response = $request->post(self::getBaseUrl($hostConfig), array('authorization' => $hostConfig['key']), json_encode($model), array("verify"=>$hostConfig['strictSSL']))->send();
 			return $response->json();
-		} catch (RequestException $exception) {
+		} 
+		/*
+		 * Handles 4XX responses
+		 */
+		catch (ClientErrorResponseException $exception) {
 			$response = $exception->getResponse();
-			throw new \Exception(json_encode($response->json()['errors']));
-		} catch (\Exception $exception) {
+			$responseArray = $response->json();
+			throw new \Exception(json_encode($responseArray['errors']));	
+		} 
+		/*
+		 * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
+		 */
+		catch (\Exception $exception) { 
 			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
 		}
-		
 	}
 	
 	/**
@@ -174,19 +178,24 @@ class Transmission {
 		
 		//make request
 		try {	
-			$response = $request->get($url, [
-				"headers"=>['authorization' => $hostConfig['key']],
-				"verify"=>$hostConfig['strictSSL']
-			]);
+			$response = $request->get($url, array('authorization' => $hostConfig['key']), array("verify"=>$hostConfig['strictSSL']))->send();
 			return $response->json();
-		} catch (RequestException $exception) {
+		} 
+		/*
+		 * Handles 4XX responses
+		 */
+		catch (ClientErrorResponseException $exception) {
 			$response = $exception->getResponse();
-			if($response->getStatusCode() === '404') {
+			$statusCode = $response->getStatusCode();
+			if($statusCode === 404) {
 				throw new \Exception("The specified Transmission ID does not exist", 404);
-			} else {
-				throw new \Exception("Received bad response from Transmission API: ". $response->getStatusCode());
 			}
-		} catch (\Exception $exception) {
+			throw new \Exception("Received bad response from Transmission API: ". $statusCode);
+		}
+		/*
+		 * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
+		 */
+		catch (\Exception $exception) {
 			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
 		}
 	}
