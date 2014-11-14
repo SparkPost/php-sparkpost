@@ -87,11 +87,12 @@ try {
 ## Development
 
 ### Setup
-
 Run `composer install` inside the directory to install dependecies and development tools.
 
 ### Testing
-Once all the dependencies are installed, you can execute the unit tests using `vendor/bin/phpunit --bootstrap test/unit/bootstrap.php ./test/unit`
+Once all the dependencies are installed, you can execute the unit tests using `vendor/bin/phpunit --bootstrap test/unit/bootstrap.php ./test/unit`.
+
+If you're interested in code coverage, you can add the `--coverage` flag for phpunit like so: ```phpunit --coverage-html test/output/report --bootstrap test/unit/bootstrap.php ./test/unit```
 
 ### Contributing
 Guidelines for adding issues

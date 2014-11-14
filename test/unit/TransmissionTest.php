@@ -90,6 +90,18 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	}
 	
 	/**
+	 * @desc tests bad response
+	 * @expectedException Exception
+	 * @expectedExceptionMessageRegExp /Unable to contact Transmissions API:.* /
+	 */
+	public function testFindForCatchAllException() {
+		$mock = new MockPlugin();
+		$mock->addResponse(new Response(500));
+		$this->client->addSubscriber($mock);
+		Transmission::find('someId');
+	}
+	
+	/**
 	 * @desc tests happy path
 	 */
 	public function testSuccessfulSend() {
@@ -107,10 +119,23 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedException Exception
 	 * @expectedExceptionMessage ["This is a fake error"]
 	 */
-	public function testSendForRequestException() {
+	public function testSendFor400Exception() {
 		$body = array('errors'=>array('This is a fake error'));
 		$mock = new MockPlugin();
 		$mock->addResponse(new Response(400, array(), json_encode($body)));
+		$this->client->addSubscriber($mock);
+		Transmission::send(array('text'=>'awesome email'));
+	}
+	
+	
+	/**
+	* @desc tests bad response
+	* @expectedException Exception
+	* @expectedExceptionMessageRegExp /Unable to contact Transmissions API:.* /
+	*/
+	public function testSendForCatchAllException() {
+		$mock = new MockPlugin();
+		$mock->addResponse(new Response(500));
 		$this->client->addSubscriber($mock);
 		Transmission::send(array('text'=>'awesome email'));
 	}

@@ -1,7 +1,7 @@
 <?php
 namespace SparkPost;
 use Guzzle\Http\Client;
-use Guzzle\Http\Exception\RequestException;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 
 /**
  * @desc SDK interface for managing transmissions
@@ -99,18 +99,6 @@ class Transmission {
 	}
 	
 	/**
-	 * Helper function for extracting the response status code out of request thrown exceptions
-	 * @param string $exceptionMessage
-	 * @return number
-	 */
-	private static function getStatusCode ($exceptionMessage) {
-		$messageParts = explode("\n", $exceptionMessage);
-		$codeLine = explode('] ', $messageParts[1]);
-		$code = trim($codeLine[1]);
-		return (int)$code;
-	}
-	
-	/**
 	 * @desc Method for issuing POST request to the Transmissions API
 	 *
 	 *  This method assumes that all the appropriate fields have
@@ -150,11 +138,19 @@ class Transmission {
 		try {
 			$response = $request->post(self::getBaseUrl($hostConfig), array('authorization' => $hostConfig['key']), json_encode($model), array("verify"=>$hostConfig['strictSSL']))->send();
 			return $response->json();
-		} catch (RequestException $exception) {
+		} 
+		/*
+		 * Handles 4XX responses
+		 */
+		catch (ClientErrorResponseException $exception) {
 			$response = $exception->getResponse();
 			$responseArray = $response->json();
-			throw new \Exception(json_encode($responseArray['errors']));
-		} catch (\Exception $exception) {
+			throw new \Exception(json_encode($responseArray['errors']));	
+		} 
+		/*
+		 * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
+		 */
+		catch (\Exception $exception) { 
 			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
 		}
 	}
@@ -184,15 +180,23 @@ class Transmission {
 		try {	
 			$response = $request->get($url, array('authorization' => $hostConfig['key']), array("verify"=>$hostConfig['strictSSL']))->send();
 			return $response->json();
-		} catch (\Exception $exception) {
-			$statusCode = self::getStatusCode($exception->getMessage());
+		} 
+		/*
+		 * Handles 4XX responses
+		 */
+		catch (ClientErrorResponseException $exception) {
+			$response = $exception->getResponse();
+			$statusCode = $response->getStatusCode();
 			if($statusCode === 404) {
 				throw new \Exception("The specified Transmission ID does not exist", 404);
-			}else if ($statusCode !== null){
-				throw new \Exception("Received bad response from Transmission API: ". $statusCode);
-			} else {
-				throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
 			}
+			throw new \Exception("Received bad response from Transmission API: ". $statusCode);
+		}
+		/*
+		 * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
+		 */
+		catch (\Exception $exception) {
+			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
 		}
 	}
 	

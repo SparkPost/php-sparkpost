@@ -96,11 +96,13 @@ class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($value, $this->email->model['html']);
 	}
 	
+	/**
+	 * @desc test that adding a category throws an exception since we don't support tags at transmission level yet
+	 * @expectedException Exception
+	 * @expectedExceptionMessage Adding categories is not yet supported
+	 */
 	public function testAddCategory() {
-		$value = 'Category A';
 		$this->email->addCategory($value);
-	
-		$this->assertEquals(array($value), $this->email->model['tags']);
 	}
 	
 	/**
