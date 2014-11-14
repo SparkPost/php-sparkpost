@@ -102,7 +102,7 @@ class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage Adding categories is not yet supported
 	 */
 	public function testAddCategory() {
-		$this->email->addCategory($value);
+		$this->email->addCategory('');
 	}
 	
 	/**
