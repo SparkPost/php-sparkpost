@@ -1,3 +1,5 @@
+[![Travis CI](https://travis-ci.org/SparkPost/php-sparkpost.svg?branch=master)](https://travis-ci.org/SparkPost/php-sparkpost)
+
 # SparkPost PHP SDK
 The official PHP binding for your favorite SparkPost APIs!
 
