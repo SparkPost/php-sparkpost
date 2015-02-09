@@ -7,4 +7,4 @@ install:
 script: phpunit --bootstrap test/unit/bootstrap.php ./test/unit
 notifications:
   slack:
-    secure: dsz+D/TuylEi+6zqdB5dVqyMlpbpafaBBcAwYIijTK6LuG8KdIdGNSFVX1ro6o3bJFwMvtfxNeK1eFrMy8l6VHZQL0dkXWRmCl/pxLhEntUiYTDwDOtiqy1QLZtv5AqtsdSr1qLiOJtgF6gXk66xipnV2UzjLVVoxzSrdOSnX4U=
+    secure: mw6HF2KR0YwYcIaYvV6qjuWC+XSIP8SQOe13VwmGf3b783hMcZDZTUS9N4bIfpwYi74A9qmzKdc425OSu45nceAf7hzFusCY5rYMoLQK/ksJ7sd+ay7tWhPRuomG1w8idTyXtzce23zOfBtOCHQakbavH2Uz6mh5lJYPFlMKW4c=
