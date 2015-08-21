@@ -68,7 +68,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @desc tests 404 bad response
 	 * @expectedException Exception
-	 * @expectedExceptionMessage The specified Transmission ID does not exist
+	 * @expectedExceptionMessage The specified resource does not exist
 	 */
 	public function testFindWith404Response() {
 		$mock = new MockPlugin();
@@ -80,7 +80,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @desc tests unknown bad response
 	 * @expectedException Exception
-	 * @expectedExceptionMessage Received bad response from Transmission API: 400
+	 * @expectedExceptionMessage Received bad response from Transmissions API: 400
 	 */
 	public function testFindWithOtherBadResponse() {
 		$mock = new MockPlugin();

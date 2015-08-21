@@ -6,18 +6,15 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
 /**
  * @desc SDK interface for managing transmissions
  */
-class Transmission {
-	/**
-	 * @desc singleton holder to create a guzzle http client 
-	 * @var \GuzzleHttp\Client
-	 */
-	private static $request;
+class Transmission extends APIResource {
+	
+	public static $endpoint = 'transmissions';
 	
 	/**
 	 * @desc Mapping for values passed into the send method to the values needed for the Transmission API 
 	 * @var array
 	 */
-	private static $parameterMappings = array(
+	protected static $parameterMappings = array(
 		'campaign'=>'campaign_id',
 		'metadata'=>'metadata',
 		'substitutionData'=>'substitution_data',
@@ -42,7 +39,7 @@ class Transmission {
 	 * @desc Sets up default structure and default values for the model that is acceptable by the API
 	 * @var array
 	 */
-	private static $structure = array(
+	protected static $structure = array(
 		'return_path'=>"default@sparkpostmail.com",
 		'content'=>array(
 			'html'=>null, 
@@ -51,48 +48,6 @@ class Transmission {
 		),
 		'use_draft_template'=>false
 	);
-	
-	/**
-	 * @desc Ensure that this class cannot be instansiated
-	 */
-	private function __construct() {}
-
-	/**
-	 * @desc Creates and returns a guzzle http client.
-	 * @return \GuzzleHttp\Client
-	 */
-	private static function getHttpClient() {
-		if(!isset(self::$request)) {
-			self::$request = new Client();
-		}
-		return self::$request;
-	}
-	
-	
-	/**
-	 * @desc Private Method helper to reference parameter mappings and set the right value for the right parameter
-	 */
-	private static function setMappedValue (&$model, $mapKey, $value) {
-		//get mapping
-		if(array_key_exists($mapKey, self::$parameterMappings)) {
-			$temp = &$model;
-			$path = explode('.', self::$parameterMappings[$mapKey]);
-			foreach( $path as $key ) {
-				$temp = &$temp[$key];
-			}
-			$temp = $value;
-		} //ignore anything we don't have a mapping for
-	}
-	
-	/**
-	 * @desc Private Method helper to get the configuration values to create the base url for the transmissions API
-	 * 
-	 * @return string base url for the transmissions API
-	 */
-	private static function getBaseUrl($config) {
-		$baseUrl = '/api/' . $config['version'] . '/transmissions';
-		return $config['protocol'] . '://' . $config['host'] . ($config['port'] ? ':' . $config['port'] : '') .  $baseUrl;
-	}
 	
 	/**
 	 * @desc Method for issuing POST request to the Transmissions API
@@ -120,80 +75,8 @@ class Transmission {
 	 *
 	 * @return array API repsonse represented as key-value pairs
 	 */
-	public static function send($transmissionConfig) {
-		$hostConfig = SparkPost::getConfig();
-		$request = self::getHttpClient();
-		
-		//create model from $transmissionConfig
-		$model = self::$structure;
-		foreach($transmissionConfig as $key=>$value) {
-			self::setMappedValue($model, $key, $value);
-		}
-		
-		//send the request
-		try {
-			$response = $request->post(self::getBaseUrl($hostConfig), array('authorization' => $hostConfig['key']), json_encode($model), array("verify"=>$hostConfig['strictSSL']))->send();
-			return $response->json();
-		} 
-		/*
-		 * Handles 4XX responses
-		 */
-		catch (ClientErrorResponseException $exception) {
-			$response = $exception->getResponse();
-			$responseArray = $response->json();
-			throw new \Exception(json_encode($responseArray['errors']));	
-		} 
-		/*
-		 * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
-		 */
-		catch (\Exception $exception) { 
-			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
-		}
-	}
-	
-	/**
-	 * @desc Private Method for issuing GET request to Transmissions API
-	 *
-	 *  This method is responsible for getting the collection _and_
-	 *  a specific entity from the Transmissions API
-	 *
-	 *  If TransmissionID parameter is omitted, then we fetch the collection
-	 *
-	 * @param string $transmissionID (optional) string Transmission ID of specific Transmission to retrieve
-	 * @return array Result set of transmissions found
-	 */
-	private static function fetch ($transmissionID = null) {
-		//figure out the url
-		$hostConfig = SparkPost::getConfig();
-		$url = self::getBaseUrl($hostConfig);
-		if (!is_null($transmissionID)){
-			$url .= '/'.$transmissionID;
-		}
-		
-		$request = self::getHttpClient();
-		
-		//make request
-		try {	
-			$response = $request->get($url, array('authorization' => $hostConfig['key']), array("verify"=>$hostConfig['strictSSL']))->send();
-			return $response->json();
-		} 
-		/*
-		 * Handles 4XX responses
-		 */
-		catch (ClientErrorResponseException $exception) {
-			$response = $exception->getResponse();
-			$statusCode = $response->getStatusCode();
-			if($statusCode === 404) {
-				throw new \Exception("The specified Transmission ID does not exist", 404);
-			}
-			throw new \Exception("Received bad response from Transmission API: ". $statusCode);
-		}
-		/*
-		 * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
-		 */
-		catch (\Exception $exception) {
-			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
-		}
+	public static function send( $transmissionConfig ) {
+		return self::sendRequest( $transmissionConfig );
 	}
 	
 	/**
@@ -202,8 +85,12 @@ class Transmission {
 	 *  
 	 * @return array result Set of transmissions
 	 */
-	public static function all() {
-		return self::fetch(); 
+	public static function all( $campaignID=null, $templateID=null ) {
+		$options = array();
+		if( $campaignID !== NULL ) $options['campaign_id'] = $campaignID;
+		if( $templateID !== NULL ) $options['template_id'] = $templateID;
+		
+		return self::fetchResource( null, $options ); 
 	}
 	
 	/**
@@ -214,7 +101,11 @@ class Transmission {
 	 * @return array result Single transmission represented in key-value pairs
 	 */
 	public static function find($transmissionID) {
-		return self::fetch($transmissionID);
+		return self::fetchResource($transmissionID);
+	}
+	
+	public static function delete( $transmissionID ) {
+		return self::deleteResource($transmissionID);
 	}
 }
 
