@@ -97,10 +97,8 @@ Once all the dependencies are installed, you can execute the unit tests using `v
 If you're interested in code coverage, you can add the `--coverage` flag for phpunit like so: ```phpunit --coverage-html test/output/report --bootstrap test/unit/bootstrap.php ./test/unit```
 
 ### Contributing
-Guidelines for adding issues
+1. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
+2. Fork [the repository](http://github.com/SparkPost/php-sparkpost) on GitHub to start making your changes to the **master** branch (or branch off of it).
+3. Write a test which shows that the bug was fixed or that the feature works as expected.
+4. Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to [AUTHORS](https://github.com/SparkPost/php-sparkpost/blob/master/AUTHORS.md).
 
-Submitting pull requests
-
-Signing our CLA
-
-Our coding standards

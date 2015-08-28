@@ -49,10 +49,6 @@ class Transmission {
 			'text'=>null,
 			'email_rfc822'=>null
 		),
-		'options'=>array(
-			'open_tracking'=>true, 
-			'click_tracking'=>true
-		),
 		'use_draft_template'=>false
 	);
 	
