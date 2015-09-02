@@ -20,6 +20,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedExceptionMessage No configuration has been provided
 	 */
 	public function testGetConfigEmptyException() {
+		SparkPost::unsetConfig();
 		SparkPost::getConfig();
 	}
 	
