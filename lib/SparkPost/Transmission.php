@@ -63,13 +63,16 @@ class Transmission {
 	 */
 	private static function getHttpClient() {
 		if(!isset(self::$request)) {
+			$composerFile = file_get_contents(dirname(__FILE__) . "/../../composer.json");
+			$composer = json_decode($composerFile, true);
+
 			$hostConfig = SparkPost::getConfig();
 			$defaultOptions = [
 				'base_uri'=>self::getBaseUrl($hostConfig),
 				'headers' =>[
 					'Authorization' => $hostConfig['key'],
 					'Content-Type' => 'application/json',
-					'User-Agent' => 'SparkPost PHP SDK v0.1.2'
+					'User-Agent' => 'php-sparkpost/' . $composer['version']
 				],
 				'verify' => $hostConfig['strictSSL']
 			];

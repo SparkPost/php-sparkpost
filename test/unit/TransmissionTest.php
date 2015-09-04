@@ -37,6 +37,22 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	 * @param {*}
 	 * @return ReflectionMethod
 	 */
+	private static function getProperty($name) {
+		$class = new \ReflectionClass('\SparkPost\Transmission');
+		$prop = $class->getProperty($name);
+		$prop->setAccessible(true);
+		return $prop->getValue();
+	}
+
+	/**
+	 * Allows access to private properties in the Transmission class
+	 *
+	 * This is needed to mock the GuzzleHttp\Client responses
+	 *
+	 * @param string $name
+	 * @param {*}
+	 * @return ReflectionMethod
+	 */
 	private static function setPrivateProperty($name, $value) {
 		$class = new \ReflectionClass('\SparkPost\Transmission');
 		$prop = $class->getProperty($name);
@@ -54,6 +70,23 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 		$this->mock = new MockHandler([]);
 		$handler = HandlerStack::create($this->mock);
 		self::setPrivateProperty('request', new Client(['handler' => $handler]));
+	}
+
+	/**
+	 * @desc tests the initial instantiaion of the guzzle client
+	 */
+	public function testGetHttpClient() {
+		// need to un-set it from the setup above
+		self::setPrivateProperty('request', null);
+
+		self::getMethod('getHttpClient')->invoke(null);
+		$requestObj = self::getProperty('request');
+		$this->assertInstanceOf('GuzzleHttp\Client', $requestObj);
+		$config = $requestObj->getConfig();
+		$this->assertRegExp('/php-sparkpost\/\d\.\d\.\d/', $config['headers']['User-Agent']);
+
+		// make sure that our actual configured instance isn't being used
+		self::setPrivateProperty('request', null);
 	}
 
 	/**
