@@ -3,19 +3,21 @@ namespace SparkPost\Test;
 
 use SparkPost\Transmission;
 use SparkPost\SparkPost;
-use Guzzle\Plugin\Mock\MockPlugin;
-use Guzzle\Http\Message\Response;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Response;
 
 
 class TransmissionTest extends \PHPUnit_Framework_TestCase {
-	
-	private $client = null;
-	
+
+	private $mock = null;
+
 	/**
 	 * Allows access to private methods in the Transmission class
-	 * 
+	 *
 	 * This is needed to mock the GuzzleHttp\Client responses
-	 * 
+	 *
 	 * @param string $name
 	 * @return ReflectionMethod
 	 */
@@ -25,17 +27,35 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 		$method->setAccessible(true);
 		return $method;
 	}
-	
+
+	/**
+	 * Allows access to private properties in the Transmission class
+	 *
+	 * This is needed to mock the GuzzleHttp\Client responses
+	 *
+	 * @param string $name
+	 * @param {*}
+	 * @return ReflectionMethod
+	 */
+	private static function setPrivateProperty($name, $value) {
+		$class = new \ReflectionClass('\SparkPost\Transmission');
+		$prop = $class->getProperty($name);
+		$prop->setAccessible(true);
+		$prop->setValue($value);
+	}
+
 	/**
 	 * (non-PHPdoc)
 	 * @before
 	 * @see PHPUnit_Framework_TestCase::setUp()
 	 */
 	public function setUp() {
-		SparkPost::setConfig(array('key'=>'blah')); 
-		$this->client = self::getMethod('getHttpClient')->invoke(null); //so we can bootstrap api responses
+		SparkPost::setConfig(['key'=>'blah']);
+		$this->mock = new MockHandler([]);
+		$handler = HandlerStack::create($this->mock);
+		self::setPrivateProperty('request', new Client(['handler' => $handler]));
 	}
-	
+
 	/**
 	 * @desc Ensures that the configuration class is not instantiable.
 	 */
@@ -43,102 +63,83 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 		$class = new \ReflectionClass('\SparkPost\Transmission');
 		$this->assertFalse($class->isInstantiable());
 	}
-	
+
 	/**
 	 * @desc tests happy path
 	 */
 	public function testAllWithGoodResponse() {
-		$mock = new MockPlugin();
-		$mock->addResponse(new Response(200, array(), '{"results":[{"test":"This is a test"}, {"test":"two"}]}'));
-		$this->client->addSubscriber($mock);
-		$this->assertEquals(array("results"=>array(array('test'=>'This is a test'), array('test'=>'two'))), Transmission::all());
+		$body = ["results"=>[['test'=>'This is a test'], ['test'=>'two']]];
+		$this->mock->append(new Response(200, [], json_encode($body)));
+		$this->assertEquals($body, Transmission::all());
 	}
-	
+
 	/**
 	 * @desc tests happy path
 	 */
 	public function testFindWithGoodResponse() {
-		$mock = new MockPlugin();
-		$mock->addResponse(new Response(200, array(), '{"results":[{"test":"This is a test"}]}'));
-		$this->client->addSubscriber($mock);
-		
-		$this->assertEquals(array("results"=>array(array('test'=>'This is a test'))), Transmission::find('someId'));
+		$body = ["results"=>[['test'=>'This is a test']]];
+		$this->mock->append(new Response(200, [], json_encode($body)));
+		$this->assertEquals($body, Transmission::find('someId'));
 	}
-	
+
 	/**
 	 * @desc tests 404 bad response
 	 * @expectedException Exception
-	 * @expectedExceptionMessage The specified Transmission ID does not exist
+ 	 * @expectedExceptionMessage The specified Transmission ID does not exist
 	 */
 	public function testFindWith404Response() {
-		$mock = new MockPlugin();
-		$mock->addResponse(new Response(404, array()));
-		$this->client->addSubscriber($mock);
+		$this->mock->append(new Response(404, []));
 		Transmission::find('someId');
 	}
-	
+
 	/**
 	 * @desc tests unknown bad response
 	 * @expectedException Exception
 	 * @expectedExceptionMessage Received bad response from Transmission API: 400
 	 */
 	public function testFindWithOtherBadResponse() {
-		$mock = new MockPlugin();
-		$mock->addResponse(new Response(400, array()));
-		$this->client->addSubscriber($mock);
+		$this->mock->append(new Response(400, []));
 		Transmission::find('someId');
 	}
-	
+
 	/**
 	 * @desc tests bad response
 	 * @expectedException Exception
-	 * @expectedExceptionMessageRegExp /Unable to contact Transmissions API:.* /
+ 	 * @expectedExceptionMessageRegExp /Unable to contact Transmissions API:.* /
 	 */
 	public function testFindForCatchAllException() {
-		$mock = new MockPlugin();
-		$mock->addResponse(new Response(500));
-		$this->client->addSubscriber($mock);
 		Transmission::find('someId');
 	}
-	
+
 	/**
 	 * @desc tests happy path
 	 */
 	public function testSuccessfulSend() {
-		$body = array("result"=>array("transmission_id"=>"11668787484950529"), "status"=>array("message"=> "ok","code"=> "1000"));
-		$mock = new MockPlugin();
-		$mock->addResponse(new Response(200, array(), json_encode($body)));
-		$this->client->addSubscriber($mock);
-		
-		
-		$this->assertEquals($body, Transmission::send(array('text'=>'awesome email')));
+		$body = ["result"=>["transmission_id"=>"11668787484950529"], "status"=>["message"=> "ok","code"=> "1000"]];
+		$this->mock->append(new Response(200, [], json_encode($body)));
+		$this->assertEquals($body, Transmission::send(['text'=>'awesome email']));
 	}
-	
+
 	/**
 	 * @desc tests bad response
 	 * @expectedException Exception
 	 * @expectedExceptionMessage ["This is a fake error"]
 	 */
 	public function testSendFor400Exception() {
-		$body = array('errors'=>array('This is a fake error'));
-		$mock = new MockPlugin();
-		$mock->addResponse(new Response(400, array(), json_encode($body)));
-		$this->client->addSubscriber($mock);
-		Transmission::send(array('text'=>'awesome email'));
+		$body = ['errors'=>['This is a fake error']];
+		$this->mock->append(new Response(400, [], json_encode($body)));
+		Transmission::send(['text'=>'awesome email']);
 	}
-	
-	
+
+
 	/**
 	* @desc tests bad response
 	* @expectedException Exception
 	* @expectedExceptionMessageRegExp /Unable to contact Transmissions API:.* /
 	*/
 	public function testSendForCatchAllException() {
-		$mock = new MockPlugin();
-		$mock->addResponse(new Response(500));
-		$this->client->addSubscriber($mock);
-		Transmission::send(array('text'=>'awesome email'));
+		Transmission::send(['text'=>'awesome email']);
 	}
-	
+
 }
 ?>

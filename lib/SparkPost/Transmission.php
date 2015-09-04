@@ -1,23 +1,23 @@
 <?php
 namespace SparkPost;
-use Guzzle\Http\Client;
-use Guzzle\Http\Exception\ClientErrorResponseException;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 /**
  * @desc SDK interface for managing transmissions
  */
 class Transmission {
 	/**
-	 * @desc singleton holder to create a guzzle http client 
+	 * @desc singleton holder to create a guzzle http client
 	 * @var \GuzzleHttp\Client
 	 */
 	private static $request;
-	
+
 	/**
-	 * @desc Mapping for values passed into the send method to the values needed for the Transmission API 
+	 * @desc Mapping for values passed into the send method to the values needed for the Transmission API
 	 * @var array
 	 */
-	private static $parameterMappings = array(
+	private static $parameterMappings = [
 		'campaign'=>'campaign_id',
 		'metadata'=>'metadata',
 		'substitutionData'=>'substitution_data',
@@ -36,22 +36,22 @@ class Transmission {
 		'trackOpens'=>'options.open_tracking',
 		'trackClicks'=>'options.click_tracking',
 		'useDraftTemplate'=>'use_draft_template'
-	);
-	
+	];
+
 	/**
 	 * @desc Sets up default structure and default values for the model that is acceptable by the API
 	 * @var array
 	 */
-	private static $structure = array(
+	private static $structure = [
 		'return_path'=>"default@sparkpostmail.com",
-		'content'=>array(
-			'html'=>null, 
+		'content'=>[
+			'html'=>null,
 			'text'=>null,
 			'email_rfc822'=>null
-		),
+		],
 		'use_draft_template'=>false
-	);
-	
+	];
+
 	/**
 	 * @desc Ensure that this class cannot be instansiated
 	 */
@@ -63,12 +63,22 @@ class Transmission {
 	 */
 	private static function getHttpClient() {
 		if(!isset(self::$request)) {
-			self::$request = new Client();
+			$hostConfig = SparkPost::getConfig();
+			$defaultOptions = [
+				'base_uri'=>self::getBaseUrl($hostConfig),
+				'headers' =>[
+					'Authorization' => $hostConfig['key'],
+					'Content-Type' => 'application/json',
+					'User-Agent' => 'SparkPost PHP SDK v0.1.2'
+				],
+				'verify' => $hostConfig['strictSSL']
+			];
+			self::$request = new Client($defaultOptions);
 		}
 		return self::$request;
 	}
-	
-	
+
+
 	/**
 	 * @desc Private Method helper to reference parameter mappings and set the right value for the right parameter
 	 */
@@ -83,24 +93,24 @@ class Transmission {
 			$temp = $value;
 		} //ignore anything we don't have a mapping for
 	}
-	
+
 	/**
 	 * @desc Private Method helper to get the configuration values to create the base url for the transmissions API
-	 * 
+	 *
 	 * @return string base url for the transmissions API
 	 */
 	private static function getBaseUrl($config) {
 		$baseUrl = '/api/' . $config['version'] . '/transmissions';
 		return $config['protocol'] . '://' . $config['host'] . ($config['port'] ? ':' . $config['port'] : '') .  $baseUrl;
 	}
-	
+
 	/**
 	 * @desc Method for issuing POST request to the Transmissions API
 	 *
 	 *  This method assumes that all the appropriate fields have
-	 *  been populated by the user through configuration.  Acceptable 
-	 *  configuration values are: 
-	 *  'campaign': string, 
+	 *  been populated by the user through configuration.  Acceptable
+	 *  configuration values are:
+	 *  'campaign': string,
 	 *	'metadata': array,
 	 *	'substitutionData': array,
 	 *	'description': string,
@@ -116,41 +126,44 @@ class Transmission {
 	 *	'template': string,
 	 *	'trackOpens': boolean,
 	 *	'trackClicks': boolean,
-	 *	'useDraftTemplate': boolean 
+	 *	'useDraftTemplate': boolean
 	 *
 	 * @return array API repsonse represented as key-value pairs
 	 */
 	public static function send($transmissionConfig) {
 		$hostConfig = SparkPost::getConfig();
 		$request = self::getHttpClient();
-		
+
 		//create model from $transmissionConfig
 		$model = self::$structure;
 		foreach($transmissionConfig as $key=>$value) {
 			self::setMappedValue($model, $key, $value);
 		}
-		
+
 		//send the request
 		try {
-			$response = $request->post(self::getBaseUrl($hostConfig), array('authorization' => $hostConfig['key']), json_encode($model), array("verify"=>$hostConfig['strictSSL']))->send();
-			return $response->json();
-		} 
+			$options = [
+				'json' => $model,
+			];
+			$response = $request->post(self::getBaseUrl($hostConfig) . '/', $options);
+			return json_decode($response->getBody(), true);
+		}
 		/*
 		 * Handles 4XX responses
 		 */
-		catch (ClientErrorResponseException $exception) {
+		catch (ClientException $exception) {
 			$response = $exception->getResponse();
-			$responseArray = $response->json();
-			throw new \Exception(json_encode($responseArray['errors']));	
-		} 
+			$responseArray = json_decode($response->getBody(), true);
+			throw new \Exception(json_encode($responseArray['errors']));
+		}
 		/*
 		 * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
 		 */
-		catch (\Exception $exception) { 
+		catch (\Exception $exception) {
 			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
 		}
 	}
-	
+
 	/**
 	 * @desc Private Method for issuing GET request to Transmissions API
 	 *
@@ -163,24 +176,25 @@ class Transmission {
 	 * @return array Result set of transmissions found
 	 */
 	private static function fetch ($transmissionID = null) {
-		//figure out the url
 		$hostConfig = SparkPost::getConfig();
-		$url = self::getBaseUrl($hostConfig);
+		//figure out the url
+		$url = self::getBaseUrl($hostConfig) . '/';
 		if (!is_null($transmissionID)){
-			$url .= '/'.$transmissionID;
+			$url .= $transmissionID;
 		}
-		
+
 		$request = self::getHttpClient();
-		
+
 		//make request
-		try {	
-			$response = $request->get($url, array('authorization' => $hostConfig['key']), array("verify"=>$hostConfig['strictSSL']))->send();
-			return $response->json();
-		} 
+		try {
+			$response = $request->get($url);
+			$body = $response->getBody();
+			return json_decode($body, true);
+		}
 		/*
 		 * Handles 4XX responses
 		 */
-		catch (ClientErrorResponseException $exception) {
+		catch (ClientException $exception) {
 			$response = $exception->getResponse();
 			$statusCode = $response->getStatusCode();
 			if($statusCode === 404) {
@@ -195,21 +209,21 @@ class Transmission {
 			throw new \Exception('Unable to contact Transmissions API: '. $exception->getMessage());
 		}
 	}
-	
+
 	/**
 	 * @desc Method for retrieving information about all transmissions
 	 *  Wrapper method for a cleaner interface
-	 *  
+	 *
 	 * @return array result Set of transmissions
 	 */
 	public static function all() {
-		return self::fetch(); 
+		return self::fetch();
 	}
-	
+
 	/**
 	 * @desc Method for retrieving information about a single transmission
  	 *  Wrapper method for a cleaner interface
- 	 *  
+ 	 *
 	 * @param string $transmissionID Identifier of the transmission to be found
 	 * @return array result Single transmission represented in key-value pairs
 	 */
