@@ -1,18 +1,18 @@
 <?php
 namespace SparkPost\Test;
 
-use SparkPost\Transmission;
+use SparkPost\APIResource;
 use SparkPost\SparkPost;
 use Guzzle\Plugin\Mock\MockPlugin;
 use Guzzle\Http\Message\Response;
 
 
-class TransmissionTest extends \PHPUnit_Framework_TestCase {
+class APIResourceTest extends \PHPUnit_Framework_TestCase {
 	
 	private $client = null;
 	
 	/**
-	 * Allows access to private methods in the Transmission class
+	 * Allows access to private methods
 	 * 
 	 * This is needed to mock the GuzzleHttp\Client responses
 	 * 
@@ -20,7 +20,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	 * @return ReflectionMethod
 	 */
 	private static function getMethod($name) {
-		$class = new \ReflectionClass('\SparkPost\Transmission');
+		$class = new \ReflectionClass('\SparkPost\APIResource');
 		$method = $class->getMethod($name);
 		$method->setAccessible(true);
 		return $method;
@@ -34,6 +34,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	public function setUp() {
 		SparkPost::setConfig(array('key'=>'blah')); 
 		$this->client = self::getMethod('getHttpClient')->invoke(null); //so we can bootstrap api responses
+		APIResource::$endpoint = 'someValidEndpoint'; // when using APIResource directly an endpoint needs to be set.
 	}
 	
 	/**
@@ -47,22 +48,22 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	/**
 	 * @desc tests happy path
 	 */
-	public function testAllWithGoodResponse() {
+	public function testFetchWithGoodResponse() {
 		$mock = new MockPlugin();
 		$mock->addResponse(new Response(200, array(), '{"results":[{"test":"This is a test"}, {"test":"two"}]}'));
 		$this->client->addSubscriber($mock);
-		$this->assertEquals(array("results"=>array(array('test'=>'This is a test'), array('test'=>'two'))), Transmission::all());
+		$this->assertEquals(array("results"=>array(array('test'=>'This is a test'), array('test'=>'two'))), APIResource::fetchResource());
 	}
 	
 	/**
 	 * @desc tests happy path
 	 */
-	public function testFindWithGoodResponse() {
+	public function testDeleteWithGoodResponse() {
 		$mock = new MockPlugin();
 		$mock->addResponse(new Response(200, array(), '{"results":[{"test":"This is a test"}]}'));
 		$this->client->addSubscriber($mock);
 		
-		$this->assertEquals(array("results"=>array(array('test'=>'This is a test'))), Transmission::find('someId'));
+		$this->assertEquals(array("results"=>array(array('test'=>'This is a test'))), APIResource::deleteResource('someId'));
 	}
 	
 	/**
@@ -70,35 +71,35 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 	 * @expectedException Exception
 	 * @expectedExceptionMessage The specified resource does not exist
 	 */
-	public function testFindWith404Response() {
+	public function testFetchWith404Response() {
 		$mock = new MockPlugin();
 		$mock->addResponse(new Response(404, array()));
 		$this->client->addSubscriber($mock);
-		Transmission::find('someId');
+		APIResource::fetchResource('someId');
 	}
 	
 	/**
 	 * @desc tests unknown bad response
 	 * @expectedException Exception
-	 * @expectedExceptionMessage Received bad response from Transmissions API: 400
+	 * @expectedExceptionMessage Received bad response from SomeValidEndpoint API: 400
 	 */
-	public function testFindWithOtherBadResponse() {
+	public function testFetchWithOtherBadResponse() {
 		$mock = new MockPlugin();
 		$mock->addResponse(new Response(400, array()));
 		$this->client->addSubscriber($mock);
-		Transmission::find('someId');
+		APIResource::fetchResource('someId');
 	}
 	
 	/**
 	 * @desc tests bad response
 	 * @expectedException Exception
-	 * @expectedExceptionMessageRegExp /Unable to contact Transmissions API:.* /
+	 * @expectedExceptionMessageRegExp /Unable to contact SomeValidEndpoint API:.* /
 	 */
-	public function testFindForCatchAllException() {
+	public function testFetchForCatchAllException() {
 		$mock = new MockPlugin();
 		$mock->addResponse(new Response(500));
 		$this->client->addSubscriber($mock);
-		Transmission::find('someId');
+		APIResource::fetchResource('someId');
 	}
 	
 	/**
@@ -111,7 +112,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 		$this->client->addSubscriber($mock);
 		
 		
-		$this->assertEquals($body, Transmission::send(array('text'=>'awesome email')));
+		$this->assertEquals($body, APIResource::sendRequest(array('text'=>'awesome email')));
 	}
 	
 	/**
@@ -124,21 +125,20 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 		$mock = new MockPlugin();
 		$mock->addResponse(new Response(400, array(), json_encode($body)));
 		$this->client->addSubscriber($mock);
-		Transmission::send(array('text'=>'awesome email'));
+		APIResource::sendRequest(array('text'=>'awesome email'));
 	}
 	
 	
 	/**
 	* @desc tests bad response
 	* @expectedException Exception
-	* @expectedExceptionMessageRegExp /Unable to contact Transmissions API:.* /
+	* @expectedExceptionMessageRegExp /Unable to contact SomeValidEndpoint API:.* /
 	*/
 	public function testSendForCatchAllException() {
 		$mock = new MockPlugin();
 		$mock->addResponse(new Response(500));
 		$this->client->addSubscriber($mock);
-		Transmission::send(array('text'=>'awesome email'));
+		APIResource::sendRequest(array('text'=>'awesome email'));
 	}
 	
 }
-?>

@@ -51,6 +51,10 @@ class SparkPost {
 		}
 		return self::$config;
 	}
+	
+	public static function unsetConfig() {
+		self::$config = NULL;
+	}
 }
 
 ?>
