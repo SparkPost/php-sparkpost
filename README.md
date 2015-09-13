@@ -9,11 +9,12 @@ To get an API Key, please log in to your SparkPost account and generate one in t
 
 ## Installation
 The recommended way to install the SparkPost PHP SDK is through composer.
-```
+
 # Requirements
 PHP version 5.5 or later
-```
+
 # Install Composer
+```
 curl -sS https://getcomposer.org/installer | php
 ```
 Next, run the Composer command to install the SparkPost PHP SDK:
@@ -31,14 +32,14 @@ SparkPost::setConfig(["key"=>"YOUR API KEY"]);
 
 try {
 	// Build your email and send it!
-	Transmission::send(array('campaign'=>'first-mailing',
+	Transmission::send(['campaign'=>'first-mailing',
 		'from'=>'you@your-company.com',
 	    'subject'=>'First SDK Mailing',
 	    'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
 	    'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
-	    'substitutionData'=>array('name'=>'YOUR FIRST NAME'),
-	    'recipients'=>array(array('address'=>array('name'=>'YOUR FULL NAME', 'email'=>'YOUR EMAIL ADDRESS' )))
-    ));
+	    'substitutionData'=>['name'=>'YOUR FIRST NAME'],
+	    'recipients'=>[['address'=>['name'=>'YOUR FULL NAME', 'email'=>'YOUR EMAIL ADDRESS']]]
+    ]);
 
     echo 'Woohoo! You just sent your first mailing!';
 } catch (Exception $err) {
