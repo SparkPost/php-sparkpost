@@ -13,7 +13,6 @@ SparkPost::setConfig($httpAdapter, ['key'=>$key]);
 
 try {
 	$results = Transmission::all();
-	echo "it returned!!!";
 	var_dump($results);
 	echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
