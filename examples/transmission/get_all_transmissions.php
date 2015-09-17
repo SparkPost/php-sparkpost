@@ -7,13 +7,12 @@ use SparkPost\Transmission;
 use GuzzleHttp\Client;
 use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 
-$key = 'YOURAPIKEY';
+$key = 'YOUR API KEY';
 $httpAdapter = new Guzzle6HttpAdapter(new Client());
-SparkPost::setConfig($httpAdapter, ['key'=>$key]);
+SparkPost::configure($httpAdapter, ['key'=>$key]);
 
 try {
 	$results = Transmission::all();
-	var_dump($results);
 	echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
 	echo $exception->getMessage();

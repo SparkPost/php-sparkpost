@@ -58,7 +58,10 @@ class APIResource {
 
 	}
 
-	protected static function buildRequestModel( $requestConfig, $model=array() ) {
+  /**
+   * TODO: Docs
+   */
+	protected static function buildRequestModel(Array $requestConfig, Array $model=[] ) {
 		foreach($requestConfig as $key=>$value) {
 			self::setMappedValue($model, $key, $value);
 		}
@@ -69,14 +72,14 @@ class APIResource {
 	 * TODO: Docs
 	 */
 	public static function create(Array $body=[]) {
-		return self::callResource( 'post', '/', ['body'=>$options]);
+		return self::callResource( 'post', null, ['body'=>$body]);
 	}
 
   /**
 	 * TODO: Docs
 	 */
-	public static function update(String $resourcePath, Array $body=[]) {
-		return self::callResource( 'post', $resourcePath, ['body'=>$options]);
+	public static function update( $resourcePath, Array $body=[]) {
+		return self::callResource( 'put', $resourcePath, ['body'=>$body]);
 	}
 
 	/**
@@ -86,8 +89,8 @@ class APIResource {
 	 * @param array $options (optional) query string parameters
 	 * @return array Result set of transmissions found
 	 */
-	public static function get(String $resourcePath=null, Array $options=[] ) {
-		return self::callResource( 'get', $resourcePath, $options );
+	public static function get( $resourcePath=null, Array $query=[] ) {
+		return self::callResource( 'get', $resourcePath, ['query'=>$query] );
 	}
 
 	/**
@@ -97,8 +100,8 @@ class APIResource {
 	 * @param array $options (optional) query string parameters
 	 * @return array Result set of transmissions found
 	 */
-	public static function delete(String $resourcePath=null, Array $options=[] ) {
-		return self::callResource( 'delete', $resourcePath, $options );
+	public static function delete( $resourcePath=null, Array $query=[] ) {
+		return self::callResource( 'delete', $resourcePath, ['query'=>$query] );
 	}
 
 	/**
@@ -121,10 +124,10 @@ class APIResource {
 			throw new \Exception('Invalid resource action');
 		}
 
-		$url = '/'.static::$endpoint;
+		$url = '/' . static::$endpoint . '/';
 		$body = null;
 		if (!is_null($resourcePath)){
-			$url .= $url.$resourcePath;
+			$url .= $resourcePath;
 		}
 
 		// untested:
@@ -135,7 +138,7 @@ class APIResource {
 
 		if( !empty($options['body']) ) {
 			$model = static::$structure;
-			$requestModel = self::buildRequestModel( $requestConfig, $options['body'] );
+			$requestModel = self::buildRequestModel( $options['body'], $model );
 			$body = json_encode($requestModel);
 		}
 
@@ -147,15 +150,15 @@ class APIResource {
 		}
 		/*
 		 * Handles 4XX responses
-		 */
-		// catch (HttpAdapterException $exception) {
-		// 	$response = $exception->getResponse();
-		// 	$statusCode = $response->getStatusCode();
-		// 	if($statusCode === 404) {
-		// 		throw new \Exception("The specified resource does not exist", 404);
-		// 	}
-		// 	throw new \Exception("Received bad response from ".ucfirst(static::$endpoint)." API: ". $statusCode );
-		// }
+     */
+    catch (HttpAdapterException $exception) {
+    	$response = $exception->getBody();
+    	$statusCode = $response->getStatusCode();
+			if($statusCode === 404) {
+				throw new \Exception("The specified resource does not exist", 404);
+			}
+			throw new \Exception("Received bad response from ".ucfirst(static::$endpoint)." API: ". $statusCode );
+		}
 		/*
 		 * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
 		 */

@@ -3,12 +3,16 @@ namespace Examples\Transmisson;
 require_once (dirname(__FILE__).'/../bootstrap.php');
 use SparkPost\SparkPost;
 use SparkPost\Transmission;
+use GuzzleHttp\Client;
+use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 
-$key = 'YOURAPIKEY'; 
-SparkPost::setConfig(array('key'=>$key));
+$key = 'YOUR API KEY';
+$httpAdapter = new Guzzle6HttpAdapter(new Client());
+SparkPost::configure($httpAdapter, ['key'=>$key]);
+
 
 try {
-	$results = Transmission::find('Your Transmission Id');
+	$results = Transmission::find('Your Transmission ID');
 	echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
 	echo $exception->getMessage();
