@@ -8,15 +8,15 @@ use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 
 $key = 'YOUR API KEY';
 $httpAdapter = new Guzzle6HttpAdapter(new Client());
-SparkPost::configure($httpAdapter, ['key'=>$key]);
+$sparky = new SparkPost($httpAdapter, ['key'=>$key]);
 
 try {
-	$results = Transmission::send([
+	$results = $sparky->transmission->send([
 		'recipients'=>[
 			[
 			  'address'=>[
 			    'email'=>'john.doe@example.com'
-			  ]
+        ]
 			]
 		],
 		'rfc822'=>"Content-Type: text/plain\nFrom: From Envelope <from@sparkpostbox.com>\nSubject: Example Email\n\nHello World"

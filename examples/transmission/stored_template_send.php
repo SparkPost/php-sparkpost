@@ -8,19 +8,19 @@ use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 
 $key = 'YOUR API KEY';
 $httpAdapter = new Guzzle6HttpAdapter(new Client());
-SparkPost::configure($httpAdapter, ['key'=>$key]);
+$sparky = new SparkPost($httpAdapter, ['key'=>$key]);
 
 try {
-	$results = Transmission::send([
+	$results = $sparky->transmission->send([
 		"from"=>"From Envelope <from@sparkpostbox.com>",
 		"recipients"=>[
 			[
 			"address"=>[
 					"email"=>"john.doe@example.com"
-				]
+        ]
       ]
 		],
-		"template"=>"my-template"
+		"template"=>"my-first-email"
 	]);
 	echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {

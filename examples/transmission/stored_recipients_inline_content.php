@@ -8,11 +8,11 @@ use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 
 $key = 'YOUR API KEY';
 $httpAdapter = new Guzzle6HttpAdapter(new Client());
-SparkPost::configure($httpAdapter, ['key'=>$key]);
+$sparky = new SparkPost($httpAdapter, ['key'=>$key]);
 
 try {
 
-	$results = Transmission::send([
+	$results = $sparky->transmission->send([
 		"campaign"=>"my-campaign",
 		"from"=>"From Envelope <from@sparkpostbox.com>",
 		"html"=>"<p>Hello World! Your name is: {{name}}</p>",

@@ -8,13 +8,13 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
  */
 class Transmission extends APIResource {
 
-	public static $endpoint = 'transmissions';
+	public $endpoint = 'transmissions';
 
 	/**
 	 * @desc Mapping for values passed into the send method to the values needed for the Transmission API
 	 * @var array
 	 */
-	protected static $parameterMappings = array(
+	protected static $parameterMappings = [
 		'campaign'=>'campaign_id',
 		'metadata'=>'metadata',
 		'substitutionData'=>'substitution_data',
@@ -33,21 +33,21 @@ class Transmission extends APIResource {
 		'trackOpens'=>'options.open_tracking',
 		'trackClicks'=>'options.click_tracking',
 		'useDraftTemplate'=>'use_draft_template'
-	);
+	];
 
 	/**
 	 * @desc Sets up default structure and default values for the model that is acceptable by the API
 	 * @var array
 	 */
-	protected static $structure = array(
+	protected static $structure = [
 		'return_path'=>"default@sparkpostmail.com",
-		'content'=>array(
+		'content'=>[
 			'html'=>null,
 			'text'=>null,
 			'email_rfc822'=>null
-		),
+		],
 		'use_draft_template'=>false
-	);
+	];
 
 	/**
 	 * @desc Method for issuing POST request to the Transmissions API
@@ -75,8 +75,8 @@ class Transmission extends APIResource {
 	 *
 	 * @return array API repsonse represented as key-value pairs
 	 */
-	public static function send( $transmissionConfig ) {
-		return self::create( $transmissionConfig );
+	public function send( $transmissionConfig ) {
+		return $this->create( $transmissionConfig );
 	}
 
 	/**
@@ -85,12 +85,12 @@ class Transmission extends APIResource {
 	 *
 	 * @return array result Set of transmissions
 	 */
-	public static function all( $campaignID=null, $templateID=null ) {
-		$options = array();
+	public function all( $campaignID=null, $templateID=null ) {
+		$options = [];
 		if( $campaignID !== NULL ) $options['campaign_id'] = $campaignID;
 		if( $templateID !== NULL ) $options['template_id'] = $templateID;
 
-		return self::get( null, $options );
+		return $this->get( null, $options );
 	}
 
 	/**
@@ -100,8 +100,8 @@ class Transmission extends APIResource {
 	 * @param string $transmissionID Identifier of the transmission to be found
 	 * @return array result Single transmission represented in key-value pairs
 	 */
-	public static function find($transmissionID) {
-		return self::get($transmissionID);
+	public function find($transmissionID) {
+		return $this->get($transmissionID);
 	}
 }
 

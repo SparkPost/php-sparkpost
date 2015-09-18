@@ -1,5 +1,7 @@
 <?php
 namespace SparkPost;
+use Ivory\HttpAdapter\Configuration;
+use Ivory\HttpAdapter\HttpAdapterInterface;
 use Ivory\HttpAdapter\HttpAdapterException;
 
 /**
@@ -9,31 +11,152 @@ class APIResource {
 
 	/**
 	 * @desc name of the API endpoint, mainly used for URL construction.
+   * This is public to provide an interface
+   *
 	 * @var string
 	 */
-	public static $endpoint;
+	public $endpoint;
 
 	/**
 	 * @desc Mapping for values passed into the send method to the values needed for the respective API
 	 * @var array
 	 */
-	protected static $parameterMappings = array();
+	protected static $parameterMappings = [];
 
 	/**
 	 * @desc Sets up default structure and default values for the model that is acceptable by the API
 	 * @var array
 	 */
-	protected static $structure = array();
+	protected static $structure = [];
+
+  /**
+   * TODO: Docs
+   */
+  private $config;
+
+  /**
+   * TODO: Docs
+   */
+  private $httpAdapter;
+
+  /**
+   * TODO: Docs
+   */
+  private static $apiDefaults = [
+		'host'=>'api.sparkpost.com',
+		'protocol'=>'https',
+		'port'=>443,
+		'strictSSL'=>true,
+		'key'=>'',
+		'version'=>'v1'
+	];
 
 	/**
-	 * @desc Ensure that this class cannot be instansiated
+	 * @desc TODO: Docs
 	 */
-	private function __construct() {}
+	public function __construct($httpAdapter, $config) {
+    //config needs to be setup before adapter because of default adapter settings
+    $this->setConfig($config);
+    $this->setHttpAdapter($httpAdapter);
+  }
+
+  /**
+	 * @desc Merges passed in headers with default headers for http requests
+	 * @return Array - headers to be set on http requests
+	 */
+	private function getHttpHeaders(Array $headers = null) {
+		$defaultOptions = [
+			'Authorization' => $this->config['key'],
+			'Content-Type' => 'application/json',
+		];
+
+		// Merge passed in headers with defaults
+		if (!is_null($headers)) {
+			foreach ($headers as $header => $value) {
+				$defaultOptions[$header] = $value;
+			}
+		}
+		return $defaultOptions;
+	}
+
+
+  /**
+	 * @desc Helper function for getting the configuration for http requests
+	 * @return \Ivory\HttpAdapter\Configuration
+	 */
+	 // TODO: Need to figure out how to set strictSSL
+  private function getHttpConfig($config) {
+		// get composer.json to extract version number
+		$composerFile = file_get_contents(dirname(__FILE__) . "/../../composer.json");
+		$composer = json_decode($composerFile, true);
+
+		// create Configuration for http adapter
+		$httpConfig = new Configuration();
+		$baseUrl = $config['protocol'] . '://' . $config['host'] . ($config['port'] ? ':' . $config['port'] : '') . '/api/' . $config['version'];
+		$httpConfig->setBaseUri($baseUrl);
+		$httpConfig->setUserAgent('php-sparkpost/' . $composer['version']);
+		return $httpConfig;
+	}
+
+  /**
+   * TODO: Docs
+   */
+  public function setHttpAdapter($httpAdapter) {
+  	if (!$httpAdapter instanceOf HttpAdapterInterface) {
+			throw new \Exception('$httpAdapter paramter must be a valid Ivory\HttpAdapter');
+		}
+
+    $this->httpAdapter = $httpAdapter;
+    $this->httpAdapter->setConfiguration($this->getHttpConfig($this->config));
+  }
+
+	/**
+	 * Retrieves the Http Adapter that was previously setup by the user
+	 * @throws \Exception
+	 */
+	public function getHttpAdapter() {
+		if ($this->httpAdapter === null) {
+			throw new \Exception('No Http Adapter has been provided');
+		}
+		return $this->httpAdapter;
+	}
+
+	/**
+	 * Allows the user to pass in values to override the defaults and set their API key
+	 * @param Array $settingsConfig - Hashmap that contains config values for the SDK to connect to SparkPost
+	 * @throws \Exception
+	 */
+	public function setConfig(Array $settingsConfig) {
+		// Validate API key because its required
+    if (!isset($settingsConfig['key']) || empty(trim($settingsConfig['key']))){
+			throw new \Exception('You must provide an API key');
+    }
+
+		$this->config = self::$apiDefaults;
+
+    // set config, overriding defaults
+		foreach ($settingsConfig as $configOption => $configValue) {
+			if(key_exists($configOption, $this->config)) {
+				$this->config[$configOption] = $configValue;
+			}
+		}
+	}
+
+	/**
+	 * Retrieves the configuration that was previously setup by the user
+	 * @throws \Exception
+	 */
+	public function getConfig() {
+		if ($this->config === null) {
+			throw new \Exception('No configuration has been provided');
+		}
+		return $this->config;
+	}
 
 	/**
 	 * @desc Private Method helper to reference parameter mappings and set the right value for the right parameter
 	 */
-	protected static function setMappedValue (&$model, $mapKey, $value) {
+	protected function setMappedValue (&$model, $mapKey, $value) {
 		//get mapping
 		if( empty(static::$parameterMappings) ) {
 			// if parameterMappings is empty we can assume that no wrapper is defined
@@ -61,9 +184,9 @@ class APIResource {
   /**
    * TODO: Docs
    */
-	protected static function buildRequestModel(Array $requestConfig, Array $model=[] ) {
-		foreach($requestConfig as $key=>$value) {
-			self::setMappedValue($model, $key, $value);
+	protected function buildRequestModel(Array $requestConfig, Array $model=[] ) {
+		foreach($requestConfig as $key => $value) {
+			$this->setMappedValue($model, $key, $value);
 		}
 		return $model;
 	}
@@ -71,15 +194,15 @@ class APIResource {
 	/**
 	 * TODO: Docs
 	 */
-	public static function create(Array $body=[]) {
-		return self::callResource( 'post', null, ['body'=>$body]);
+	public function create(Array $body=[]) {
+		return $this->callResource( 'post', null, ['body'=>$body]);
 	}
 
   /**
 	 * TODO: Docs
 	 */
-	public static function update( $resourcePath, Array $body=[]) {
-		return self::callResource( 'put', $resourcePath, ['body'=>$body]);
+	public function update( $resourcePath, Array $body=[]) {
+		return $this->callResource( 'put', $resourcePath, ['body'=>$body]);
 	}
 
 	/**
@@ -89,8 +212,8 @@ class APIResource {
 	 * @param array $options (optional) query string parameters
 	 * @return array Result set of transmissions found
 	 */
-	public static function get( $resourcePath=null, Array $query=[] ) {
-		return self::callResource( 'get', $resourcePath, ['query'=>$query] );
+	public function get( $resourcePath=null, Array $query=[] ) {
+		return $this->callResource( 'get', $resourcePath, ['query'=>$query] );
 	}
 
 	/**
@@ -100,9 +223,42 @@ class APIResource {
 	 * @param array $options (optional) query string parameters
 	 * @return array Result set of transmissions found
 	 */
-	public static function delete( $resourcePath=null, Array $query=[] ) {
-		return self::callResource( 'delete', $resourcePath, ['query'=>$query] );
+	public function delete( $resourcePath=null, Array $query=[] ) {
+		return $this->callResource( 'delete', $resourcePath, ['query'=>$query] );
 	}
+
+
+  /**
+   * TODO: docs
+   */
+  private function buildUrl($resourcePath, $options) {
+    $url = join(['/', $this->endpoint, '/']);
+    if (!is_null($resourcePath)){
+      $url .= $resourcePath;
+    }
+
+    if( !empty($options['query'])) {
+      $queryString = http_build_query($options['query']);
+      $url .= '?'.$queryString;
+    }
+
+    return $url;
+  }
+
+
+  /**
+   * TODO: Docs
+   */
+  private function buildBody($options) {
+    $body = null;
+    if( !empty($options['body']) ) {
+			$model = static::$structure;
+			$requestModel = $this->buildRequestModel( $options['body'], $model );
+			$body = json_encode($requestModel);
+		}
+    return $body;
+  }
+
 
 	/**
 	 * @desc Private Method for issuing GET and DELETE request to current API endpoint
@@ -117,35 +273,19 @@ class APIResource {
 	 * @param array $options (optional) query string parameters
 	 * @return array Result set of action performed on resource
 	 */
-	private static function callResource( $action, $resourcePath=null, $options=[] ) {
+	private function callResource( $action, $resourcePath=null, $options=[] ) {
 		$action = strtoupper($action); // normalize
 
 		if( !in_array($action, ['POST', 'PUT', 'GET', 'DELETE'])) {
 			throw new \Exception('Invalid resource action');
 		}
 
-		$url = '/' . static::$endpoint . '/';
-		$body = null;
-		if (!is_null($resourcePath)){
-			$url .= $resourcePath;
-		}
-
-		// untested:
-		if( !empty($options['query'])) {
-			$queryString = http_build_query($options['query']);
-			$url .= '?'.$queryString;
-		}
-
-		if( !empty($options['body']) ) {
-			$model = static::$structure;
-			$requestModel = self::buildRequestModel( $options['body'], $model );
-			$body = json_encode($requestModel);
-		}
+		$url = $this->buildUrl($resourcePath, $options);
+		$body = $this->buildBody($options);
 
 		//make request
 		try {
-			$httpAdapter = SparkPost::getHttpAdapter();
-			$response = SparkPost::getHttpAdapter()->send($url, $action, SparkPost::getHttpHeaders(), $body);
+			$response = $this->httpAdapter->send($url, $action, $this->getHttpHeaders(), $body);
 			return json_decode($response->getBody()->getContents(), true);
 		}
 		/*
@@ -157,13 +297,13 @@ class APIResource {
 			if($statusCode === 404) {
 				throw new \Exception("The specified resource does not exist", 404);
 			}
-			throw new \Exception("Received bad response from ".ucfirst(static::$endpoint)." API: ". $statusCode );
+			throw new \Exception("Received bad response from ".ucfirst($this->endpoint)." API: ". $statusCode );
 		}
 		/*
 		 * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
 		 */
 		catch (\Exception $exception) {
-			throw new \Exception("Unable to contact ".ucfirst(static::$endpoint)." API: ". $exception->getMessage());
+			throw new \Exception("Unable to contact ".ucfirst($this->endpoint)." API: ". $exception->getMessage());
 		}
 	}
 

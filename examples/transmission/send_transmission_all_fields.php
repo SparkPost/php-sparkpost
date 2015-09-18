@@ -8,12 +8,12 @@ use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 
 $key = 'YOUR API KEY';
 $httpAdapter = new Guzzle6HttpAdapter(new Client());
-SparkPost::configure($httpAdapter, ['key'=>$key]);
+$sparky = new SparkPost($httpAdapter, ['key'=>$key]);
 
 // TODO: update all from emails to = sandbox domain
 
 try{
-	$results = Transmission::send([
+	$results = $sparky->transmission->send([
 	  "campaign"=>"my-campaign",
 	  "metadata"=>[
 	   "sample_campaign"=>true,
@@ -37,12 +37,11 @@ try{
 	    [
 	      "address"=>[
 	        "email"=>"john.doe@example.com"
-	      ]
+        ]
 	    ]
 	  ]
 	]);
 
-  var_dump($results);
 	echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
 	echo $exception->getMessage();
