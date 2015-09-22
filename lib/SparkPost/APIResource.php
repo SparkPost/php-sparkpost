@@ -111,17 +111,6 @@ class APIResource {
   }
 
 	/**
-	 * Retrieves the Http Adapter that was previously setup by the user
-	 * @throws \Exception
-	 */
-	public function getHttpAdapter() {
-		if ($this->httpAdapter === null) {
-			throw new \Exception('No Http Adapter has been provided');
-		}
-		return $this->httpAdapter;
-	}
-
-	/**
 	 * Allows the user to pass in values to override the defaults and set their API key
 	 * @param Array $settingsConfig - Hashmap that contains config values for the SDK to connect to SparkPost
 	 * @throws \Exception
@@ -140,17 +129,6 @@ class APIResource {
 				$this->config[$configOption] = $configValue;
 			}
 		}
-	}
-
-	/**
-	 * Retrieves the configuration that was previously setup by the user
-	 * @throws \Exception
-	 */
-	public function getConfig() {
-		if ($this->config === null) {
-			throw new \Exception('No configuration has been provided');
-		}
-		return $this->config;
 	}
 
 	/**

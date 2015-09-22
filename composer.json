@@ -20,7 +20,8 @@
     "autoload": {
     	"psr-4": {
     		"SparkPost\\": "lib/SparkPost/",
-    		"SparkPost\\SendGridCompatibility\\": "lib/SendGridCompatibility/"
+    		"SparkPost\\SendGridCompatibility\\": "lib/SendGridCompatibility/",
+        "SparkPost\\Test\\TestUtils\\": "test/unit/TestUtils/"
     	}
     }
 }
