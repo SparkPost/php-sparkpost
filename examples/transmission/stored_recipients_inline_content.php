@@ -2,7 +2,6 @@
 namespace Examples\Transmisson;
 require_once (dirname(__FILE__).'/../bootstrap.php');
 use SparkPost\SparkPost;
-use SparkPost\Transmission;
 use GuzzleHttp\Client;
 use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 

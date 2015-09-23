@@ -13,7 +13,7 @@ The recommended way to install the SparkPost PHP SDK is through composer.
 # Install Composer
 curl -sS https://getcomposer.org/installer | php
 ```
-Next, run the Composer command to install the SparkPost PHP SDK: 
+Next, run the Composer command to install the SparkPost PHP SDK:
 ```
 composer require sparkpost/php-sparkpost
 ```
@@ -22,25 +22,53 @@ After installing, you need to require Composer's autoloader:
 require 'vendor/autoload.php';
 ```
 
+## Setting up a Request Adapter
+Because of dependency collision, we have opted to use a request adapter rather than
+requiring a request library.  This means that your application will need to pass in
+a request adapter to the constructor of the SparkPost Library.  We use the [Ivory HTTP Adapter] (https://github.com/egeloen/ivory-http-adapter) in SparkPost. Please visit their repo
+for a list of supported adapters.  If you don't currently use a request library, you will
+need to require one and create an adapter from it and pass it along.  The example below uses the
+GuzzleHttp Client Library.
+
+An Adapter can be setup like so:
+```
+use SparkPost\SparkPost;
+use GuzzleHttp\Client;
+use Ivory\HttpAdapter\Guzzle6HttpAdapter;
+
+$httpAdapter = new Guzzle6HttpAdapter(new Client());
+$sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
+```
+
 ## Getting Started:  Your First Mailing
 ```
-SparkPost::setConfig(["key"=>"YOUR API KEY"]);
+use SparkPost\SparkPost;
+use GuzzleHttp\Client;
+use Ivory\HttpAdapter\Guzzle6HttpAdapter;
+
+$httpAdapter = new Guzzle6HttpAdapter(new Client());
+$sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
 
 try {
-	// Build your email and send it!
-	Transmission::send(array('campaign'=>'first-mailing', 
-		'from'=>'you@your-company.com',
-	    'subject'=>'First SDK Mailing',
-	    'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
-	    'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
-	    'substitutionData'=>array('name'=>'YOUR FIRST NAME'),
-	    'recipients'=>array(array('address'=>array('name'=>'YOUR FULL NAME', 'email'=>'YOUR EMAIL ADDRESS' )))
-    ));
-
-    echo 'Woohoo! You just sent your first mailing!';
-} catch (Exception $err) {
-    echo 'Whoops! Something went wrong';
-    var_dump($err);
+	$results = $sparky->transmission->send([
+		'from'=>'From Envelope <from@sparkpostbox.com>',
+		'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
+		'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
+    'substitutionData'=>array('name'=>'YOUR FIRST NAME')
+		'subject'=>'First Mailing From PHP',
+		'recipients'=>[
+  		[
+  			"address"=>[
+          'name'=>'YOUR FULL NAME',
+          'email'=>'YOUR EMAIL ADDRESS'
+        ]
+    	]
+  	]
+	]);
+	echo 'Woohoo! You just sent your first mailing!';
+} catch (\Exception $err) {
+  echo 'Whoops! Something went wrong';
+  var_dump($err);
 }
 ```
 
@@ -101,4 +129,3 @@ If you're interested in code coverage, you can add the `--coverage` flag for php
 2. Fork [the repository](http://github.com/SparkPost/php-sparkpost) on GitHub to start making your changes to the **master** branch (or branch off of it).
 3. Write a test which shows that the bug was fixed or that the feature works as expected.
 4. Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to [AUTHORS](https://github.com/SparkPost/php-sparkpost/blob/master/AUTHORS.md).
-
