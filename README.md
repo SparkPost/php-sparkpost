@@ -92,7 +92,10 @@ try {
 Run `composer install` inside the directory to install dependecies and development tools.
 
 ### Testing
-Once all the dependencies are installed, you can execute the unit tests using ```composer test```.
+Once all the dependencies are installed, you can execute the unit tests using 
+```
+composer test
+```
 
 ### Contributing
 1. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
