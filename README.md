@@ -20,6 +20,7 @@ composer require sparkpost/php-sparkpost
 After installing, you need to require Composer's autoloader:
 ```
 require 'vendor/autoload.php';
+use SparkPost\SparkPost;
 ```
 
 ## Getting Started:  Your First Mailing
