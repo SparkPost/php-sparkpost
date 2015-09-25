@@ -3,11 +3,19 @@
     "description": "SDK for interfacing with SparkPost APIs",
     "license": "Apache 2.0",
     "authors": [
-        {
-            "name": "Message Systems, Inc."
-        }
+      {
+        "name": "Message Systems, Inc."
+      }
     ],
     "minimum-stability": "stable",
+    "scripts": {
+      "post-package-install": "
+        echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json"
+      "post-package-update": "
+        if [ ! -f examples/example-config.json ]
+          echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json
+        fi"
+    },
     "require": {
     	"php": ">=5.3.0",
         "guzzlehttp/guzzle": "3.8.1"
