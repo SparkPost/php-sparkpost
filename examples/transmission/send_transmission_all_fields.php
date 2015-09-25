@@ -9,8 +9,6 @@ $key = 'YOUR API KEY';
 $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>$key]);
 
-// TODO: update all from emails to = sandbox domain
-
 try{
 	$results = $sparky->transmission->send([
 	  "campaign"=>"my-campaign",

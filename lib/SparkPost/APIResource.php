@@ -30,17 +30,17 @@ class APIResource {
 	protected static $structure = [];
 
   /**
-   * TODO: Docs
+   * @dec connection config for making requests.
    */
   private $config;
 
   /**
-   * TODO: Docs
+   * @desc Ivory\HttpAdapter\HttpAdapterInterface to make requests through.
    */
-  private $httpAdapter;
+  protected $httpAdapter;
 
   /**
-   * TODO: Docs
+   * @desc Default config values. Passed in values will override these.
    */
   private static $apiDefaults = [
 		'host'=>'api.sparkpost.com',
@@ -52,7 +52,9 @@ class APIResource {
 	];
 
 	/**
-	 * @desc TODO: Docs
+	 * @desc Initializes config and httpAdapter for use later.
+   * @param $httpAdapter Ivory\HttpAdapter\HttpAdapterInterface to make requests through.
+   * @param $config connection config for making requests.
 	 */
 	public function __construct($httpAdapter, $config) {
     //config needs to be setup before adapter because of default adapter settings
@@ -84,7 +86,6 @@ class APIResource {
 	 * @desc Helper function for getting the configuration for http requests
 	 * @return \Ivory\HttpAdapter\Configuration
 	 */
-	 // TODO: Need to figure out how to set strictSSL
   private function getHttpConfig($config) {
 		// get composer.json to extract version number
 		$composerFile = file_get_contents(dirname(__FILE__) . "/../../composer.json");
@@ -99,7 +100,9 @@ class APIResource {
 	}
 
   /**
-   * TODO: Docs
+   * @desc Validates and sets up the httpAdapter
+   * @param $httpAdapter Ivory\HttpAdapter\HttpAdapterInterface to make requests through.
+   * @throws \Exception
    */
   public function setHttpAdapter($httpAdapter) {
   	if (!$httpAdapter instanceOf HttpAdapterInterface) {
@@ -133,6 +136,10 @@ class APIResource {
 
 	/**
 	 * @desc Private Method helper to reference parameter mappings and set the right value for the right parameter
+   *
+   * @param array $model (pass by reference) the set of values to map
+   * @param string $mapKey a dot syntax path determining which value to set
+   * @param mixed $value value for the given path
 	 */
 	protected function setMappedValue (&$model, $mapKey, $value) {
 		//get mapping
@@ -160,7 +167,10 @@ class APIResource {
 	}
 
   /**
-   * TODO: Docs
+   * @desc maps values from the passed in model to those needed for the request
+   * @param $requestConfig the passed in model
+   * @param $model the set of defaults
+   * @return array A model ready for the body of a request
    */
 	protected function buildRequestModel(Array $requestConfig, Array $model=[] ) {
 		foreach($requestConfig as $key => $value) {
@@ -170,14 +180,18 @@ class APIResource {
 	}
 
 	/**
-	 * TODO: Docs
+	 * @desc posts to the api with a supplied body
+   * @param body post body for the request
+   * @return array Result of the request
 	 */
 	public function create(Array $body=[]) {
 		return $this->callResource( 'post', null, ['body'=>$body]);
 	}
 
   /**
-	 * TODO: Docs
+   * @desc Makes a put request to the api with a supplied body
+   * @param body Put body for the request
+   * @return array Result of the request
 	 */
 	public function update( $resourcePath, Array $body=[]) {
 		return $this->callResource( 'put', $resourcePath, ['body'=>$body]);
@@ -188,7 +202,7 @@ class APIResource {
 	 *
 	 * @param string $resourcePath (optional) string resource path of specific resource
 	 * @param array $options (optional) query string parameters
-	 * @return array Result set of transmissions found
+	 * @return array Result of the request
 	 */
 	public function get( $resourcePath=null, Array $query=[] ) {
 		return $this->callResource( 'get', $resourcePath, ['query'=>$query] );
@@ -199,7 +213,7 @@ class APIResource {
 	 *
 	 * @param string $resourcePath (optional) string resource path of specific resource
 	 * @param array $options (optional) query string parameters
-	 * @return array Result set of transmissions found
+	 * @return array Result of the request
 	 */
 	public function delete( $resourcePath=null, Array $query=[] ) {
 		return $this->callResource( 'delete', $resourcePath, ['query'=>$query] );
@@ -207,7 +221,10 @@ class APIResource {
 
 
   /**
-   * TODO: docs
+   * @desc assembles a URL for a request
+   * @param string $resourcePath path after the initial endpoint
+   * @param array options array with an optional value of query with values to build a querystring from.
+   * @return string the assembled URL
    */
   private function buildUrl($resourcePath, $options) {
     $url = join(['/', $this->endpoint, '/']);
@@ -225,7 +242,9 @@ class APIResource {
 
 
   /**
-   * TODO: Docs
+   * @desc Prepares a body for put and post requests
+   * @param array options array with an optional value of body with values to build a request body from.
+   * @return string|null A json encoded string or null if no body was provided
    */
   private function buildBody($options) {
     $body = null;
@@ -270,7 +289,7 @@ class APIResource {
 		 * Handles 4XX responses
      */
     catch (HttpAdapterException $exception) {
-    	$response = $exception->getBody();
+    	$response = $exception->getResponse();
     	$statusCode = $response->getStatusCode();
 			if($statusCode === 404) {
 				throw new \Exception("The specified resource does not exist", 404);
