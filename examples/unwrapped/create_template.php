@@ -1,16 +1,20 @@
 <?php
 namespace Examples\Unwrapped;
 require_once (dirname(__FILE__).'/../bootstrap.php');
+
+//pull in API key config
+$configFile = file_get_contents(dirname(__FILE__) . "/../example-config.json");
+$config = json_decode($configFile, true);
+
 use SparkPost\SparkPost;
 use SparkPost\APIResource;
 
-$key = 'YOURAPIKEY'; 
-SparkPost::setConfig(array('key'=>$key));
+SparkPost::setConfig(array('key'=>$config['api-key']));
 
 try {
 	// define the endpoint
 	APIResource::$endpoint = 'templates';
-	
+
 	$templateConfig = array(
 		'name' => 'Summer Sale!',
 		'content.from' => 'marketing@bounces.company.example',
