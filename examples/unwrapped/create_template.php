@@ -6,11 +6,11 @@ use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 
 $key = 'YOUR API KEY';
 $httpAdapter = new Guzzle6HttpAdapter(new Client());
-$resource = new \SparkPost\APIResource($httpAdapter, ['key'=>$key]);
+$sparky = new SparkPost($httpAdapter, ['key'=>$key]);
 
 try {
 	// define the endpoint
-	$resource->endpoint = 'templates';
+	$sparky->setupUnwrapped('templates');
 
 	$templateConfig = [
 		'name' => 'Summer Sale!',
@@ -21,7 +21,7 @@ try {
 		  'html' => '<b>Check out these deals!</b>'
     ]
 	];
-	$results = $resource->create($templateConfig);
+	$results = $sparky->templates->create($templateConfig);
 	echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
 	echo $exception->getMessage();
