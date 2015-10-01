@@ -52,7 +52,7 @@ class SparkPost {
    * The new resource is attached to this object as well as returned
    * @return SparkPost\APIResource - the unwrapped resource
    */
-  public function setupUnwrapped (string $endpoint) {
+  public function setupUnwrapped ($endpoint) {
     $this->{$endpoint} = new APIResource($this);
     $this->{$endpoint}->endpoint = $endpoint;
 

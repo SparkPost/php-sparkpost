@@ -1,6 +1,7 @@
 <?php
 namespace Examples\Unwrapped;
 require_once (dirname(__FILE__).'/../bootstrap.php');
+use SparkPost\SparkPost;
 use GuzzleHttp\Client;
 use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 
@@ -14,7 +15,7 @@ try {
 
 	$templateConfig = [
 		'name' => 'Summer Sale!',
-    'id'=>'summer-sale',
+    'id'=>'jordan-test-summer-sale',
 		'content'=> [
       'from' => 'from@sparkpostbox.com',
 		  'subject' => 'Summer deals',

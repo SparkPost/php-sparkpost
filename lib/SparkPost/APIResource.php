@@ -28,6 +28,11 @@ class APIResource {
 	 */
 	protected static $structure = [];
 
+  /**
+   * @desc SparkPost reference for httpAdapters and configs
+   */
+  protected $sparkpost;
+
 	/**
 	 * @desc Initializes config and httpAdapter for use later.
    * @param $sparkpost SparkPost\SparkPost provides api configuration information

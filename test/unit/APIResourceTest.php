@@ -24,14 +24,13 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 	 * @see PHPUnit_Framework_TestCase::setUp()
 	 */
 	public function setUp() {
-    $this->adapterMock = Mockery::mock('Ivory\HttpAdapter\HttpAdapterInterface', function($mock) {
-      $mock->shouldReceive('setConfiguration');
-      $mock->shouldReceive('getConfiguration->getUserAgent')->andReturn('php-sparkpost/0.2.0');
+    $this->sparkPostMock = Mockery::mock('SparkPost\SparkPost', function($mock) {
+      $mock->shouldReceive('getHttpHeaders')->andReturn([]);
     });
-    $this->resource = new APIResource($this->adapterMock, ['key'=>'a key']);
+    $this->sparkPostMock->httpAdapter = Mockery::mock();
+    $this->resource = new APIResource($this->sparkPostMock);
     self::$utils = new ClassUtils($this->resource);
-
-    self::$utils->setProperty($this->resource, 'httpAdapter', $this->adapterMock);
+    self::$utils->setProperty($this->resource, 'sparkpost', $this->sparkPostMock);
   }
 
   public function tearDown()
@@ -39,36 +38,21 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
         Mockery::close();
     }
 
-  public function testConstructorSetsUpAdapterAndConfig() {
-    $adapter = self::$utils->getProperty($this->resource, 'httpAdapter');
-    $this->assertRegExp('/php-sparkpost.*/', $adapter->getConfiguration()->getUserAgent());
-  }
-
-  /**
-   * @expectedException Exception
-   * @expectedExceptionMessageRegExp /valid Ivory\\HttpAdapter/
-   */
-  public function testSetBadHTTPAdapter() {
-    $this->resource->setHttpAdapter(new \stdClass());
-  }
-
-  /**
-   * @expectedException Exception
-   * @expectedExceptionMessageRegExp /API key/
-   */
-  public function testSetBadConfig() {
-    $this->resource->setConfig(['not'=>'a key']);
+  public function testConstructorSetsUpSparkPostObject() {
+    $this->sparkPostMock->newProp = 'new value';
+    $this->assertEquals($this->sparkPostMock, self::$utils->getProperty($this->resource, 'sparkpost'));
   }
 
   public function testCreate() {
     $testInput = ['test'=>'body'];
     $testBody = ["results"=>["my"=>"test"]];
     $responseMock = Mockery::mock();
-    $this->adapterMock->shouldReceive('send')->
+    $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       with(Mockery::type('string'), 'POST', Mockery::type('array'), json_encode($testInput))->
       andReturn($responseMock);
     $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
+
 
     $this->assertEquals($testBody, $this->resource->create($testInput));
   }
@@ -77,7 +61,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
     $testInput = ['test'=>'body'];
     $testBody = ["results"=>["my"=>"test"]];
     $responseMock = Mockery::mock();
-    $this->adapterMock->shouldReceive('send')->
+    $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       with('/.*\/test/', 'PUT', Mockery::type('array'), json_encode($testInput))->
       andReturn($responseMock);
@@ -89,7 +73,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
   public function testGet() {
     $testBody = ["results"=>["my"=>"test"]];
     $responseMock = Mockery::mock();
-    $this->adapterMock->shouldReceive('send')->
+    $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       with('/.*\/test/', 'GET', Mockery::type('array'), null)->
       andReturn($responseMock);
@@ -100,7 +84,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 
   public function testDelete() {
     $responseMock = Mockery::mock();
-    $this->adapterMock->shouldReceive('send')->
+    $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       with('/.*\/test/', 'DELETE', Mockery::type('array'), null)->
       andReturn($responseMock);
@@ -111,7 +95,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 
   public function testAdapter404Exception() {
     try {
-      $this->adapterMock->shouldReceive('send')->
+      $this->sparkPostMock->httpAdapter->shouldReceive('send')->
         once()->
         andThrow($this->getExceptionMock(404));
 
@@ -124,7 +108,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 
   public function testAdapter4XXException() {
     try {
-      $this->adapterMock->shouldReceive('send')->
+      $this->sparkPostMock->httpAdapter->shouldReceive('send')->
         once()->
         andThrow($this->getExceptionMock(400));
 
@@ -137,7 +121,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 
   public function testAdapter5XXException() {
     try {
-      $this->adapterMock->shouldReceive('send')->
+      $this->sparkPostMock->httpAdapter->shouldReceive('send')->
         once()->
         andThrow(new \Exception('Something went wrong.'));
 
