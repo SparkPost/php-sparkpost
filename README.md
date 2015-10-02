@@ -1,4 +1,5 @@
 [![Travis CI](https://travis-ci.org/SparkPost/php-sparkpost.svg?branch=master)](https://travis-ci.org/SparkPost/php-sparkpost)
+[![Coverage Status](https://coveralls.io/repos/SparkPost/php-sparkpost/badge.svg?branch=master&service=github)](https://coveralls.io/github/SparkPost/php-sparkpost?branch=master)
 
 # SparkPost PHP SDK
 The official PHP binding for your favorite SparkPost APIs!
@@ -20,6 +21,7 @@ composer require sparkpost/php-sparkpost
 After installing, you need to require Composer's autoloader:
 ```
 require 'vendor/autoload.php';
+use SparkPost\SparkPost;
 ```
 
 ## Setting up a Request Adapter
@@ -50,6 +52,7 @@ $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
 
 try {
+  // Build your email and send it!
 	$results = $sparky->transmission->send([
 		'from'=>'From Envelope <from@sparkpostbox.com>',
 		'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
@@ -120,9 +123,10 @@ try {
 Run `composer install` inside the directory to install dependecies and development tools.
 
 ### Testing
-Once all the dependencies are installed, you can execute the unit tests using `vendor/bin/phpunit --bootstrap test/unit/bootstrap.php ./test/unit`.
-
-If you're interested in code coverage, you can add the `--coverage` flag for phpunit like so: ```phpunit --coverage-html test/output/report --bootstrap test/unit/bootstrap.php ./test/unit```
+Once all the dependencies are installed, you can execute the unit tests using:
+```
+composer test
+```
 
 ### Contributing
 1. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
