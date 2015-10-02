@@ -13,7 +13,7 @@ The recommended way to install the SparkPost PHP SDK is through composer.
 # Install Composer
 curl -sS https://getcomposer.org/installer | php
 ```
-Next, run the Composer command to install the SparkPost PHP SDK: 
+Next, run the Composer command to install the SparkPost PHP SDK:
 ```
 composer require sparkpost/php-sparkpost
 ```
@@ -29,7 +29,7 @@ SparkPost::setConfig(["key"=>"YOUR API KEY"]);
 
 try {
 	// Build your email and send it!
-	Transmission::send(array('campaign'=>'first-mailing', 
+	Transmission::send(array('campaign'=>'first-mailing',
 		'from'=>'you@your-company.com',
 	    'subject'=>'First SDK Mailing',
 	    'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
@@ -93,13 +93,13 @@ try {
 Run `composer install` inside the directory to install dependecies and development tools.
 
 ### Testing
-Once all the dependencies are installed, you can execute the unit tests using `vendor/bin/phpunit --bootstrap test/unit/bootstrap.php ./test/unit`.
-
-If you're interested in code coverage, you can add the `--coverage` flag for phpunit like so: ```phpunit --coverage-html test/output/report --bootstrap test/unit/bootstrap.php ./test/unit```
+Once all the dependencies are installed, you can execute the unit tests using:
+```
+composer test
+```
 
 ### Contributing
 1. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
 2. Fork [the repository](http://github.com/SparkPost/php-sparkpost) on GitHub to start making your changes to the **master** branch (or branch off of it).
 3. Write a test which shows that the bug was fixed or that the feature works as expected.
 4. Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to [AUTHORS](https://github.com/SparkPost/php-sparkpost/blob/master/AUTHORS.md).
-
