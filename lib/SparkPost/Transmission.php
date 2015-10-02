@@ -8,7 +8,7 @@ use Guzzle\Http\Exception\ClientErrorResponseException;
  */
 class Transmission extends APIResource {
 
-	public $endpoint = 'transmissions';
+  public $endpoint = 'transmissions';
 
 	/**
 	 * @desc Mapping for values passed into the send method to the values needed for the Transmission API

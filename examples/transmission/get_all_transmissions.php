@@ -14,7 +14,7 @@ $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
 try {
-	$results = $sparky->transmission->all();
+  $results = $sparky->transmission->all();
 	echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
 	echo $exception->getMessage();

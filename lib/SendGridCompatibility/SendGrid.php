@@ -7,7 +7,7 @@ use SparkPost\SendGridCompatibility\Email;
 class SendGrid{
   private $sparky;
 
-	public function __construct($username, $password, $options = null, $httpAdapter) {
+  public function __construct($username, $password, $options = null, $httpAdapter) {
 		//username isn't used in our system
 		$opts = array('key'=>$password);
 		if (!is_null($options)) {

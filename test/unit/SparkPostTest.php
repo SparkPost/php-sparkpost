@@ -29,12 +29,11 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
     self::$utils->setProperty($this->resource, 'httpAdapter', $this->adapterMock);
   }
 
-  public function tearDown()
-    {
-        Mockery::close();
-    }
+  public function tearDown(){
+    Mockery::close();
+  }
 
-	/**
+  /**
 	 * @desc Ensures that the configuration class is not instantiable.
 	 */
 	public function testConstructorSetsUpTransmissions() {

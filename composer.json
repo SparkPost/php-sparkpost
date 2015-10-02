@@ -15,7 +15,7 @@
       "test": "phpunit ./test/unit/"
     },
     "require": {
-    	"php": ">=5.5.0",
+      "php": ">=5.5.0",
       "egeloen/http-adapter": "*"
     },
     "require-dev": {

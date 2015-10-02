@@ -15,7 +15,7 @@ $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
 try {
 
-	$results = $sparky->transmission->send([
+  $results = $sparky->transmission->send([
 		"campaign"=>"my-campaign",
 		"from"=>"From Envelope <from@sparkpostbox.com>",
 		"html"=>"<p>Hello World! Your name is: {{name}}</p>",

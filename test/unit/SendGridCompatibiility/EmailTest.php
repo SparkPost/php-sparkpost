@@ -2,7 +2,7 @@
 use SparkPost\SendGridCompatibility\Email;
 
 class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase {
-	
+  
 	private $email;
 	
 	public function setup() {

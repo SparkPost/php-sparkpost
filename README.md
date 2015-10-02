@@ -19,7 +19,7 @@ Next, run the Composer command to install the SparkPost PHP SDK:
 composer require sparkpost/php-sparkpost
 ```
 After installing, you need to require Composer's autoloader:
-```
+```php
 require 'vendor/autoload.php';
 use SparkPost\SparkPost;
 ```
@@ -33,7 +33,7 @@ need to require one and create an adapter from it and pass it along.  The exampl
 GuzzleHttp Client Library.
 
 An Adapter can be setup like so:
-```
+```php
 use SparkPost\SparkPost;
 use GuzzleHttp\Client;
 use Ivory\HttpAdapter\Guzzle6HttpAdapter;
@@ -43,7 +43,7 @@ $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
 ```
 
 ## Getting Started:  Your First Mailing
-```
+```php
 require 'vendor/autoload.php';
 
 use SparkPost\SparkPost;
@@ -55,7 +55,7 @@ $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
 
 try {
   // Build your email and send it!
-	$results = $sparky->transmission->send([
+  $results = $sparky->transmission->send([
 		'from'=>'From Envelope <from@sparkpostbox.com>',
 		'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
 		'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',

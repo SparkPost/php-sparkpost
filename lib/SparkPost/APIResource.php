@@ -8,7 +8,7 @@ use SparkPost\SparkPost;
  */
 class APIResource {
 
-	/**
+  /**
 	 * @desc name of the API endpoint, mainly used for URL construction.
    * This is public to provide an interface
    *

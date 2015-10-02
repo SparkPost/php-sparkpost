@@ -14,7 +14,7 @@ $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
 try {
-	$results = $sparky->transmission->send([
+  $results = $sparky->transmission->send([
 		'recipients'=>[
 			[
 			  'address'=>[

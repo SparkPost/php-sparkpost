@@ -18,7 +18,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
     return $exception;
   }
 
-	/**
+  /**
 	 * (non-PHPdoc)
 	 * @before
 	 * @see PHPUnit_Framework_TestCase::setUp()

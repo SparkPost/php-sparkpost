@@ -21,7 +21,7 @@ class SparkPost {
    * @desc Default config values. Passed in values will override these.
    */
   private static $apiDefaults = [
-		'host'=>'api.sparkpost.com',
+  	'host'=>'api.sparkpost.com',
 		'protocol'=>'https',
 		'port'=>443,
 		'strictSSL'=>true,

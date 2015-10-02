@@ -2,7 +2,7 @@
 namespace SparkPost\SendGridCompatibility;
 
 class Email {
-	public $model;
+  public $model;
 	
 	
 	/**

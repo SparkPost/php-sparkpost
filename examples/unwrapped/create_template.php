@@ -14,7 +14,7 @@ $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
 try {
-	// define the endpoint
+  // define the endpoint
 	$sparky->setupUnwrapped('templates');
 
 	$templateConfig = [
