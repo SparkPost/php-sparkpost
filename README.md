@@ -44,6 +44,8 @@ $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
 
 ## Getting Started:  Your First Mailing
 ```
+require 'vendor/autoload.php';
+
 use SparkPost\SparkPost;
 use GuzzleHttp\Client;
 use Ivory\HttpAdapter\Guzzle6HttpAdapter;
@@ -57,11 +59,11 @@ try {
 		'from'=>'From Envelope <from@sparkpostbox.com>',
 		'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
 		'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
-    'substitutionData'=>array('name'=>'YOUR FIRST NAME')
+    'substitutionData'=>['name'=>'YOUR FIRST NAME']
 		'subject'=>'First Mailing From PHP',
 		'recipients'=>[
   		[
-  			"address"=>[
+  			'address'=>[
           'name'=>'YOUR FULL NAME',
           'email'=>'YOUR EMAIL ADDRESS'
         ]
@@ -77,7 +79,7 @@ try {
 
 ## Learn More
 * For more detailed examples, check our examples:
-    * [Transmissions](https://github.com/SparkPost/php-sparkpost/tree/master/examples/transmission)
+  * [Transmissions](https://github.com/SparkPost/php-sparkpost/tree/master/examples/transmission)
 * Read our REST API documentation - <http://www.sparkpost.com/docs/introduction>
 
 ## Field Descriptions
