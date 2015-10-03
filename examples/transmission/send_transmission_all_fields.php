@@ -17,8 +17,8 @@ try{
   $results = $sparky->transmission->send([
 	  "campaign"=>"my-campaign",
 	  "metadata"=>[
-	   "sample_campaign"=>true,
-	   "type"=>"these are custom fields"
+	    "sample_campaign"=>true,
+	    "type"=>"these are custom fields"
 	  ],
 	  "substitutionData"=>[
 	    "name"=>"Test Name"
