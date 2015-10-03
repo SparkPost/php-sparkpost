@@ -34,14 +34,14 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
   }
 
   /**
-	 * @desc Ensures that the configuration class is not instantiable.
-	 */
-	public function testConstructorSetsUpTransmissions() {
-		$sparky = new SparkPost(new CurlHttpAdapter(), ['key'=>'a key']);
-		$this->assertEquals('SparkPost\Transmission', get_class($sparky->transmission));
+   * @desc Ensures that the configuration class is not instantiable.
+   */
+  public function testConstructorSetsUpTransmissions() {
+    $sparky = new SparkPost(new CurlHttpAdapter(), ['key'=>'a key']);
+    $this->assertEquals('SparkPost\Transmission', get_class($sparky->transmission));
     $adapter = self::$utils->getProperty($this->resource, 'httpAdapter');
     $this->assertRegExp('/php-sparkpost.*/', $adapter->getConfiguration()->getUserAgent());
-	}
+  }
 
   /**
    * @expectedException Exception

@@ -19,11 +19,11 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
   }
 
   /**
-	 * (non-PHPdoc)
-	 * @before
-	 * @see PHPUnit_Framework_TestCase::setUp()
-	 */
-	public function setUp() {
+   * (non-PHPdoc)
+   * @before
+   * @see PHPUnit_Framework_TestCase::setUp()
+   */
+  public function setUp() {
     $this->sparkPostMock = Mockery::mock('SparkPost\SparkPost', function($mock) {
       $mock->shouldReceive('getHttpHeaders')->andReturn([]);
     });
@@ -45,7 +45,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 
   public function testCreate() {
     $testInput = ['test'=>'body'];
-    $testBody = ["results"=>["my"=>"test"]];
+    $testBody = ['results'=>['my'=>'test']];
     $responseMock = Mockery::mock();
     $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
@@ -59,7 +59,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 
   public function testUpdate() {
     $testInput = ['test'=>'body'];
-    $testBody = ["results"=>["my"=>"test"]];
+    $testBody = ['results'=>['my'=>'test']];
     $responseMock = Mockery::mock();
     $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
@@ -71,7 +71,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
   }
 
   public function testGet() {
-    $testBody = ["results"=>["my"=>"test"]];
+    $testBody = ['results'=>['my'=>'test']];
     $responseMock = Mockery::mock();
     $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->

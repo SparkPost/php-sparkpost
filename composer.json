@@ -22,13 +22,13 @@
       "phpunit/phpunit": "4.3.*",
       "guzzlehttp/guzzle": "6.*",
       "mockery/mockery": "^0.9.4",
-	    "satooshi/php-coveralls": "dev-master"
+      "satooshi/php-coveralls": "dev-master"
     },
     "autoload": {
-    	"psr-4": {
-    		"SparkPost\\": "lib/SparkPost/",
-    		"SparkPost\\SendGridCompatibility\\": "lib/SendGridCompatibility/",
+      "psr-4": {
+        "SparkPost\\": "lib/SparkPost/",
+        "SparkPost\\SendGridCompatibility\\": "lib/SendGridCompatibility/",
         "SparkPost\\Test\\TestUtils\\": "test/unit/TestUtils/"
-    	}
+      }
     }
 }

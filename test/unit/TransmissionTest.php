@@ -31,7 +31,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
   public function testSend() {
     $responseMock = Mockery::mock();
     $body = ['text'=>'awesomesauce', 'content'=>['subject'=>'awesomeness']];
-    $responseBody = ["results"=>"yay"];
+    $responseBody = ['results'=>'yay'];
 
     $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
@@ -45,7 +45,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 
   public function testAllWithFilter() {
     $responseMock = Mockery::mock();
-    $responseBody = ["results"=>"yay"];
+    $responseBody = ['results'=>'yay'];
     $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       with('/.*transmissions.*?campaign_id=campaign&template_id=template/', 'GET', Mockery::type('array'), null)->
@@ -58,7 +58,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 
   public function testAllWithOutFilter() {
     $responseMock = Mockery::mock();
-    $responseBody = ["results"=>"yay"];
+    $responseBody = ['results'=>'yay'];
     $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       with('/.*\/transmissions/', 'GET', Mockery::type('array'), null)->
@@ -71,7 +71,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
 
   public function testFind() {
     $responseMock = Mockery::mock();
-    $responseBody = ["results"=>"yay"];
+    $responseBody = ['results'=>'yay'];
     $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       with('/.*\/transmissions.*\/test/', 'GET', Mockery::type('array'), null)->

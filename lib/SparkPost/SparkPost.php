@@ -21,13 +21,13 @@ class SparkPost {
    * @desc Default config values. Passed in values will override these.
    */
   private static $apiDefaults = [
-  	'host'=>'api.sparkpost.com',
-		'protocol'=>'https',
-		'port'=>443,
-		'strictSSL'=>true,
-		'key'=>'',
-		'version'=>'v1'
-	];
+    'host'=>'api.sparkpost.com',
+    'protocol'=>'https',
+    'port'=>443,
+    'strictSSL'=>true,
+    'key'=>'',
+    'version'=>'v1'
+  ];
 
   /**
    * @desc sets up httpAdapter and config
@@ -37,7 +37,7 @@ class SparkPost {
    * @param Ivory\HttpAdapter $httpAdapter - An adapter for making http requests
    * @param Array $settingsConfig - Hashmap that contains config values for the SDK to connect to SparkPost
    */
-	public function __construct($httpAdapter, $settingsConfig) {
+  public function __construct($httpAdapter, $settingsConfig) {
     //config needs to be setup before adapter because of default adapter settings
     $this->setConfig($settingsConfig);
     $this->setHttpAdapter($httpAdapter);
@@ -85,7 +85,7 @@ class SparkPost {
    */
   private function getHttpConfig($config) {
     // get composer.json to extract version number
-    $composerFile = file_get_contents(dirname(__FILE__) . "/../../composer.json");
+    $composerFile = file_get_contents(dirname(__FILE__) . '/../../composer.json');
     $composer = json_decode($composerFile, true);
 
     // create Configuration for http adapter

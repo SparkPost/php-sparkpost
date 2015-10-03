@@ -3,7 +3,7 @@ namespace Examples\Transmisson;
 require_once (dirname(__FILE__).'/../bootstrap.php');
 
 //pull in API key config
-$configFile = file_get_contents(dirname(__FILE__) . "/../example-config.json");
+$configFile = file_get_contents(dirname(__FILE__) . '/../example-config.json');
 $config = json_decode($configFile, true);
 
 use SparkPost\SparkPost;
@@ -15,8 +15,8 @@ $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
 try {
   $results = $sparky->transmission->all();
-	echo 'Congrats you can use your SDK!';
+  echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
-	echo $exception->getMessage();
+  echo $exception->getMessage();
 }
 ?>
