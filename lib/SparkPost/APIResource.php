@@ -48,7 +48,7 @@ class APIResource {
    * @param string $mapKey a dot syntax path determining which value to set
    * @param mixed $value value for the given path
    */
-  protected function setMappedValue (&$model, $mapKey, $value) {
+  protected function setMappedValue(&$model, $mapKey, $value) {
     //get mapping
     if( empty(static::$parameterMappings) ) {
       // if parameterMappings is empty we can assume that no wrapper is defined
@@ -179,10 +179,6 @@ class APIResource {
    */
   private function callResource( $action, $resourcePath=null, $options=[] ) {
     $action = strtoupper($action); // normalize
-
-    if( !in_array($action, ['POST', 'PUT', 'GET', 'DELETE'])) {
-      throw new \Exception('Invalid resource action');
-    }
 
     $url = $this->buildUrl($resourcePath, $options);
     $body = $this->buildBody($options);

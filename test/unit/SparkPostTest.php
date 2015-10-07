@@ -66,11 +66,6 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals('application/json', $results['Content-Type']);
   }
 
-  public function testGetHeadersOverride() {
-    $results = $this->resource->getHttpHeaders(['Content-Type'=>'application/xml']);
-    $this->assertEquals('application/xml', $results['Content-Type']);
-  }
-
   public function testSetUnwrapped() {
     $results = $this->resource->setupUnwrapped('ASweetEndpoint');
     $this->assertEquals($this->resource->ASweetEndpoint, $results);

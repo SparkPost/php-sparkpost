@@ -61,20 +61,13 @@ class SparkPost {
 
   /**
    * @desc Merges passed in headers with default headers for http requests
-   * @return Array - headers to be set on http requests
    */
-  public function getHttpHeaders(Array $headers = null) {
+  public function getHttpHeaders() {
     $defaultOptions = [
       'Authorization' => $this->config['key'],
       'Content-Type' => 'application/json',
     ];
 
-    // Merge passed in headers with defaults
-    if (!is_null($headers)) {
-      foreach ($headers as $header => $value) {
-        $defaultOptions[$header] = $value;
-      }
-    }
     return $defaultOptions;
   }
 
