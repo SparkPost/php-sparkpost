@@ -1,37 +1,38 @@
 <phpunit
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.5/phpunit.xsd"
-         backupGlobals="true"
-         backupStaticAttributes="false"
-         bootstrap="test/unit/bootstrap.php"
-         cacheTokens="false"
-         colors="always"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         forceCoversAnnotation="false"
-         mapTestClassNameToCoveredClassName="false"
-         printerClass="PHPUnit_TextUI_ResultPrinter"
-         processIsolation="false"
-         stopOnError="false"
-         stopOnFailure="false"
-         stopOnIncomplete="false"
-         stopOnSkipped="false"
-         stopOnRisky="false"
-         testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
-         timeoutForSmallTests="1"
-         timeoutForMediumTests="10"
-         timeoutForLargeTests="60"
-         verbose="false">
+         xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+         xsi:noNamespaceSchemaLocation='http://schema.phpunit.de/4.5/phpunit.xsd'
+         backupGlobals='true'
+         backupStaticAttributes='false'
+         bootstrap='test/unit/bootstrap.php'
+         cacheTokens='false'
+         colors='always'
+         convertErrorsToExceptions='true'
+         convertNoticesToExceptions='true'
+         convertWarningsToExceptions='true'
+         forceCoversAnnotation='false'
+         mapTestClassNameToCoveredClassName='false'
+         printerClass='PHPUnit_TextUI_ResultPrinter'
+         processIsolation='false'
+         stopOnError='false'
+         stopOnFailure='false'
+         stopOnIncomplete='false'
+         stopOnSkipped='false'
+         stopOnRisky='false'
+         testSuiteLoaderClass='PHPUnit_Runner_StandardTestSuiteLoader'
+         timeoutForSmallTests='1'
+         timeoutForMediumTests='10'
+         timeoutForLargeTests='60'
+         verbose='false'>
 
 
   <logging>
-    <log type="coverage-html" target="test/output/report"/>
-    <log type="coverage-clover" target="test/output/clover.xml"/>
+    <log type='coverage-html' target='test/output/report'/>
+    <log type='coverage-clover' target='test/output/clover.xml'/>
   </logging>
   <filter>
         <blacklist>
               <directory>./vendor</directory>
+              <directory>./test</directory>
         </blacklist>
     </filter>
 </phpunit>
