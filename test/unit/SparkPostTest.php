@@ -2,60 +2,76 @@
 namespace SparkPost\Test;
 
 use SparkPost\SparkPost;
+use Ivory\HttpAdapter\CurlHttpAdapter;
+use SparkPost\Test\TestUtils\ClassUtils;
+use \Mockery;
 
 class SparkPostTest extends \PHPUnit_Framework_TestCase {
-	
-	/**
-	 * @desc Ensures that the configuration class is not instantiable.
-	 */
-	public function testConstructorCannotBeCalled() {
-		$class = new \ReflectionClass('\SparkPost\SparkPost');
-		$this->assertFalse($class->isInstantiable()); 
-	}
-	
-	/**
-	 * @desc Tests that an exception is thrown when a library tries to recieve the config and it has not yet been set.
-	 * 		Since its a singleton this test must come before any setConfig tests.
-	 * @expectedException Exception
-	 * @expectedExceptionMessage No configuration has been provided
-	 */
-	public function testGetConfigEmptyException() {
-		SparkPost::unsetConfig();
-		SparkPost::getConfig();
-	}
-	
-	/**
-	 * @desc Tests that the api key is set when setting the config
-	 * @expectedException Exception
-	 * @expectedExceptionMessage You must provide an API key
-	 */
-	public function testSetConfigAPIKeyNotSetException() {
-		SparkPost::setConfig(array('something'=>'other than an API Key'));
-	}
-	
-	/**
-	 * @desc Tests that the api key is set when setting the config and that its not empty
-	 * @expectedException Exception
-	 * @expectedExceptionMessage You must provide an API key
-	 */
-	public function testSetConfigAPIKeyEmptyException() {
-		SparkPost::setConfig(array('key'=>''));
-	}
-	
-	/**
-	 * @desc Tests overridable values are set while invalid values are ignored
-	 */
-	public function testSetConfigMultipleValuesAndGetConfig() {
-		SparkPost::setConfig(array('key'=>'lala', 'version'=>'v8', 'port'=>1024, 'someOtherValue'=>'fakeValue'));
-		
-		$testConfig = SparkPost::getConfig();
-		$this->assertEquals('lala', $testConfig['key']);
-		$this->assertEquals('v8', $testConfig['version']);
-		$this->assertEquals(1024, $testConfig['port']);
-		$this->assertNotContains('someOtherValue', array_keys($testConfig));
-		$this->assertEquals('https', $testConfig['protocol']);
-		$this->assertEquals('api.sparkpost.com', $testConfig['host']);
-		$this->assertEquals(true, $testConfig['strictSSL']);
-	}
+
+  private static $utils;
+  private $adapterMock;
+  private $resource;
+
+  /**
+   * (non-PHPdoc)
+   * @before
+   * @see PHPUnit_Framework_TestCase::setUp()
+   */
+  public function setUp() {
+    //setup mock for the adapter
+    $this->adapterMock = Mockery::mock('Ivory\HttpAdapter\HttpAdapterInterface', function($mock) {
+      $mock->shouldReceive('setConfiguration');
+      $mock->shouldReceive('getConfiguration->getUserAgent')->andReturn('php-sparkpost/0.2.0');
+    });
+
+    $this->resource = new SparkPost($this->adapterMock, ['key'=>'a key']);
+    self::$utils = new ClassUtils($this->resource);
+    self::$utils->setProperty($this->resource, 'httpAdapter', $this->adapterMock);
+  }
+
+  public function tearDown(){
+    Mockery::close();
+  }
+
+  /**
+   * @desc Ensures that the configuration class is not instantiable.
+   */
+  public function testConstructorSetsUpTransmissions() {
+    $sparky = new SparkPost(new CurlHttpAdapter(), ['key'=>'a key']);
+    $this->assertEquals('SparkPost\Transmission', get_class($sparky->transmission));
+    $adapter = self::$utils->getProperty($this->resource, 'httpAdapter');
+    $this->assertRegExp('/php-sparkpost.*/', $adapter->getConfiguration()->getUserAgent());
+  }
+
+  /**
+   * @expectedException Exception
+   * @expectedExceptionMessageRegExp /valid Ivory\\HttpAdapter/
+   */
+  public function testSetBadHTTPAdapter() {
+    $this->resource->setHttpAdapter(new \stdClass());
+  }
+
+  /**
+   * @expectedException Exception
+   * @expectedExceptionMessageRegExp /API key/
+   */
+  public function testSetBadConfig() {
+    $this->resource->setConfig(['not'=>'a key']);
+  }
+
+
+  public function testGetHeaders() {
+    $results = $this->resource->getHttpHeaders();
+    $this->assertEquals('a key', $results['Authorization']);
+    $this->assertEquals('application/json', $results['Content-Type']);
+  }
+
+  public function testSetUnwrapped() {
+    $results = $this->resource->setupUnwrapped('ASweetEndpoint');
+    $this->assertEquals($this->resource->ASweetEndpoint, $results);
+    $this->assertInstanceOf('SparkPost\APIResource', $results);
+    $this->assertEquals('ASweetEndpoint', $results->endpoint);
+  }
+
 }
 ?>
