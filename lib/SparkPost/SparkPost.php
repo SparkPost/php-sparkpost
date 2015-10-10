@@ -40,11 +40,6 @@ class SparkPost {
    *              its just they API Key.
    */
   public function __construct($httpAdapter, $settingsConfig) {
-    // if the config map is a string we should assume that its an api key
-    if (gettype($settingsConfig) === 'string') {
-      $settingsConfig = ['key'=>$settingsConfig];
-    }
-
     //config needs to be setup before adapter because of default adapter settings
     $this->setConfig($settingsConfig);
     $this->setHttpAdapter($httpAdapter);
@@ -114,10 +109,17 @@ class SparkPost {
 
   /**
    * Allows the user to pass in values to override the defaults and set their API key
-   * @param Array $settingsConfig - Hashmap that contains config values for the SDK to connect to SparkPost
+   * @param String | Array $settingsConfig - Hashmap that contains config values
+   *              for the SDK to connect to SparkPost. If its a string we assume that
+   *              its just they API Key.
    * @throws \Exception
    */
-  public function setConfig(Array $settingsConfig) {
+  public function setConfig($settingsConfig) {
+    // if the config map is a string we should assume that its an api key
+    if (gettype($settingsConfig) === 'string') {
+      $settingsConfig = ['key'=>$settingsConfig];
+    }
+
     // Validate API key because its required
     if (!isset($settingsConfig['key']) || empty(trim($settingsConfig['key']))){
       throw new \Exception('You must provide an API key');
