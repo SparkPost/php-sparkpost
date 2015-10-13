@@ -118,3 +118,6 @@ try {
 * If you specify a stored template and also provide inline content via `html` or `text`, you will receive an error.
 * By default, open and click tracking are enabled for a transmission.
 * By default, a transmission will use the published version of a stored template.
+
+### Contributing
+See [contributing](https://github.com/SparkPost/php-sparkpost/blob/contributing/CONTRIBUTING.md).
