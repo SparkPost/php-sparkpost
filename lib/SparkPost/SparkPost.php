@@ -116,7 +116,7 @@ class SparkPost {
    */
   public function setConfig($settingsConfig) {
     // if the config map is a string we should assume that its an api key
-    if (gettype($settingsConfig) === 'string') {
+    if (is_string($settingsConfig)) {
       $settingsConfig = ['key'=>$settingsConfig];
     }
 
