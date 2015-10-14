@@ -51,6 +51,12 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
     $this->resource->setHttpAdapter(new \stdClass());
   }
 
+  public function testSetConfigStringKey() {
+    $this->resource->setConfig('a key');
+    $config = self::$utils->getProperty($this->resource, 'config');
+    $this->assertEquals('a key', $config['key']);
+  }
+
   /**
    * @expectedException Exception
    * @expectedExceptionMessageRegExp /API key/
