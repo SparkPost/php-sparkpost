@@ -1,6 +1,6 @@
 {
     "name": "sparkpost/php-sparkpost",
-    "description": "SDK for interfacing with SparkPost APIs",
+    "description": "Client library for interfacing with the SparkPost API.",
     "license": "Apache 2.0",
     "version": "1.0.0",
     "authors": [
