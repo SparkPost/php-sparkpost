@@ -2,7 +2,7 @@
     "name": "sparkpost/php-sparkpost",
     "description": "SDK for interfacing with SparkPost APIs",
     "license": "Apache 2.0",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "authors": [
       {
         "name": "Message Systems, Inc."
