@@ -120,4 +120,4 @@ try {
 * By default, a transmission will use the published version of a stored template.
 
 ### Contributing
-See [contributing](https://github.com/SparkPost/php-sparkpost/blob/contributing/CONTRIBUTING.md).
+See [contributing](https://github.com/SparkPost/php-sparkpost/blob/master/CONTRIBUTING.md).
