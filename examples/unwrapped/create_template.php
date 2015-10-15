@@ -19,7 +19,7 @@ try {
 
   $templateConfig = [
     'name' => 'Summer Sale!',
-    'id'=>'jordan-test-summer-sale',
+    'id'=>'summer-sale',
     'content'=> [
       'from' => 'from@sparkpostbox.com',
       'subject' => 'Summer deals',
