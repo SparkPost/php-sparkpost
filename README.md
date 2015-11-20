@@ -122,7 +122,7 @@ try {
 ## Tips and Tricks
 ### General
 * You _must_ provide at least an API key when instantiating the SparkPost Library - `[ 'key'=>'184ac5480cfdd2bb2859e4476d2e5b1d2bad079bf' ]`
-* The Libraries features are namespaced under the various SparkPost API names.
+* The library's features are namespaced under the various SparkPost API names.
 
 ### Transmissions
 * If you specify a stored recipient list and inline recipients in a Transmission, you will receive an error.
