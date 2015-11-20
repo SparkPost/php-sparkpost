@@ -2,7 +2,7 @@
 
 [Sign up](https://app.sparkpost.com/sign-up?src=Dev-Website&sfdcid=70160000000pqBb) for a SparkPost account and visit our [Developer Hub](https://developers.sparkpost.com) for even more content.
 
-# SparkPost PHP SDK
+# SparkPost PHP Library
 
 [![Travis CI](https://travis-ci.org/SparkPost/php-sparkpost.svg?branch=master)](https://travis-ci.org/SparkPost/php-sparkpost)
 [![Coverage Status](https://coveralls.io/repos/SparkPost/php-sparkpost/badge.svg?branch=master&service=github)](https://coveralls.io/github/SparkPost/php-sparkpost?branch=master)
@@ -14,22 +14,28 @@ Before using this library, you must have a valid API Key.
 To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
 
 ## Installation
-The recommended way to install the SparkPost PHP SDK is through composer.
+The recommended way to install the SparkPost PHP Library is through composer.
+
 ```
 # Install Composer
 curl -sS https://getcomposer.org/installer | php
 ```
-Next, run the Composer command to install the SparkPost PHP SDK:
+
+Next, run the Composer command to install the SparkPost PHP Library:
+
 ```
 composer require sparkpost/php-sparkpost
 ```
+
 After installing, you need to require Composer's autoloader:
+
 ```php
 require 'vendor/autoload.php';
 use SparkPost\SparkPost;
 ```
 
 ## Setting up a Request Adapter
+
 Because of dependency collision, we have opted to use a request adapter rather than
 requiring a request library.  This means that your application will need to pass in
 a request adapter to the constructor of the SparkPost Library.  We use the [Ivory HTTP Adapter] (https://github.com/egeloen/ivory-http-adapter) in SparkPost. Please visit their repo
@@ -38,6 +44,7 @@ need to require one and create an adapter from it and pass it along.  The exampl
 GuzzleHttp Client Library.
 
 An Adapter can be setup like so:
+
 ```php
 use SparkPost\SparkPost;
 use GuzzleHttp\Client;
@@ -48,6 +55,7 @@ $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
 ```
 
 ## Getting Started:  Your First Mailing
+
 ```php
 require 'vendor/autoload.php';
 
@@ -114,10 +122,10 @@ try {
 ## Tips and Tricks
 ### General
 * You _must_ provide at least an API key when instantiating the SparkPost Library - `[ 'key'=>'184ac5480cfdd2bb2859e4476d2e5b1d2bad079bf' ]`
-* The SDK's features are namespaced under the various SparkPost API names.
+* The library's features are namespaced under the various SparkPost API names.
 
 ### Transmissions
-* If you specify a stored recipient list and inline recipients in a Transmission, you will recieve an error.
+* If you specify a stored recipient list and inline recipients in a Transmission, you will receive an error.
 * If you specify HTML and/or Plain Text content and then provide RFC-822 encoded content, you will receive an error.
     * RFC-822 content is not valid with any other content type.
 * If you specify a stored template and also provide inline content via `html` or `text`, you will receive an error.
