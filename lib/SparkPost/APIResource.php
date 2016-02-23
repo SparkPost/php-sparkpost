@@ -3,6 +3,8 @@ namespace SparkPost;
 use Ivory\HttpAdapter\HttpAdapterException;
 use SparkPost\SparkPost;
 
+
+
 /**
  * @desc SDK interface for managing SparkPost API endpoints
  */
@@ -186,24 +188,29 @@ class APIResource {
     //make request
     try {
       $response = $this->sparkpost->httpAdapter->send($url, $action, $this->sparkpost->getHttpHeaders(), $body);
-      return json_decode($response->getBody()->getContents(), true);
-    }
-    /*
-     * Handles 4XX responses
-     */
-    catch (HttpAdapterException $exception) {
-      $response = $exception->getResponse();
+
       $statusCode = $response->getStatusCode();
-      if($statusCode === 404) {
-        throw new \Exception('The specified resource does not exist', 404);
+
+      // Handle 4XX responses, 5XX responses will throw an HttpAdapterException
+      if ($statusCode < 400) {
+        return json_decode($response->getBody()->getContents(), true);
+      } else {
+        if ($statusCode === 404) {
+          throw new APIResponseException('The specified resource does not exist', 404);
+        }
+        throw new APIResponseException('Received bad response from '.ucfirst($this->endpoint).' API: '. $statusCode );
       }
-      throw new \Exception('Received bad response from '.ucfirst($this->endpoint).' API: '. $statusCode );
     }
+
     /*
-     * Handles 5XX Errors, Configuration Errors, and a catch all for other errors
+     * Configuration Errors, and a catch all for other errors
      */
     catch (\Exception $exception) {
-      throw new \Exception('Unable to contact '.ucfirst($this->endpoint).' API: '. $exception->getMessage());
+      if($exception instanceof APIResponseException) {
+        throw $exception;
+      }
+
+      throw new APIResponseException('Unable to contact '.ucfirst($this->endpoint).' API: '. $exception->getMessage());
     }
   }
 
