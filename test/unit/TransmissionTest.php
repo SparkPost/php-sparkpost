@@ -37,6 +37,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
       once()->
       with('/.*\/transmissions/', 'POST', Mockery::type('array'), Mockery::type('string'))->
       andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
 
     $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
 
@@ -50,6 +51,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
       once()->
       with('/.*transmissions.*?campaign_id=campaign&template_id=template/', 'GET', Mockery::type('array'), null)->
       andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
 
     $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
 
@@ -63,6 +65,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
       once()->
       with('/.*\/transmissions/', 'GET', Mockery::type('array'), null)->
       andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
 
     $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
 
@@ -76,6 +79,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
       once()->
       with('/.*\/transmissions.*\/test/', 'GET', Mockery::type('array'), null)->
       andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
 
     $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
 

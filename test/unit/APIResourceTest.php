@@ -51,8 +51,8 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
       once()->
       with(Mockery::type('string'), 'POST', Mockery::type('array'), json_encode($testInput))->
       andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
     $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
-
 
     $this->assertEquals($testBody, $this->resource->create($testInput));
   }
@@ -65,6 +65,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
       once()->
       with('/.*\/test/', 'PUT', Mockery::type('array'), json_encode($testInput))->
       andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
     $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
 
     $this->assertEquals($testBody, $this->resource->update('test', $testInput));
@@ -77,6 +78,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
       once()->
       with('/.*\/test/', 'GET', Mockery::type('array'), null)->
       andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
     $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
 
     $this->assertEquals($testBody, $this->resource->get('test'));
@@ -88,6 +90,7 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
       once()->
       with('/.*\/test/', 'DELETE', Mockery::type('array'), null)->
       andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
     $responseMock->shouldReceive('getBody->getContents')->andReturn('');
 
     $this->assertEquals(null, $this->resource->delete('test'));
@@ -95,9 +98,11 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 
   public function testAdapter404Exception() {
     try {
+      $responseMock = Mockery::mock();
       $this->sparkPostMock->httpAdapter->shouldReceive('send')->
         once()->
-        andThrow($this->getExceptionMock(404));
+        andReturn($responseMock);
+      $responseMock->shouldReceive('getStatusCode')->andReturn(404);
 
       $this->resource->get('test');
     }
@@ -108,9 +113,11 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 
   public function testAdapter4XXException() {
     try {
+      $responseMock = Mockery::mock();
       $this->sparkPostMock->httpAdapter->shouldReceive('send')->
         once()->
-        andThrow($this->getExceptionMock(400));
+        andReturn($responseMock);
+      $responseMock->shouldReceive('getStatusCode')->andReturn(400);
 
       $this->resource->get('test');
     }
