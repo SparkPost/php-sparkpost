@@ -13,7 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Library will now throw a `SparkPost\APIReponseException` properly when a 4XX http status is encountered.
 
-## [1.0.0] - 2015-10-15
+## 1.0.0 - 2015-10-15
 ### Added
 - Request adapter interface for passing in request adapters via `Ivory\HttpAdapter`
 - Ability to create 'unwrapped' modules for API endpoints that haven't had functionality included yet.
