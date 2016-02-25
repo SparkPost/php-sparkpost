@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [Unreleased][unreleased]
 - All content has been released to date.
 
 ## [1.0.1] - 2016-02-24
@@ -25,3 +25,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - README now has proper code blocks denoting PHP language
+
+[unreleased]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.0...v1.0.1
