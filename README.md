@@ -55,6 +55,7 @@ $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
 ```
 
 ## Getting Started:  Your First Mailing
+For this example to work as is, [Guzzle 6 will need to be installed](http://docs.guzzlephp.org/en/latest/overview.html#installation).  Otherwise another adapter can be used for your specific setup.  See "Setting up a Request Adapter" above.
 
 ```php
 require 'vendor/autoload.php';
@@ -72,7 +73,7 @@ try {
     'from'=>'From Envelope <from@sparkpostbox.com>',
     'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
     'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
-    'substitutionData'=>['name'=>'YOUR FIRST NAME']
+    'substitutionData'=>['name'=>'YOUR FIRST NAME'],
     'subject'=>'First Mailing From PHP',
     'recipients'=>[
       [
