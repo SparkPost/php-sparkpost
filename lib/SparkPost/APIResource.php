@@ -198,7 +198,7 @@ class APIResource {
         if ($statusCode === 404) {
           throw new APIResponseException('The specified resource does not exist', 404);
         }
-        throw new APIResponseException('Received bad response from '.ucfirst($this->endpoint).' API: '. $statusCode );
+        throw new APIResponseException('Received bad response from ' . ucfirst($this->endpoint) . ' API: '. $statusCode );
       }
     }
 
@@ -210,7 +210,7 @@ class APIResource {
         throw $exception;
       }
 
-      throw new APIResponseException('Unable to contact '.ucfirst($this->endpoint).' API: '. $exception->getMessage());
+      throw new APIResponseException('Unable to contact ' . ucfirst($this->endpoint) . ' API: '. $exception->getMessage());
     }
   }
 
