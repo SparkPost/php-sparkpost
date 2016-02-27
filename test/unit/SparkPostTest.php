@@ -1,15 +1,16 @@
 <?php
 namespace SparkPost\Test;
 
-use SparkPost\SparkPost;
 use Ivory\HttpAdapter\CurlHttpAdapter;
+use Mockery;
+use SparkPost\SparkPost;
 use SparkPost\Test\TestUtils\ClassUtils;
-use \Mockery;
 
 class SparkPostTest extends \PHPUnit_Framework_TestCase {
 
   private static $utils;
   private $adapterMock;
+  /** @var SparkPost */
   private $resource;
 
   /**
@@ -41,14 +42,6 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals('SparkPost\Transmission', get_class($sparky->transmission));
     $adapter = self::$utils->getProperty($this->resource, 'httpAdapter');
     $this->assertRegExp('/php-sparkpost.*/', $adapter->getConfiguration()->getUserAgent());
-  }
-
-  /**
-   * @expectedException Exception
-   * @expectedExceptionMessageRegExp /valid Ivory\\HttpAdapter/
-   */
-  public function testSetBadHTTPAdapter() {
-    $this->resource->setHttpAdapter(new \stdClass());
   }
 
   public function testSetConfigStringKey() {
