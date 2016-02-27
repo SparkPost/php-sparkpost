@@ -2,7 +2,7 @@
     "name": "sparkpost/php-sparkpost",
     "description": "Client library for interfacing with the SparkPost API.",
     "license": "Apache 2.0",
-    "version": "1.0.1",
+  "version": "1.0.2",
     "authors": [
       {
         "name": "Message Systems, Inc."
