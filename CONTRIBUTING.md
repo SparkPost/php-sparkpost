@@ -50,14 +50,15 @@ Follow the instructions at [xdebug.org](http://xdebug.org/wizard.php)
 
 - Provide documentation for any newly added code.
 - Provide tests for any newly added code.
-- Follow [PSR-1](http://www.php-fig.org/psr/psr-1/)
+- Follow [PSR-2](http://www.php-fig.org/psr/psr-2/) (_will be auto-enforced by php-cs-fixer in a later step_)
 
 1. Create a new branch named after the issue you’ll be fixing (include the issue number as the branch name, example: Issue in GH is #8 then the branch name should be ISSUE-8)
-2. Write corresponding tests and code (only what is needed to satisfy the issue and tests please)
+1. Write corresponding tests and code (only what is needed to satisfy the issue and tests please)
     * Include your tests in the 'test' directory in an appropriate test file
     * Write code to satisfy the tests
-3. Ensure automated tests pass
-4. Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to [AUTHORS](https://github.com/SparkPost/php-sparkpost/blob/master/AUTHORS.md).
+1. Ensure automated tests pass
+1. Run `composer run-script fix-style` to enforce PSR-2 style
+1. Send a pull request and bug the maintainer until it gets merged and published. :) Make sure to add yourself to [AUTHORS](https://github.com/SparkPost/php-sparkpost/blob/master/AUTHORS.md).
 
 
 ### Testing

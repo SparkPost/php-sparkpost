@@ -2,8 +2,6 @@
 
 namespace SparkPost;
 
-class APIResponseException extends \Exception {
-
+class APIResponseException extends \Exception
+{
 }
-
-?>
