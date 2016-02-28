@@ -134,7 +134,7 @@ class APIResource {
    * @return string the assembled URL
    */
   private function buildUrl($resourcePath, $options) {
-    $url = join(['/', $this->endpoint, '/']);
+    $url = "/{$this->endpoint}/";
     if (!is_null($resourcePath)){
       $url .= $resourcePath;
     }
