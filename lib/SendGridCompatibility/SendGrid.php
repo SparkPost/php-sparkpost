@@ -2,7 +2,6 @@
 namespace SparkPost\SendGridCompatibility;
 
 use SparkPost\SparkPost;
-use SparkPost\SendGridCompatibility\Email;
 
 class SendGrid{
   private $sparky;
