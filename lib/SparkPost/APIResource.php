@@ -33,7 +33,7 @@ class APIResource {
 
   /**
    * Initializes config and httpAdapter for use later.
-   * @param $sparkpost SparkPost\SparkPost provides api configuration information
+   * @param $sparkpost \SparkPost\SparkPost provides api configuration information
    */
   public function __construct(SparkPost $sparkpost) {
     $this->sparkpost = $sparkpost;
@@ -73,8 +73,8 @@ class APIResource {
 
   /**
    * maps values from the passed in model to those needed for the request
-   * @param $requestConfig the passed in model
-   * @param $model the set of defaults
+   * @param array $requestConfig the passed in model
+   * @param array $model the set of defaults
    * @return array A model ready for the body of a request
    */
   protected function buildRequestModel(Array $requestConfig, Array $model=[] ) {
@@ -86,7 +86,7 @@ class APIResource {
 
   /**
    * posts to the api with a supplied body
-   * @param body post body for the request
+   * @param array $body post body for the request
    * @return array Result of the request
    */
   public function create(Array $body=[]) {
@@ -95,8 +95,10 @@ class APIResource {
 
   /**
    * Makes a put request to the api with a supplied body
-   * @param body Put body for the request
+   * @param $resourcePath
+   * @param array $body Put body for the request
    * @return array Result of the request
+   * @throws APIResponseException
    */
   public function update( $resourcePath, Array $body=[]) {
     return $this->callResource( 'put', $resourcePath, ['body'=>$body]);
@@ -106,7 +108,7 @@ class APIResource {
    * Wrapper method for issuing GET request to current API endpoint
    *
    * @param string $resourcePath (optional) string resource path of specific resource
-   * @param array $options (optional) query string parameters
+   * @param array $query (optional) query string parameters
    * @return array Result of the request
    */
   public function get( $resourcePath=null, Array $query=[] ) {
@@ -117,7 +119,7 @@ class APIResource {
    * Wrapper method for issuing DELETE request to current API endpoint
    *
    * @param string $resourcePath (optional) string resource path of specific resource
-   * @param array $options (optional) query string parameters
+   * @param array $query (optional) query string parameters
    * @return array Result of the request
    */
   public function delete( $resourcePath=null, Array $query=[] ) {
@@ -128,7 +130,7 @@ class APIResource {
   /**
    * assembles a URL for a request
    * @param string $resourcePath path after the initial endpoint
-   * @param array options array with an optional value of query with values to build a querystring from.
+   * @param array $options array with an optional value of query with values to build a querystring from.
    * @return string the assembled URL
    */
   private function buildUrl($resourcePath, $options) {
@@ -148,7 +150,7 @@ class APIResource {
 
   /**
    * Prepares a body for put and post requests
-   * @param array options array with an optional value of body with values to build a request body from.
+   * @param array $options array with an optional value of body with values to build a request body from.
    * @return string|null A json encoded string or null if no body was provided
    */
   private function buildBody($options) {
@@ -160,7 +162,6 @@ class APIResource {
     }
     return $body;
   }
-
 
   /**
    * Private Method for issuing GET and DELETE request to current API endpoint
@@ -174,6 +175,7 @@ class APIResource {
    * @param string $resourcePath (optional) string resource path of specific resource
    * @param array $options (optional) query string parameters
    * @return array Result set of action performed on resource
+   * @throws APIResponseException
    */
   private function callResource( $action, $resourcePath=null, $options=[] ) {
     $action = strtoupper($action); // normalize
