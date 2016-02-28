@@ -1,11 +1,13 @@
 <?php
 namespace SparkPost;
+use Guzzle\Http\Client;
+use Guzzle\Http\Exception\ClientErrorResponseException;
 
 /**
  * SDK interface for managing transmissions
  */
-class Transmission extends APIResource
-{
+class Transmission extends APIResource {
+
   public $endpoint = 'transmissions';
 
   /**
@@ -13,24 +15,24 @@ class Transmission extends APIResource
    * @var array
    */
   protected static $parameterMappings = [
-    'campaign' => 'campaign_id',
-    'metadata' => 'metadata',
-    'substitutionData' => 'substitution_data',
-    'description' => 'description',
-    'returnPath' => 'return_path',
-    'replyTo' => 'content.reply_to',
-    'subject' => 'content.subject',
-    'from' => 'content.from',
-    'html' => 'content.html',
-    'text' => 'content.text',
-    'rfc822' => 'content.email_rfc822',
-    'customHeaders' => 'content.headers',
-    'recipients' => 'recipients',
-    'recipientList' => 'recipients.list_id',
-    'template' => 'content.template_id',
-    'trackOpens' => 'options.open_tracking',
-    'trackClicks' => 'options.click_tracking',
-    'useDraftTemplate' => 'use_draft_template'
+    'campaign'=>'campaign_id',
+    'metadata'=>'metadata',
+    'substitutionData'=>'substitution_data',
+    'description'=>'description',
+    'returnPath'=>'return_path',
+    'replyTo'=>'content.reply_to',
+    'subject'=>'content.subject',
+    'from'=>'content.from',
+    'html'=>'content.html',
+    'text'=>'content.text',
+    'rfc822'=>'content.email_rfc822',
+    'customHeaders'=>'content.headers',
+    'recipients'=>'recipients',
+    'recipientList'=>'recipients.list_id',
+    'template'=>'content.template_id',
+    'trackOpens'=>'options.open_tracking',
+    'trackClicks'=>'options.click_tracking',
+    'useDraftTemplate'=>'use_draft_template'
   ];
 
   /**
@@ -38,13 +40,13 @@ class Transmission extends APIResource
    * @var array
    */
   protected static $structure = [
-    'return_path' => 'default@sparkpostmail.com',
-    'content' => [
-      'html' => null,
-      'text' => null,
-      'email_rfc822' => null
+    'return_path'=>'default@sparkpostmail.com',
+    'content'=>[
+      'html'=>null,
+      'text'=>null,
+      'email_rfc822'=>null
     ],
-    'use_draft_template' => false
+    'use_draft_template'=>false
   ];
 
   /**
@@ -71,44 +73,34 @@ class Transmission extends APIResource
    *  'trackClicks': boolean,
    *  'useDraftTemplate': boolean
    *
-   * @param array $transmissionConfig
-   * @return array API response represented as key-value pairs
+   * @return array API repsonse represented as key-value pairs
    */
-  public function send(array $transmissionConfig)
-  {
-    return $this->create($transmissionConfig);
+  public function send( $transmissionConfig ) {
+    return $this->create( $transmissionConfig );
   }
 
   /**
    * Method for retrieving information about all transmissions
    *  Wrapper method for a cleaner interface
    *
-   * @param null|string $campaignID
-   * @param null|string $templateID
    * @return array result Set of transmissions
    */
-  public function all($campaignID = null, $templateID = null)
-  {
+  public function all( $campaignID=null, $templateID=null ) {
     $options = [];
-    if ($campaignID !== null) {
-      $options['campaign_id'] = $campaignID;
-    }
-    if ($templateID !== null) {
-      $options['template_id'] = $templateID;
-    }
+    if( $campaignID !== NULL ) $options['campaign_id'] = $campaignID;
+    if( $templateID !== NULL ) $options['template_id'] = $templateID;
 
-    return $this->get(null, $options);
+    return $this->get( null, $options );
   }
 
   /**
    * Method for retrieving information about a single transmission
-   * Wrapper method for a cleaner interface
-   *
+    *  Wrapper method for a cleaner interface
+    *
    * @param string $transmissionID Identifier of the transmission to be found
    * @return array result Single transmission represented in key-value pairs
    */
-  public function find($transmissionID)
-  {
+  public function find($transmissionID) {
     return $this->get($transmissionID);
   }
 }
