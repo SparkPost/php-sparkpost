@@ -73,6 +73,7 @@ class Transmission extends APIResource {
    *  'trackClicks': boolean,
    *  'useDraftTemplate': boolean
    *
+   * @param array $transmissionConfig
    * @return array API repsonse represented as key-value pairs
    */
   public function send( $transmissionConfig ) {
@@ -83,6 +84,8 @@ class Transmission extends APIResource {
    * Method for retrieving information about all transmissions
    *  Wrapper method for a cleaner interface
    *
+   * @param null|string $campaignID
+   * @param null|string $templateID
    * @return array result Set of transmissions
    */
   public function all( $campaignID=null, $templateID=null ) {
