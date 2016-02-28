@@ -8,12 +8,12 @@ class SparkPost {
   public $transmission;
 
   /**
-   * @dec connection config for making requests.
+   * Connection config for making requests.
    */
   private $config;
 
   /**
-   * Ivory\HttpAdapter\HttpAdapterInterface to make requests through.
+   * @var \Ivory\HttpAdapter\HttpAdapterInterface to make requests through.
    */
   public $httpAdapter;
 
@@ -21,21 +21,21 @@ class SparkPost {
    * Default config values. Passed in values will override these.
    */
   private static $apiDefaults = [
-    'host'=>'api.sparkpost.com',
-    'protocol'=>'https',
-    'port'=>443,
-    'strictSSL'=>true,
-    'key'=>'',
-    'version'=>'v1'
+      'host'=>'api.sparkpost.com',
+      'protocol'=>'https',
+      'port'=>443,
+      'strictSSL'=>true,
+      'key'=>'',
+      'version'=>'v1'
   ];
 
   /**
-   * sets up httpAdapter and config
+   * Sets up httpAdapter and config
    *
    * Sets up instances of sub libraries.
    *
-   * @param Ivory\HttpAdapter $httpAdapter - An adapter for making http requests
-   * @param String | Array $settingsConfig - Hashmap that contains config values
+   * @param \Ivory\HttpAdapter\HttpAdapterInterface $httpAdapter - An adapter for making http requests
+   * @param String | array $settingsConfig - Hashmap that contains config values
    *              for the SDK to connect to SparkPost. If its a string we assume that
    *              its just they API Key.
    */
@@ -47,12 +47,11 @@ class SparkPost {
     $this->transmission = new Transmission($this);
   }
 
-
-
   /**
    * Creates an unwrapped api interface for endpoints that aren't yet supported.
    * The new resource is attached to this object as well as returned
-   * @return SparkPost\APIResource - the unwrapped resource
+   * @param string $endpoint
+   * @return APIResource - the unwrapped resource
    */
   public function setupUnwrapped ($endpoint) {
     $this->{$endpoint} = new APIResource($this);
@@ -66,17 +65,17 @@ class SparkPost {
    */
   public function getHttpHeaders() {
     $defaultOptions = [
-      'Authorization' => $this->config['key'],
-      'Content-Type' => 'application/json',
+        'Authorization' => $this->config['key'],
+        'Content-Type' => 'application/json',
     ];
 
     return $defaultOptions;
   }
 
-
   /**
    * Helper function for getting the configuration for http requests
-   * @return \Ivory\HttpAdapter\Configuration
+   * @param array $config
+   * @return Configuration
    */
   private function getHttpConfig($config) {
     // get composer.json to extract version number
@@ -94,22 +93,17 @@ class SparkPost {
 
   /**
    * Validates and sets up the httpAdapter
-   * @param $httpAdapter Ivory\HttpAdapter\HttpAdapterInterface to make requests through.
+   * @param $httpAdapter \Ivory\HttpAdapter\HttpAdapterInterface to make requests through.
    * @throws \Exception
    */
-  public function setHttpAdapter($httpAdapter) {
-    if (!$httpAdapter instanceOf HttpAdapterInterface) {
-      throw new \Exception('$httpAdapter paramter must be a valid Ivory\HttpAdapter');
-    }
-
+  public function setHttpAdapter(HttpAdapterInterface $httpAdapter) {
     $this->httpAdapter = $httpAdapter;
     $this->httpAdapter->setConfiguration($this->getHttpConfig($this->config));
   }
 
-
   /**
    * Allows the user to pass in values to override the defaults and set their API key
-   * @param String | Array $settingsConfig - Hashmap that contains config values
+   * @param String | array $settingsConfig - Hashmap that contains config values
    *              for the SDK to connect to SparkPost. If its a string we assume that
    *              its just they API Key.
    * @throws \Exception
