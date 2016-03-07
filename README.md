@@ -7,11 +7,11 @@
 [![Travis CI](https://travis-ci.org/SparkPost/php-sparkpost.svg?branch=master)](https://travis-ci.org/SparkPost/php-sparkpost)
 [![Coverage Status](https://coveralls.io/repos/SparkPost/php-sparkpost/badge.svg?branch=master&service=github)](https://coveralls.io/github/SparkPost/php-sparkpost?branch=master) [![Slack Status](http://slack.sparkpost.com/badge.svg)](http://slack.sparkpost.com)
 
-The official PHP binding for your favorite SparkPost APIs!
+The official PHP library for using [the SparkPost REST API](https://developers.sparkpost.com).
 
-Before using this library, you must have a valid API Key.
+**Note: We understand that the ivory-http-adapter we use in this library is deprecated in favor of httplug. We use Ivory internally to make it simple for you to use whatever HTTP library you want. The deprecation won't affect or limit our ongoing support of this PHP library.**
 
-To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
+Before using this library, you must have a valid API Key. To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
 
 ## Installation
 The recommended way to install the SparkPost PHP Library is through composer.
