@@ -113,11 +113,13 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
 
   public function testAdapter4XXException() {
     try {
+      $testBody = ['errors'=>['my'=>'test']];
       $responseMock = Mockery::mock();
       $this->sparkPostMock->httpAdapter->shouldReceive('send')->
         once()->
         andReturn($responseMock);
       $responseMock->shouldReceive('getStatusCode')->andReturn(400);
+      $responseMock->shouldReceive('getBody')->andReturn(json_encode($testBody));
 
       $this->resource->get('test');
     }
