@@ -29,6 +29,7 @@ class Transmission extends APIResource {
     'customHeaders'=>'content.headers',
     'recipients'=>'recipients',
     'recipientList'=>'recipients.list_id',
+    'inlineImages'=>'content.inline_images',    
     'template'=>'content.template_id',
     'trackOpens'=>'options.open_tracking',
     'trackClicks'=>'options.click_tracking',
