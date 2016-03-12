@@ -34,7 +34,11 @@ class Transmission extends APIResource {
     'template'=>'content.template_id',
     'trackOpens'=>'options.open_tracking',
     'trackClicks'=>'options.click_tracking',
-    'useDraftTemplate'=>'use_draft_template'
+    'useDraftTemplate'=>'use_draft_template',
+    'startTime'=>'options.start_time',
+    'sandbox'=>'options.sandbox',
+    'transactional'=>'options.transactional',
+    'inlineCss'=>'options.inline_css'
   ];
 
   /**
@@ -70,10 +74,16 @@ class Transmission extends APIResource {
    *  'customHeaders': array,
    *  'recipients': array,
    *  'recipientList': string,
+   *  'attachments': array,
+   *  'inlineImages': array,
    *  'template': string,
    *  'trackOpens': boolean,
    *  'trackClicks': boolean,
-   *  'useDraftTemplate': boolean
+   *  'useDraftTemplate': boolean,
+   *  'startTime': string,
+   *  'sandbox': boolean,
+   *  'transactional': boolean,
+   *  'inlineCss': boolean
    *
    * @param array $transmissionConfig
    * @return array API repsonse represented as key-value pairs
