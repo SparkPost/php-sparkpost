@@ -15,30 +15,30 @@ class Transmission extends APIResource {
    * @var array
    */
   protected static $parameterMappings = [
+    'attachments'=>'content.attachments',
     'campaign'=>'campaign_id',
-    'metadata'=>'metadata',
-    'substitutionData'=>'substitution_data',
+    'customHeaders'=>'content.headers',
     'description'=>'description',
-    'returnPath'=>'return_path',
-    'replyTo'=>'content.reply_to',
-    'subject'=>'content.subject',
     'from'=>'content.from',
     'html'=>'content.html',
-    'text'=>'content.text',
-    'rfc822'=>'content.email_rfc822',
-    'customHeaders'=>'content.headers',
-    'recipients'=>'recipients',
-    'recipientList'=>'recipients.list_id',
-    'attachments'=>'content.attachments',
+    'inlineCss'=>'options.inline_css',
     'inlineImages'=>'content.inline_images',
-    'template'=>'content.template_id',
-    'trackOpens'=>'options.open_tracking',
-    'trackClicks'=>'options.click_tracking',
-    'useDraftTemplate'=>'use_draft_template',
-    'startTime'=>'options.start_time',
+    'metadata'=>'metadata',
+    'recipientList'=>'recipients.list_id',
+    'recipients'=>'recipients',
+    'replyTo'=>'content.reply_to',
+    'returnPath'=>'return_path',
+    'rfc822'=>'content.email_rfc822',
     'sandbox'=>'options.sandbox',
+    'startTime'=>'options.start_time',
+    'subject'=>'content.subject',
+    'substitutionData'=>'substitution_data',
+    'template'=>'content.template_id',
+    'text'=>'content.text',
+    'trackClicks'=>'options.click_tracking',
+    'trackOpens'=>'options.open_tracking',
     'transactional'=>'options.transactional',
-    'inlineCss'=>'options.inline_css'
+    'useDraftTemplate'=>'use_draft_template'
   ];
 
   /**
@@ -61,29 +61,29 @@ class Transmission extends APIResource {
    *  This method assumes that all the appropriate fields have
    *  been populated by the user through configuration.  Acceptable
    *  configuration values are:
+   *  'attachments': array,
    *  'campaign': string,
-   *  'metadata': array,
-   *  'substitutionData': array,
+   *  'customHeaders': array,
    *  'description': string,
-   *  'replyTo': string,
-   *  'subject': string,
    *  'from': string,
    *  'html': string,
-   *  'text': string,
-   *  'rfc822': string,
-   *  'customHeaders': array,
-   *  'recipients': array,
-   *  'recipientList': string,
-   *  'attachments': array,
+   *  'inlineCss': boolean,
    *  'inlineImages': array,
-   *  'template': string,
-   *  'trackOpens': boolean,
-   *  'trackClicks': boolean,
-   *  'useDraftTemplate': boolean,
-   *  'startTime': string,
+   *  'metadata': array,
+   *  'recipientList': string,
+   *  'recipients': array,
+   *  'replyTo': string,
+   *  'rfc822': string,
    *  'sandbox': boolean,
+   *  'startTime': string,
+   *  'subject': string,
+   *  'substitutionData': array,
+   *  'template': string,
+   *  'text': string,
+   *  'trackClicks': boolean,
+   *  'trackOpens': boolean,
    *  'transactional': boolean,
-   *  'inlineCss': boolean
+   *  'useDraftTemplate': boolean
    *
    * @param array $transmissionConfig
    * @return array API repsonse represented as key-value pairs
