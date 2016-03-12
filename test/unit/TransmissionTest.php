@@ -86,5 +86,19 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($responseBody, $this->resource->find('test'));
   }
 
+  public function testDelete() {
+    $responseMock = Mockery::mock();
+    $responseBody = [];
+    $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+      once()->
+      with('/.*\/transmissions.*\/test/', 'DELETE', Mockery::type('array'), null)->
+      andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
+
+    $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
+
+    $this->assertEquals($responseBody, $this->resource->destroy('test'));
+  }
+
 }
 ?>
