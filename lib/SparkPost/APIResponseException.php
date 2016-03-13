@@ -16,15 +16,15 @@ class APIResponseException extends \Exception {
   /**
    * @var string
    */
-  protected $apiMessageDescription;
+  protected $apiDescription;
 
   /**
    * Construct the exception.
    */
-  public function __construct($message = "", $code = 0, $apiMessage = "", $apiCode = 0, $apiMessageDescription = "") {
+  public function __construct($message = "", $code = 0, $apiMessage = "", $apiCode = 0, $apiDescription = "") {
     $this->apiMessage = $apiMessage;
     $this->apiCode = $apiCode;
-    $this->apiMessageDescription = $apiMessageDescription;
+    $this->apiDescription = $apiDescription;
     parent::__construct($message, $code);
   }
 
@@ -45,11 +45,11 @@ class APIResponseException extends \Exception {
   }
 
   /**
-   * Gets the Exception message
-   * @return string the Exception message as a string.
+   * Gets the Exception description
+   * @return string the Exception description as a string.
    */
-  public function getAPIMessageDescription() {
-    return $this->apiMessageDescription;
+  public function getAPIDescription() {
+    return $this->apiDescription;
   }
 
 }
