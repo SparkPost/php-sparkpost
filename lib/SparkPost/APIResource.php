@@ -192,11 +192,19 @@ class APIResource {
       // Handle 4XX responses, 5XX responses will throw an HttpAdapterException
       if ($statusCode < 400) {
         return json_decode($response->getBody()->getContents(), true);
-      } else {
-        if ($statusCode === 404) {
-          throw new APIResponseException('The specified resource does not exist', 404);
-        }
-        throw new APIResponseException('Received bad response from ' . ucfirst($this->endpoint) . ' API: '. $statusCode );
+      }
+      elseif ($statusCode === 404) {
+        throw new APIResponseException('The specified resource does not exist', 404);
+      }
+      else {
+        $response = json_decode($response->getBody(), true);
+        throw new APIResponseException(
+          'Received bad response from ' . ucfirst($this->endpoint),
+          $statusCode,
+          isset($response['errors'][0]['message']) ? $response['errors'][0]['message'] : "",
+          isset($response['errors'][0]['code']) ? $response['errors'][0]['code'] : 0,
+          isset($response['errors'][0]['description']) ? $response['errors'][0]['description'] : ""
+        );
       }
     }
 
@@ -208,7 +216,7 @@ class APIResource {
         throw $exception;
       }
 
-      throw new APIResponseException('Unable to contact ' . ucfirst($this->endpoint) . ' API: '. $exception->getMessage());
+      throw new APIResponseException('Unable to contact ' . ucfirst($this->endpoint) . ' API: '. $exception->getMessage(), $exception->getCode());
     }
   }
 
