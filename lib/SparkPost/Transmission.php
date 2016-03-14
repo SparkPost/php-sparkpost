@@ -108,6 +108,17 @@ class Transmission extends APIResource {
   public function find($transmissionID) {
     return $this->get($transmissionID);
   }
+
+  /**
+   * Method for deleting a scheduled transmission
+    *  Wrapper method for a cleaner interface
+    *
+   * @param string $transmissionID Identifier of the transmission to deleted
+   * @return array result Result of delete, empty on success
+   */
+  public function destroy($transmissionID) {
+    return $this->delete($transmissionID);
+  }
 }
 
 ?>
