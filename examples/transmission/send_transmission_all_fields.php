@@ -13,6 +13,8 @@ use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
+$data = file_get_contents('/path/to/test.csv');
+
 try{
   $results = $sparky->transmission->send([
     'campaign'=>'my-campaign',
@@ -30,6 +32,10 @@ try{
     ],
     'trackOpens'=>false,
     'trackClicks'=>false,
+    'sandbox'=>false,
+    'inlineCss'=>true,
+    'transactional'=>true,
+    'startTime'=>'2016-03-17T08:00:00-04:00',
     'from'=>'From Envelope <from@sparkpostbox.com>',
     'html'=>'<p>Hello World! Your name is: {{name}}</p>',
     'text'=>'Hello World!',
@@ -39,6 +45,13 @@ try{
         'address'=>[
           'email'=>'john.doe@example.com'
         ]
+      ]
+    ],
+    'attachments'=>[
+      [
+        'type'=>'text/csv',
+        'name'=>'testing.csv',
+        'data'=>base64_encode($data)
       ]
     ]
   ]);
