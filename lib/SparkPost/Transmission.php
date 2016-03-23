@@ -37,6 +37,7 @@ class Transmission extends APIResource {
     'text'=>'content.text',
     'trackClicks'=>'options.click_tracking',
     'trackOpens'=>'options.open_tracking',
+    'inlineCss'=>'options.inline_css',
     'transactional'=>'options.transactional',
     'useDraftTemplate'=>'use_draft_template'
   ];
@@ -82,6 +83,7 @@ class Transmission extends APIResource {
    *  'text': string,
    *  'trackClicks': boolean,
    *  'trackOpens': boolean,
+   *  'inlineCss': boolean,
    *  'transactional': boolean,
    *  'useDraftTemplate': boolean
    *

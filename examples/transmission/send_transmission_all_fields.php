@@ -30,6 +30,7 @@ try{
     ],
     'trackOpens'=>false,
     'trackClicks'=>false,
+    'inlineCss'=>false,
     'from'=>'From Envelope <from@sparkpostbox.com>',
     'html'=>'<p>Hello World! Your name is: {{name}}</p>',
     'text'=>'Hello World!',
