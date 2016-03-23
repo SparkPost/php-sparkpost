@@ -107,6 +107,7 @@ try {
 | trackOpens       | no          | Field for enabling/disabling transmission level open tracking  (default: true)                                             | Boolean          |
 | trackClicks      | no          | Field for enabling/disabling transmission level click tracking (default: true)                                             | Boolean          |
 | useDraftTemplate | no          | Field for allowing the sending of a transmission using a draft of a stored template (default: false)                       | Boolean          |
+| inlineCss        | no          | Field for enabling automatic CSS inlining (default: false)                                                                 | Boolean          |
 | replyTo          | no          | Field for specifying the email address that should be used when a recipient hits the reply button                          | String           |
 | subject          | yes         | Field for setting the subject line of a given transmission                                                                 | String           |
 | from             | yes**       | Field for setting the from line of a given transmission                                                                    | String or Object |
