@@ -75,7 +75,7 @@ class Transmission extends APIResource {
    *  'replyTo': string,
    *  'rfc822': string,
    *  'sandbox': boolean,
-   *  'startTime': string,
+   *  'startTime': string | \DateTime,
    *  'subject': string,
    *  'substitutionData': array,
    *  'template': string,
@@ -89,6 +89,13 @@ class Transmission extends APIResource {
    * @return array API repsonse represented as key-value pairs
    */
   public function send( $transmissionConfig ) {
+    if(isset($transmissionConfig["startTime"]) &&
+      $transmissionConfig["startTime"] instanceof \DateTime)
+      {
+        $transmissionConfig["startTime"] =
+          $transmissionConfig["startTime"]->format(\DateTime::ATOM);
+      }
+
     return $this->create( $transmissionConfig );
   }
 
