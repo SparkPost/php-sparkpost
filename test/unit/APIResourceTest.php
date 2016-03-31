@@ -84,6 +84,20 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($testBody, $this->resource->get('test'));
   }
 
+  public function testGetCommaSeparated() {
+    $testBody = ['results'=>['my'=>'test']];
+    $responseMock = Mockery::mock();
+    $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+    once()->
+    with('/.*\/test/', 'GET', Mockery::type('array'), null)->
+    andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
+    $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
+
+    $this->assertEquals($testBody, $this->resource->get(
+      'test', [ "param1" => "param1val", "param2" => ["param2val1", "param2val2"] ]));
+  }
+
   public function testDelete() {
     $responseMock = Mockery::mock();
     $this->sparkPostMock->httpAdapter->shouldReceive('send')->

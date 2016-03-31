@@ -112,6 +112,11 @@ class APIResource {
    * @return array Result of the request
    */
   public function get( $resourcePath=null, Array $query=[] ) {
+    foreach($query as $element) {
+      if(is_array($element)) {
+        
+      }
+    }
     return $this->callResource( 'get', $resourcePath, ['query'=>$query] );
   }
 
