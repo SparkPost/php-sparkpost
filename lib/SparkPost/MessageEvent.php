@@ -44,9 +44,9 @@ class MessageEvent extends APIResource
   }
 
   /**
-   * List an example of the event data that will be included in a response from the MessageEvent::search() method.
+   * List examples of the event data that will be included in a response from the MessageEvent::search() method.
    */
-  public function samples() {
-    return $this->get("events/samples", ["events" => "bounce"]);
+  public function samples(Array $events) {
+    return $this->get("events/samples", ["events"=>$events]);
   }
 }
