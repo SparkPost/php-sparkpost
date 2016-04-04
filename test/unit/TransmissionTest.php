@@ -44,6 +44,22 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase {
     $this->assertEquals($responseBody, $this->resource->send($body));
   }
 
+  public function testSendDateTimeConversion()
+  {
+    $testStartTime = new \DateTime("2016-08-27 13:01:02", new \DateTimeZone("UTC"));
+
+    $responseMock = Mockery::mock();
+    $responseBody = ['results'=>'yay'];
+    $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+      once()->
+      with('/.*\/transmissions/', 'POST', Mockery::type('array'), matchesPattern('/"start_time":"2016-08-27T13:01:02\+00:00"/'))->
+      andReturn($responseMock);
+    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
+    $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
+
+    $this->assertEquals($responseBody, $this->resource->send(['startTime'=>$testStartTime]));
+  }
+
   public function testAllWithFilter() {
     $responseMock = Mockery::mock();
     $responseBody = ['results'=>'yay'];
