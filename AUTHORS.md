@@ -4,4 +4,5 @@ php-sparkpost is maintained by Message Systems.
 
 * Jordan Nornhold <jordan.nornhold@messagesystems.com>, @beardyman
 * Rich Leland <rich.leland@messagesystems.com>, @richleland
-* Matthew April <matthew.japril@gmail.com>
+* Matthew April <matthew.japril@gmail.com>,
+* Stephen Rhyne <stephen@throwingboulders.com>, @srhyne
