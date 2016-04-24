@@ -89,11 +89,9 @@ class Transmission extends APIResource {
    * @return array API repsonse represented as key-value pairs
    */
   public function send( $transmissionConfig ) {
-    if(isset($transmissionConfig["startTime"]) &&
-      $transmissionConfig["startTime"] instanceof \DateTime)
+    if(isset($transmissionConfig["startTime"]) && $transmissionConfig["startTime"] instanceof \DateTime)
       {
-        $transmissionConfig["startTime"] =
-          $transmissionConfig["startTime"]->format(\DateTime::ATOM);
+        $transmissionConfig["startTime"] = $transmissionConfig["startTime"]->format(\DateTime::ATOM);
       }
 
     return $this->create( $transmissionConfig );
