@@ -141,6 +141,7 @@ class APIResource {
     }
 
     if( !empty($options['query'])) {
+      // check each query element - if it's an array, implode it to match the API-accepted format
       foreach($options['query'] as &$element) {
         if(is_array($element)) {
           $element = implode(",", $element);
