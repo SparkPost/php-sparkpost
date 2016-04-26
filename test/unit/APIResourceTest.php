@@ -111,6 +111,21 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase {
     }
   }
 
+  public function testAdapter403Exception() {
+    try {
+      $responseMock = Mockery::mock();
+      $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+      once()->
+      andReturn($responseMock);
+      $responseMock->shouldReceive('getStatusCode')->andReturn(403);
+
+      $this->resource->get('test');
+    }
+    catch(\Exception $e) {
+      $this->assertRegExp('/Request forbidden/', $e->getMessage());
+    }
+  }
+
   public function testAdapter4XXException() {
     try {
       $testBody = ['errors'=>['my'=>'test']];

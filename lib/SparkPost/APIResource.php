@@ -194,6 +194,9 @@ class APIResource {
       if ($statusCode < 400) {
         return json_decode($response->getBody()->getContents(), true);
       }
+      elseif ($statusCode === 403) {
+        throw new APIResponseException('Request forbidden.  Does this API Key have the correct SparkPost permissions?');
+      }
       elseif ($statusCode === 404) {
         throw new APIResponseException('The specified resource does not exist', 404);
       }

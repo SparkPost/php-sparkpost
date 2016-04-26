@@ -117,7 +117,7 @@ class SparkPost {
     }
 
     // Validate API key because its required
-    if (!isset($settingsConfig['key']) || empty(trim($settingsConfig['key']))){
+    if (!isset($settingsConfig['key']) || !preg_match('/\S/', $settingsConfig['key'])){
       throw new \Exception('You must provide an API key');
     }
 
