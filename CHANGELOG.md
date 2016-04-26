@@ -3,7 +3,8 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
-- All content has been released to date.
+- Message Events API added.
+- Transmission API now accepts a DateTime object for startDate
 
 ## [1.0.3] - 2016-03-25
 ### Added

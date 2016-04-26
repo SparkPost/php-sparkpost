@@ -6,8 +6,11 @@ namespace SparkPost;
  *
  * @see https://developers.sparkpost.com/api/#/reference/message-events
  */
-class MessageEvent extends APIResource
+class MessageEvents extends APIResource
 {
+  /**
+   * @var string
+   */
   public $endpoint = 'message-events';
 
   /**
@@ -45,8 +48,13 @@ class MessageEvent extends APIResource
 
   /**
    * List examples of the event data that will be included in a response from the MessageEvent::search() method.
+   *
+   * @param array $events (optional) Event types for which to get a sample payload.  If not provided, samples
+   * for all events will be returned.
+   *
+   * @return array Sample events.
    */
-  public function samples(Array $events) {
+  public function samples(Array $events = []) {
     return $this->get("events/samples", ["events"=>$events]);
   }
 }

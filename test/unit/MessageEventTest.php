@@ -21,7 +21,7 @@ class MessageEventTest extends \PHPUnit_Framework_TestCase
       $mock->shouldReceive('getHttpHeaders')->andReturn([]);
     });
     $this->sparkPostMock->httpAdapter = Mockery::mock();
-    $this->sut = new MessageEvent($this->sparkPostMock);
+    $this->sut = new MessageEvents($this->sparkPostMock);
   }
 
   public function testDateTimeConversion()
