@@ -177,14 +177,15 @@ class APIResource {
    * @return array Result set of action performed on resource
    * @throws APIResponseException
    */
-  private function callResource( $action, $resourcePath=null, $options=[] ) {
-    $action = strtoupper($action); // normalize
+  public function callResource( $action, $resourcePath=null, $options=[] ) {
+    $action = strtoupper($action); // normalize        
 
     $url = $this->buildUrl($resourcePath, $options);
     $body = $this->buildBody($options);
 
     //make request
     try {
+
       $response = $this->sparkpost->httpAdapter->send($url, $action, $this->sparkpost->getHttpHeaders(), $body);
 
       $statusCode = $response->getStatusCode();
@@ -198,6 +199,7 @@ class APIResource {
       }
       else {
         $response = json_decode($response->getBody(), true);
+
         throw new APIResponseException(
           'Received bad response from ' . ucfirst($this->endpoint),
           $statusCode,
