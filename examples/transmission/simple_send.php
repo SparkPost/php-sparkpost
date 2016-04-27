@@ -14,21 +14,24 @@ $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
 try {
-  $results = $sparky->transmission->send([
-    'from'=>'From Envelope <from@sparkpostbox.com>',
-    'html'=>'<p>Hello World!</p>',
-    'text'=>'Hello World!',
-    'subject'=>'Example Email',
-    'recipients'=>[
-      [
-        'address'=>[
-          'email'=>'john.doe@example.com'
+    $results = $sparky->transmission->send([
+        'from'=>[
+            'name' => 'From Envelope',
+            'email' => 'from@sparkpostbox.com>'
+        ],
+        'html'=>'<p>Hello World!</p>',
+        'text'=>'Hello World!',
+        'subject'=>'Example Email',
+        'recipients'=>[
+            [
+                'address'=>[
+                    'email'=>'john.doe@example.com'
+                ]
+            ]
         ]
-      ]
-    ]
-  ]);
-  echo 'Congrats you can use your SDK!';
+    ]);
+    echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
-  echo $exception->getMessage();
+    echo $exception->getMessage();
 }
 ?>
