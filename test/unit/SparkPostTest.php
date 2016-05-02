@@ -25,9 +25,13 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
       $mock->shouldReceive('getConfiguration->getUserAgent')->andReturn('php-sparkpost/0.2.0');
     });
 
-    $this->resource = new SparkPost($this->adapterMock, ['key'=>'a key']);
+    $this->resource = new SparkPost($this->adapterMock, [
+      'key'=>'a key',
+      'subaccount_id' => 1
+    ]);
     self::$utils = new ClassUtils($this->resource);
-    self::$utils->setProperty($this->resource, 'httpAdapter', $this->adapterMock);
+    self::$utils->setProperty($this->resource, 'httpAdapter', 
+      $this->adapterMock);
   }
 
   public function tearDown(){
@@ -63,6 +67,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase {
     $results = $this->resource->getHttpHeaders();
     $this->assertEquals('a key', $results['Authorization']);
     $this->assertEquals('application/json', $results['Content-Type']);
+    $this->assertEquals(1, $results['X-MSYS-SUBACCOUNT']);
   }
 
   public function testSetUnwrapped() {

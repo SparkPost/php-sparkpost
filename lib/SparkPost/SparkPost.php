@@ -26,7 +26,8 @@ class SparkPost {
       'port'=>443,
       'strictSSL'=>true,
       'key'=>'',
-      'version'=>'v1'
+      'version'=>'v1',
+      'subaccount_id' => 0
   ];
 
   /**
@@ -64,10 +65,15 @@ class SparkPost {
    * Merges passed in headers with default headers for http requests
    */
   public function getHttpHeaders() {
+
     $defaultOptions = [
         'Authorization' => $this->config['key'],
         'Content-Type' => 'application/json',
     ];
+
+    if( $this->config['subaccount_id'] ){
+      $defaultOptions['X-MSYS-SUBACCOUNT'] = $this->config['subaccount_id'];
+    }
 
     return $defaultOptions;
   }
