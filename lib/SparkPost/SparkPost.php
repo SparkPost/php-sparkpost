@@ -6,6 +6,7 @@ use Ivory\HttpAdapter\HttpAdapterInterface;
 class SparkPost {
 
   public $transmission;
+  public $messageEvents;
 
   /**
    * Connection config for making requests.
@@ -45,6 +46,7 @@ class SparkPost {
     $this->setHttpAdapter($httpAdapter);
 
     $this->transmission = new Transmission($this);
+    $this->messageEvents = new MessageEvents($this);
   }
 
   /**

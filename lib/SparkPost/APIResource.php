@@ -130,7 +130,8 @@ class APIResource {
   /**
    * assembles a URL for a request
    * @param string $resourcePath path after the initial endpoint
-   * @param array $options array with an optional value of query with values to build a querystring from.
+   * @param array $options array with an optional value of query with values to build a querystring from.  Any
+   *                        query elements that are themselves arrays will be imploded into a comma separated list. 
    * @return string the assembled URL
    */
   private function buildUrl($resourcePath, $options) {
@@ -140,6 +141,13 @@ class APIResource {
     }
 
     if( !empty($options['query'])) {
+      // check each query element - if it's an array, implode it to match the API-accepted format
+      foreach($options['query'] as &$element) {
+        if(is_array($element)) {
+          $element = implode(",", $element);
+        }
+      }
+
       $queryString = http_build_query($options['query']);
       $url .= '?'.$queryString;
     }

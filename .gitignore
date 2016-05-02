@@ -5,3 +5,4 @@
 test/output/
 examples/example-config.json
 .idea
+/composer.phar
