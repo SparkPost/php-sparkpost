@@ -1,34 +1,35 @@
 {
-    "name": "sparkpost/php-sparkpost",
-    "description": "Client library for interfacing with the SparkPost API.",
-    "license": "Apache 2.0",
-    "version": "1.0.3",
-    "authors": [
-      {
-        "name": "Message Systems, Inc."
-      }
-    ],
-    "minimum-stability": "stable",
-    "scripts": {
-      "post-install-cmd": "if [ ! -f 'examples/example-config.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json; fi",
-      "post-update-cmd": "if [ ! -f 'examples/example-config.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json; fi",
-      "test": "phpunit ./test/unit/"
-    },
-    "require": {
-      "php": ">=5.5.0",
-      "egeloen/http-adapter": "*"
-    },
-    "require-dev": {
-      "phpunit/phpunit": "4.3.*",
-      "guzzlehttp/guzzle": "6.*",
-      "mockery/mockery": "^0.9.4",
-      "satooshi/php-coveralls": "dev-master"
-    },
-    "autoload": {
-      "psr-4": {
-        "SparkPost\\": "lib/SparkPost/",
-        "SparkPost\\SendGridCompatibility\\": "lib/SendGridCompatibility/",
-        "SparkPost\\Test\\TestUtils\\": "test/unit/TestUtils/"
-      }
+  "name": "sparkpost/php-sparkpost",
+  "description": "Client library for interfacing with the SparkPost API.",
+  "license": "Apache 2.0",
+  "authors": [
+    {
+      "name": "SparkPost"
     }
+  ],
+  "minimum-stability": "stable",
+  "scripts": {
+    "post-install-cmd": "if [ ! -f 'examples/example-config.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json; fi",
+    "post-update-cmd": "if [ ! -f 'examples/example-config.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json; fi",
+    "test": "phpunit ./test/unit/",
+    "fix-style": "php-cs-fixer fix ."
+  },
+  "require": {
+    "php": ">=5.5.0",
+    "egeloen/http-adapter": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "4.3.*",
+    "guzzlehttp/guzzle": "6.*",
+    "mockery/mockery": "^0.9.4",
+    "satooshi/php-coveralls": "dev-master",
+    "fabpot/php-cs-fixer": "^1.11"
+  },
+  "autoload": {
+    "psr-4": {
+      "SparkPost\\": "lib/SparkPost/",
+      "SparkPost\\SendGridCompatibility\\": "lib/SendGridCompatibility/",
+      "SparkPost\\Test\\TestUtils\\": "test/unit/TestUtils/"
+    }
+  }
 }
