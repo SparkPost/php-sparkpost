@@ -15,17 +15,20 @@ $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
 try {
 
-  $results = $sparky->transmission->send([
-    'campaign'=>'my-campaign',
-    'from'=>'From Envelope <from@sparkpostbox.com>',
-    'html'=>'<p>Hello World! Your name is: {{name}}</p>',
-    'text'=>'Hello World!',
-    'subject'=>'Example Email: {{name}}',
-    'recipientList'=>'Example List'
-  ]);
+    $results = $sparky->transmission->send([
+        'campaign'=>'my-campaign',
+        'from'=>[
+            'name' => 'From Envelope',
+            'email' => 'from@sparkpostbox.com>'
+        ],
+        'html'=>'<p>Hello World! Your name is: {{name}}</p>',
+        'text'=>'Hello World!',
+        'subject'=>'Example Email: {{name}}',
+        'recipientList'=>'Example List'
+    ]);
 
-  echo 'Congrats you can use your SDK!';
+    echo 'Congrats you can use your SDK!';
 } catch (\Exception $exception) {
-  echo $exception->getMessage();
+    echo $exception->getMessage();
 }
 ?>
