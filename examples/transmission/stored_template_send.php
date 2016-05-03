@@ -17,7 +17,7 @@ try {
     $results = $sparky->transmission->send([
         'from'=>[
             'name' => 'From Envelope',
-            'email' => 'from@sparkpostbox.com>'
+            'email' => 'from@sparkpostbox.com'
         ],
         'recipients'=>[
             [
@@ -28,7 +28,7 @@ try {
         ],
         'template'=>'my-first-email'
     ]);
-    echo 'Congrats you can use your SDK!';
+    echo 'Congrats! You sent an email using SparkPost!';
 } catch (\Exception $exception) {
     echo $exception->getMessage();
 }

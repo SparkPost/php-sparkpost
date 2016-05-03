@@ -38,7 +38,7 @@ try{
         'startTime'=>'2016-03-17T08:00:00-04:00',
         'from'=>[
             'name' => 'From Envelope',
-            'email' => 'from@sparkpostbox.com>'
+            'email' => 'from@sparkpostbox.com'
         ],
         'html'=>'<p>Hello World! Your name is: {{name}}</p>',
         'text'=>'Hello World!',
@@ -59,7 +59,7 @@ try{
         ]
     ]);
 
-    echo 'Congrats you can use your SDK!';
+    echo 'Congrats! You sent an email using SparkPost!';
 } catch (\Exception $exception) {
     echo $exception->getMessage();
 }

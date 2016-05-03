@@ -14,9 +14,9 @@ $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
 try {
-  $results = $sparky->transmission->delete('transmission-id');
-  echo 'Transmission deleted!';
+    $results = $sparky->transmission->delete('transmission-id');
+    echo 'Transmission deleted!';
 } catch (\Exception $exception) {
-  echo $exception->getMessage();
+    echo $exception->getMessage();
 }
 ?>

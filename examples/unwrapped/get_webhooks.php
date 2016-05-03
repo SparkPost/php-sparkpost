@@ -14,12 +14,12 @@ $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>$config['api-key']]);
 
 try {
-  $sparky->setupUnwrapped('webhooks');
+    $sparky->setupUnwrapped('webhooks');
 
-  $results = $sparky->webhooks->get();
+    $results = $sparky->webhooks->get();
 
-  echo 'Congrats you can use your SDK!';
+    echo 'Congrats! You got a list of all your webhooks from SparkPost!';
 } catch (\Exception $exception) {
-  echo $exception->getMessage();
+    echo $exception->getMessage();
 }
 ?>
