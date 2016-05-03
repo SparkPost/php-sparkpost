@@ -22,7 +22,7 @@ try {
                 ]
             ]
         ],
-        'rfc822'=>'Content-Type: text/plain\nFrom: From Envelope <from@sparkpostbox.com>\nSubject: Example Email\n\nHello World'
+        'rfc822'=>"Content-Type: text/plain\nFrom: From Envelope <from@sparkpostbox.com>\nSubject: Example Email\n\nHello World"
     ]);
     echo 'Congrats! You sent an email using SparkPost!';
 } catch (\Exception $exception) {
