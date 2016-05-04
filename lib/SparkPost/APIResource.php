@@ -131,7 +131,7 @@ class APIResource {
    * assembles a URL for a request
    * @param string $resourcePath path after the initial endpoint
    * @param array $options array with an optional value of query with values to build a querystring from.  Any
-   *                        query elements that are themselves arrays will be imploded into a comma separated list. 
+   *                        query elements that are themselves arrays will be imploded into a comma separated list.
    * @return string the assembled URL
    */
   private function buildUrl($resourcePath, $options) {
@@ -202,7 +202,14 @@ class APIResource {
         return json_decode($response->getBody()->getContents(), true);
       }
       elseif ($statusCode === 403) {
-        throw new APIResponseException('Request forbidden.  Does this API Key have the correct SparkPost permissions?');
+        $response = json_decode($response->getBody(), true);
+        throw new APIResponseException(
+          'Request forbidden',
+          $statusCode,
+          isset($response['errors'][0]['message']) ? $response['errors'][0]['message'] : "Request forbidden",
+          isset($response['errors'][0]['code']) ? $response['errors'][0]['code'] : 1100,
+          isset($response['errors'][0]['description']) ? $response['errors'][0]['description'] : "Does this API Key have the correct permissions?"
+        );
       }
       elseif ($statusCode === 404) {
         throw new APIResponseException('The specified resource does not exist', 404);

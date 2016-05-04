@@ -17,6 +17,8 @@ try {
     $results = $sparky->transmission->delete('transmission-id');
     echo 'Transmission deleted!';
 } catch (\Exception $exception) {
-    echo $exception->getMessage();
+    echo $exception->getAPIMessage() . "\n";
+    echo $exception->getAPICode() . "\n";
+    echo $exception->getAPIDescription() . "\n";
 }
 ?>
