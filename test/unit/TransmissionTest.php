@@ -12,22 +12,22 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
     private $sparkPostMock;
     private $resource;
 
-  /**
-   * (non-PHPdoc).
-   *
-   * @before
-   *
-   * @see PHPUnit_Framework_TestCase::setUp()
-   */
-  public function setUp()
-  {
-      $this->sparkPostMock = Mockery::mock('SparkPost\SparkPost', function ($mock) {
-      $mock->shouldReceive('getHttpHeaders')->andReturn([]);
-    });
-      $this->sparkPostMock->httpAdapter = Mockery::mock();
-      $this->resource = new Transmission($this->sparkPostMock);
-      self::$utils = new ClassUtils($this->resource);
-  }
+    /**
+     * (non-PHPdoc).
+     *
+     * @before
+     *
+     * @see PHPUnit_Framework_TestCase::setUp()
+     */
+    public function setUp()
+    {
+        $this->sparkPostMock = Mockery::mock('SparkPost\SparkPost', function ($mock) {
+            $mock->shouldReceive('getHttpHeaders')->andReturn([]);
+        });
+        $this->sparkPostMock->httpAdapter = Mockery::mock();
+        $this->resource = new Transmission($this->sparkPostMock);
+        self::$utils = new ClassUtils($this->resource);
+    }
 
     public function tearDown()
     {
@@ -41,9 +41,9 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
         $responseBody = ['results' => 'yay'];
 
         $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-      once()->
-      with('/.*\/transmissions/', 'POST', Mockery::type('array'), Mockery::type('string'))->
-      andReturn($responseMock);
+            once()->
+            with('/.*\/transmissions/', 'POST', Mockery::type('array'), Mockery::type('string'))->
+            andReturn($responseMock);
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
 
         $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
@@ -58,9 +58,9 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
         $responseMock = Mockery::mock();
         $responseBody = ['results' => 'yay'];
         $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-      once()->
-      with('/.*\/transmissions/', 'POST', Mockery::type('array'), matchesPattern('/"start_time":"2016-08-27T13:01:02\+00:00"/'))->
-      andReturn($responseMock);
+            once()->
+            with('/.*\/transmissions/', 'POST', Mockery::type('array'), matchesPattern('/"start_time":"2016-08-27T13:01:02\+00:00"/'))->
+            andReturn($responseMock);
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
         $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
 
@@ -72,9 +72,9 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
         $responseMock = Mockery::mock();
         $responseBody = ['results' => 'yay'];
         $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-      once()->
-      with('/.*transmissions.*?campaign_id=campaign&template_id=template/', 'GET', Mockery::type('array'), null)->
-      andReturn($responseMock);
+            once()->
+            with('/.*transmissions.*?campaign_id=campaign&template_id=template/', 'GET', Mockery::type('array'), null)->
+            andReturn($responseMock);
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
 
         $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
@@ -87,9 +87,9 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
         $responseMock = Mockery::mock();
         $responseBody = ['results' => 'yay'];
         $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-      once()->
-      with('/.*\/transmissions/', 'GET', Mockery::type('array'), null)->
-      andReturn($responseMock);
+            once()->
+            with('/.*\/transmissions/', 'GET', Mockery::type('array'), null)->
+            andReturn($responseMock);
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
 
         $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
@@ -102,9 +102,9 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
         $responseMock = Mockery::mock();
         $responseBody = ['results' => 'yay'];
         $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-      once()->
-      with('/.*\/transmissions.*\/test/', 'GET', Mockery::type('array'), null)->
-      andReturn($responseMock);
+            once()->
+            with('/.*\/transmissions.*\/test/', 'GET', Mockery::type('array'), null)->
+            andReturn($responseMock);
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
 
         $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));

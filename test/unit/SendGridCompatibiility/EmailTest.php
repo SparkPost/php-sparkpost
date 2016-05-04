@@ -61,15 +61,15 @@ class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('email' => 'test@email.com', 'name' => 'Test Bot'), $this->email->model['from']);
     }
 
-  /**
-   * @desc Tests that setting the fromName prior to setting the From field throws an exception
-   * @expectedException Exception
-   * @expectedExceptionMessage Must set 'From' prior to setting 'From Name'.
-   */
-  public function testSetFromNameWithoutAddress()
-  {
-      $this->email->setFromName('Test Bot');
-  }
+    /**
+     * @desc Tests that setting the fromName prior to setting the From field throws an exception
+     * @expectedException Exception
+     * @expectedExceptionMessage Must set 'From' prior to setting 'From Name'.
+     */
+    public function testSetFromNameWithoutAddress()
+    {
+        $this->email->setFromName('Test Bot');
+    }
 
     public function testSetReplyto()
     {
@@ -77,14 +77,14 @@ class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('test@email.com', $this->email->model['replyTo']);
     }
-  /**
-   * @expectedException Exception
-   * @expectedExceptionMessage Adding bcc recipients is not yet supported, try adding them as a 'to' address
-   */
-  public function testAddBcc()
-  {
-      $this->email->addBcc('test@email.com');
-  }
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessage Adding bcc recipients is not yet supported, try adding them as a 'to' address
+     */
+    public function testAddBcc()
+    {
+        $this->email->addBcc('test@email.com');
+    }
 
     public function testSetSubject()
     {
@@ -109,25 +109,25 @@ class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($value, $this->email->model['html']);
     }
 
-  /**
-   * @desc test that adding a category throws an exception since we don't support tags at transmission level yet
-   * @expectedException Exception
-   * @expectedExceptionMessage Adding categories is not yet supported
-   */
-  public function testAddCategory()
-  {
-      $this->email->addCategory('');
-  }
+    /**
+     * @desc test that adding a category throws an exception since we don't support tags at transmission level yet
+     * @expectedException Exception
+     * @expectedExceptionMessage Adding categories is not yet supported
+     */
+    public function testAddCategory()
+    {
+        $this->email->addCategory('');
+    }
 
-  /**
-   * @desc Tests that setting an attachment throws a meaningful exception
-   * @expectedException Exception
-   * @expectedExceptionMessage Adding attachments is not yet supported
-   */
-  public function testAddAttachment()
-  {
-      $this->email->addAttachment('blah');
-  }
+    /**
+     * @desc Tests that setting an attachment throws a meaningful exception
+     * @expectedException Exception
+     * @expectedExceptionMessage Adding attachments is not yet supported
+     */
+    public function testAddAttachment()
+    {
+        $this->email->addAttachment('blah');
+    }
 
     public function testAddSubstitution()
     {
@@ -143,25 +143,25 @@ class SendGridCompatibilityEmailTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('item' => 'baseball bat'), $this->email->model['substitutionData']);
     }
 
-  /**
-   * @desc Tests that setting an attachment throws a meaningful exception
-   * @expectedException Exception
-   * @expectedExceptionMessage Adding Unique Arguments is not yet supported
-   */
-  public function testAddUniqueArguement()
-  {
-      $this->email->addUniqueArg('blah', 'someblah');
-  }
+    /**
+     * @desc Tests that setting an attachment throws a meaningful exception
+     * @expectedException Exception
+     * @expectedExceptionMessage Adding Unique Arguments is not yet supported
+     */
+    public function testAddUniqueArguement()
+    {
+        $this->email->addUniqueArg('blah', 'someblah');
+    }
 
-  /**
-   * @desc Tests that setting an unique argument throws a meaningful exception
-   * @expectedException Exception
-   * @expectedExceptionMessage Setting Unique Arguments is not yet supported
-   */
-  public function testSetUniqueArgs()
-  {
-      $this->email->setUniqueArgs(array('blah', 'andBlah'));
-  }
+    /**
+     * @desc Tests that setting an unique argument throws a meaningful exception
+     * @expectedException Exception
+     * @expectedExceptionMessage Setting Unique Arguments is not yet supported
+     */
+    public function testSetUniqueArgs()
+    {
+        $this->email->setUniqueArgs(array('blah', 'andBlah'));
+    }
 
     public function testAddHeader()
     {

@@ -11,44 +11,44 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
 {
     private static $utils;
     private $adapterMock;
-  /** @var SparkPost */
-  private $resource;
+    /** @var SparkPost */
+    private $resource;
 
-  /**
-   * (non-PHPdoc).
-   *
-   * @before
-   *
-   * @see PHPUnit_Framework_TestCase::setUp()
-   */
-  public function setUp()
-  {
-      //setup mock for the adapter
-    $this->adapterMock = Mockery::mock('Ivory\HttpAdapter\HttpAdapterInterface', function ($mock) {
-      $mock->shouldReceive('setConfiguration');
-      $mock->shouldReceive('getConfiguration->getUserAgent')->andReturn('php-sparkpost/0.2.0');
-    });
+    /**
+     * (non-PHPdoc).
+     *
+     * @before
+     *
+     * @see PHPUnit_Framework_TestCase::setUp()
+     */
+    public function setUp()
+    {
+        //setup mock for the adapter
+        $this->adapterMock = Mockery::mock('Ivory\HttpAdapter\HttpAdapterInterface', function ($mock) {
+            $mock->shouldReceive('setConfiguration');
+            $mock->shouldReceive('getConfiguration->getUserAgent')->andReturn('php-sparkpost/0.2.0');
+        });
 
-      $this->resource = new SparkPost($this->adapterMock, ['key' => 'a key']);
-      self::$utils = new ClassUtils($this->resource);
-      self::$utils->setProperty($this->resource, 'httpAdapter', $this->adapterMock);
-  }
+        $this->resource = new SparkPost($this->adapterMock, ['key' => 'a key']);
+        self::$utils = new ClassUtils($this->resource);
+        self::$utils->setProperty($this->resource, 'httpAdapter', $this->adapterMock);
+    }
 
     public function tearDown()
     {
         Mockery::close();
     }
 
-  /**
-   * @desc Ensures that the configuration class is not instantiable.
-   */
-  public function testConstructorSetsUpTransmissions()
-  {
-      $sparky = new SparkPost(new CurlHttpAdapter(), ['key' => 'a key']);
-      $this->assertEquals('SparkPost\Transmission', get_class($sparky->transmission));
-      $adapter = self::$utils->getProperty($this->resource, 'httpAdapter');
-      $this->assertRegExp('/php-sparkpost.*/', $adapter->getConfiguration()->getUserAgent());
-  }
+    /**
+     * @desc Ensures that the configuration class is not instantiable.
+     */
+    public function testConstructorSetsUpTransmissions()
+    {
+        $sparky = new SparkPost(new CurlHttpAdapter(), ['key' => 'a key']);
+        $this->assertEquals('SparkPost\Transmission', get_class($sparky->transmission));
+        $adapter = self::$utils->getProperty($this->resource, 'httpAdapter');
+        $this->assertRegExp('/php-sparkpost.*/', $adapter->getConfiguration()->getUserAgent());
+    }
 
     public function testSetConfigStringKey()
     {
@@ -57,14 +57,14 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('a key', $config['key']);
     }
 
-  /**
-   * @expectedException Exception
-   * @expectedExceptionMessageRegExp /API key/
-   */
-  public function testSetBadConfig()
-  {
-      $this->resource->setConfig(['not' => 'a key']);
-  }
+    /**
+     * @expectedException Exception
+     * @expectedExceptionMessageRegExp /API key/
+     */
+    public function testSetBadConfig()
+    {
+        $this->resource->setConfig(['not' => 'a key']);
+    }
 
     public function testGetHeaders()
     {

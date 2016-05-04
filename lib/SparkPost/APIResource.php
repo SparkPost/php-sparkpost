@@ -8,149 +8,149 @@ namespace SparkPost;
 class APIResource
 {
     /**
-   * name of the API endpoint, mainly used for URL construction.
-   * This is public to provide an interface.
-   *
-   * @var string
-   */
-  public $endpoint;
+     * name of the API endpoint, mainly used for URL construction.
+     * This is public to provide an interface.
+     *
+     * @var string
+     */
+    public $endpoint;
 
-  /**
-   * Mapping for values passed into the send method to the values needed for the respective API.
-   *
-   * @var array
-   */
-  protected static $parameterMappings = [];
+    /**
+     * Mapping for values passed into the send method to the values needed for the respective API.
+     *
+     * @var array
+     */
+    protected static $parameterMappings = [];
 
-  /**
-   * Sets up default structure and default values for the model that is acceptable by the API.
-   *
-   * @var array
-   */
-  protected static $structure = [];
+    /**
+     * Sets up default structure and default values for the model that is acceptable by the API.
+     *
+     * @var array
+     */
+    protected static $structure = [];
 
-  /**
-   * SparkPost reference for httpAdapters and configs.
-   */
-  protected $sparkpost;
+    /**
+     * SparkPost reference for httpAdapters and configs.
+     */
+    protected $sparkpost;
 
-  /**
-   * Initializes config and httpAdapter for use later.
-   *
-   * @param $sparkpost \SparkPost\SparkPost provides api configuration information
-   */
-  public function __construct(SparkPost $sparkpost)
-  {
-      $this->sparkpost = $sparkpost;
-  }
-
-  /**
-   * Private Method helper to reference parameter mappings and set the right value for the right parameter.
-   *
-   * @param array $model (pass by reference) the set of values to map
-   * @param string $mapKey a dot syntax path determining which value to set
-   * @param mixed $value value for the given path
-   */
-  protected function setMappedValue(&$model, $mapKey, $value)
-  {
-      //get mapping
-    if (empty(static::$parameterMappings)) {
-        // if parameterMappings is empty we can assume that no wrapper is defined
-      // for the current endpoint and we will use the mapKey to define the mappings directly
-      $mapPath = $mapKey;
-    } elseif (array_key_exists($mapKey, static::$parameterMappings)) {
-        // use only defined parameter mappings to construct $model
-      $mapPath = static::$parameterMappings[$mapKey];
-    } else {
-        return;
+    /**
+     * Initializes config and httpAdapter for use later.
+     *
+     * @param $sparkpost \SparkPost\SparkPost provides api configuration information
+     */
+    public function __construct(SparkPost $sparkpost)
+    {
+        $this->sparkpost = $sparkpost;
     }
 
-      $path = explode('.', $mapPath);
-      $temp = &$model;
-      foreach ($path as $key) {
-          if (!isset($temp[$key])) {
-              $temp[$key] = null;
-          }
-          $temp = &$temp[$key];
-      }
-      $temp = $value;
-  }
+    /**
+     * Private Method helper to reference parameter mappings and set the right value for the right parameter.
+     *
+     * @param array $model (pass by reference) the set of values to map
+     * @param string $mapKey a dot syntax path determining which value to set
+     * @param mixed $value value for the given path
+     */
+    protected function setMappedValue(&$model, $mapKey, $value)
+    {
+        //get mapping
+        if (empty(static::$parameterMappings)) {
+            // if parameterMappings is empty we can assume that no wrapper is defined
+            // for the current endpoint and we will use the mapKey to define the mappings directly
+            $mapPath = $mapKey;
+        } elseif (array_key_exists($mapKey, static::$parameterMappings)) {
+            // use only defined parameter mappings to construct $model
+            $mapPath = static::$parameterMappings[$mapKey];
+        } else {
+            return;
+        }
 
-  /**
-   * maps values from the passed in model to those needed for the request.
-   *
-   * @param array $requestConfig the passed in model
-   * @param array $model the set of defaults
-   *
-   * @return array A model ready for the body of a request
-   */
-  protected function buildRequestModel(array $requestConfig, array $model = [])
-  {
-      foreach ($requestConfig as $key => $value) {
-          $this->setMappedValue($model, $key, $value);
-      }
+        $path = explode('.', $mapPath);
+        $temp = &$model;
+        foreach ($path as $key) {
+            if (!isset($temp[$key])) {
+                $temp[$key] = null;
+            }
+            $temp = &$temp[$key];
+        }
+        $temp = $value;
+    }
 
-      return $model;
-  }
+    /**
+     * maps values from the passed in model to those needed for the request.
+     *
+     * @param array $requestConfig the passed in model
+     * @param array $model the set of defaults
+     *
+     * @return array A model ready for the body of a request
+     */
+    protected function buildRequestModel(array $requestConfig, array $model = [])
+    {
+        foreach ($requestConfig as $key => $value) {
+            $this->setMappedValue($model, $key, $value);
+        }
 
-  /**
-   * posts to the api with a supplied body.
-   *
-   * @param array $body post body for the request
-   *
-   * @return array Result of the request
-   */
-  public function create(array $body = [])
-  {
-      return $this->callResource('post', null, ['body' => $body]);
-  }
+        return $model;
+    }
 
-  /**
-   * Makes a put request to the api with a supplied body.
-   *
-   * @param $resourcePath
-   * @param array $body Put body for the request
-   *
-   * @return array Result of the request
-   *
-   * @throws APIResponseException
-   */
-  public function update($resourcePath, array $body = [])
-  {
-      return $this->callResource('put', $resourcePath, ['body' => $body]);
-  }
+    /**
+     * posts to the api with a supplied body.
+     *
+     * @param array $body post body for the request
+     *
+     * @return array Result of the request
+     */
+    public function create(array $body = [])
+    {
+        return $this->callResource('post', null, ['body' => $body]);
+    }
 
-  /**
-   * Wrapper method for issuing GET request to current API endpoint.
-   *
-   * @param string $resourcePath (optional) string resource path of specific resource
-   * @param array $query (optional) query string parameters
-   *
-   * @return array Result of the request
-   */
-  public function get($resourcePath = null, array $query = [])
-  {
-      return $this->callResource('get', $resourcePath, ['query' => $query]);
-  }
+    /**
+     * Makes a put request to the api with a supplied body.
+     *
+     * @param $resourcePath
+     * @param array $body Put body for the request
+     *
+     * @return array Result of the request
+     *
+     * @throws APIResponseException
+     */
+    public function update($resourcePath, array $body = [])
+    {
+        return $this->callResource('put', $resourcePath, ['body' => $body]);
+    }
 
-  /**
-   * Wrapper method for issuing DELETE request to current API endpoint.
-   *
-   * @param string $resourcePath (optional) string resource path of specific resource
-   * @param array $query (optional) query string parameters
-   *
-   * @return array Result of the request
-   */
-  public function delete($resourcePath = null, array $query = [])
-  {
-      return $this->callResource('delete', $resourcePath, ['query' => $query]);
-  }
+    /**
+     * Wrapper method for issuing GET request to current API endpoint.
+     *
+     * @param string $resourcePath (optional) string resource path of specific resource
+     * @param array $query (optional) query string parameters
+     *
+     * @return array Result of the request
+     */
+    public function get($resourcePath = null, array $query = [])
+    {
+        return $this->callResource('get', $resourcePath, ['query' => $query]);
+    }
 
-  /**
-   * assembles a URL for a request.
-   *
-   * @param string $resourcePath path after the initial endpoint
-<<<<<<< HEAD
+    /**
+     * Wrapper method for issuing DELETE request to current API endpoint.
+     *
+     * @param string $resourcePath (optional) string resource path of specific resource
+     * @param array $query (optional) query string parameters
+     *
+     * @return array Result of the request
+     */
+    public function delete($resourcePath = null, array $query = [])
+    {
+        return $this->callResource('delete', $resourcePath, ['query' => $query]);
+    }
+
+    /**
+     * assembles a URL for a request.
+     *
+     * @param string $resourcePath path after the initial endpoint
+     <<<<<<< HEAD
    * @param array $options array with an optional value of query with values to build a querystring from.
    *
 =======

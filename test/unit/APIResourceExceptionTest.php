@@ -11,20 +11,20 @@ class APIResourceExceptionTest extends \PHPUnit_Framework_TestCase
     private $description;
     private $exception;
 
-  /**
-   * (non-PHPdoc).
-   *
-   * @before
-   *
-   * @see PHPUnit_Framework_TestCase::setUp()
-   */
-  public function setUp()
-  {
-      $this->message = 'Test message';
-      $this->code = 400;
-      $this->description = 'Test description';
-      $this->exception = new APIResponseException(null, 0, $this->message, $this->code, $this->description);
-  }
+    /**
+     * (non-PHPdoc).
+     *
+     * @before
+     *
+     * @see PHPUnit_Framework_TestCase::setUp()
+     */
+    public function setUp()
+    {
+        $this->message = 'Test message';
+        $this->code = 400;
+        $this->description = 'Test description';
+        $this->exception = new APIResponseException(null, 0, $this->message, $this->code, $this->description);
+    }
 
     public function testAPIMessage()
     {

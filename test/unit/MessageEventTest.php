@@ -9,21 +9,21 @@ class MessageEventTest extends \PHPUnit_Framework_TestCase
     private $sparkPostMock;
     private $sut;
 
-  /**
-   * (non-PHPdoc).
-   *
-   * @before
-   *
-   * @see PHPUnit_Framework_TestCase::setUp()
-   */
-  public function setUp()
-  {
-      $this->sparkPostMock = Mockery::mock('SparkPost\SparkPost', function ($mock) {
-      $mock->shouldReceive('getHttpHeaders')->andReturn([]);
-    });
-      $this->sparkPostMock->httpAdapter = Mockery::mock();
-      $this->sut = new MessageEvents($this->sparkPostMock);
-  }
+    /**
+     * (non-PHPdoc).
+     *
+     * @before
+     *
+     * @see PHPUnit_Framework_TestCase::setUp()
+     */
+    public function setUp()
+    {
+        $this->sparkPostMock = Mockery::mock('SparkPost\SparkPost', function ($mock) {
+            $mock->shouldReceive('getHttpHeaders')->andReturn([]);
+        });
+        $this->sparkPostMock->httpAdapter = Mockery::mock();
+        $this->sut = new MessageEvents($this->sparkPostMock);
+    }
 
     public function testDateTimeConversion()
     {
@@ -35,9 +35,9 @@ class MessageEventTest extends \PHPUnit_Framework_TestCase
 
         $responseMock = Mockery::mock();
         $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-      once()->
-      with("/message-events/?from={$testFromStr}&to={$testToStr}", 'GET', Mockery::type('array'), null)->
-      andReturn($responseMock);
+            once()->
+            with("/message-events/?from={$testFromStr}&to={$testToStr}", 'GET', Mockery::type('array'), null)->
+            andReturn($responseMock);
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
         $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
 
@@ -49,9 +49,9 @@ class MessageEventTest extends \PHPUnit_Framework_TestCase
         $testBody = ['results' => ['my' => 'test']];
         $responseMock = Mockery::mock();
         $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-      once()->
-      with('/message-events/events/documentation', 'GET', Mockery::type('array'), null)->
-      andReturn($responseMock);
+            once()->
+            with('/message-events/events/documentation', 'GET', Mockery::type('array'), null)->
+            andReturn($responseMock);
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
         $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
 
@@ -63,9 +63,9 @@ class MessageEventTest extends \PHPUnit_Framework_TestCase
         $testBody = ['results' => ['my' => 'test']];
         $responseMock = Mockery::mock();
         $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-      once()->
-      with('/message-events/events/samples?events='.urlencode('delivery,bounce'), 'GET', Mockery::type('array'), null)->
-      andReturn($responseMock);
+            once()->
+            with('/message-events/events/samples?events='.urlencode('delivery,bounce'), 'GET', Mockery::type('array'), null)->
+            andReturn($responseMock);
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
         $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
 
