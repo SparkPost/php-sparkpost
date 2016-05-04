@@ -13,7 +13,7 @@ class SparkPost
     /**
      * Library version, used for setting User-Agent.
      */
-    private $version = '1.1.0';
+    private $version = '1.2.0';
 
     /**
      * Connection config for making requests.
