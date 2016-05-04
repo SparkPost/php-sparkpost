@@ -9,6 +9,11 @@ class SparkPost {
   public $messageEvents;
 
   /**
+   * Library version, used for setting User-Agent.
+   */
+  private $version = '1.1.0';
+
+  /**
    * Connection config for making requests.
    */
   private $config;
@@ -80,15 +85,11 @@ class SparkPost {
    * @return Configuration
    */
   private function getHttpConfig($config) {
-    // get composer.json to extract version number
-    $composerFile = file_get_contents(dirname(__FILE__) . '/../../composer.json');
-    $composer = json_decode($composerFile, true);
-
     // create Configuration for http adapter
     $httpConfig = new Configuration();
     $baseUrl = $config['protocol'] . '://' . $config['host'] . ($config['port'] ? ':' . $config['port'] : '') . '/api/' . $config['version'];
     $httpConfig->setBaseUri($baseUrl);
-    $httpConfig->setUserAgent('php-sparkpost/' . $composer['version']);
+    $httpConfig->setUserAgent('php-sparkpost/' . $this->version);
     return $httpConfig;
   }
 
