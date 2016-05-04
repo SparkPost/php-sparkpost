@@ -7,8 +7,8 @@ use Ivory\HttpAdapter\HttpAdapterInterface;
 
 class SparkPost
 {
-  public $transmission;
-  public $messageEvents;
+    public $transmission;
+    public $messageEvents;
 
   /**
    * Library version, used for setting User-Agent.
@@ -51,10 +51,10 @@ class SparkPost
   {
       //config needs to be setup before adapter because of default adapter settings
     $this->setConfig($settingsConfig);
-    $this->setHttpAdapter($httpAdapter);
+      $this->setHttpAdapter($httpAdapter);
 
-    $this->transmission = new Transmission($this);
-    $this->messageEvents = new MessageEvents($this);
+      $this->transmission = new Transmission($this);
+      $this->messageEvents = new MessageEvents($this);
   }
 
   /**
@@ -97,9 +97,10 @@ class SparkPost
   {
       // create Configuration for http adapter
       $httpConfig = new Configuration();
-      $baseUrl = $config['protocol'] . '://' . $config['host'] . ($config['port'] ? ':' . $config['port'] : '') . '/api/' . $config['version'];
+      $baseUrl = $config['protocol'].'://'.$config['host'].($config['port'] ? ':'.$config['port'] : '').'/api/'.$config['version'];
       $httpConfig->setBaseUri($baseUrl);
-      $httpConfig->setUserAgent('php-sparkpost/' . $this->version);
+      $httpConfig->setUserAgent('php-sparkpost/'.$this->version);
+
       return $httpConfig;
   }
 
@@ -133,7 +134,7 @@ class SparkPost
     }
 
     // Validate API key because its required
-    if (!isset($settingsConfig['key']) || !preg_match('/\S/', $settingsConfig['key'])){
+    if (!isset($settingsConfig['key']) || !preg_match('/\S/', $settingsConfig['key'])) {
         throw new \Exception('You must provide an API key');
     }
 

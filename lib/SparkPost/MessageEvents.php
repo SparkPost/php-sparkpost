@@ -1,14 +1,15 @@
 <?php
+
 namespace SparkPost;
 
 /**
- * SDK class for querying the Message Events API
+ * SDK class for querying the Message Events API.
  *
  * @see https://developers.sparkpost.com/api/#/reference/message-events
  */
 class MessageEvents extends APIResource
 {
-  /**
+    /**
    * @var string
    */
   public $endpoint = 'message-events';
@@ -17,6 +18,7 @@ class MessageEvents extends APIResource
    * Method for issuing search requests to the Message Events API.
    *
    * The method passes-through all of the query parameters - the valid ones are listed at
+   *
    * @link https://developers.sparkpost.com/api/#/reference/message-events/events-documentation/search-for-message-events
    *
    * @param array $queryParams  The query parameters.  Note that a query parameter containing an array
@@ -24,17 +26,17 @@ class MessageEvents extends APIResource
    *
    * @return array The result of the query.
    */
-  public function search(Array $queryParams)
+  public function search(array $queryParams)
   {
-    // check for DateTime objects & replace them with the formatted string equivalent
-    foreach(["from", "to"] as $dateTimeParam) {
-      if (isset($queryParams[$dateTimeParam]) && $queryParams[$dateTimeParam] instanceof \DateTime) {
-        // the message events API doesn't allow the seconds or GMT offset, so strip them
+      // check for DateTime objects & replace them with the formatted string equivalent
+    foreach (['from', 'to'] as $dateTimeParam) {
+        if (isset($queryParams[$dateTimeParam]) && $queryParams[$dateTimeParam] instanceof \DateTime) {
+            // the message events API doesn't allow the seconds or GMT offset, so strip them
         $queryParams[$dateTimeParam] = substr($queryParams[$dateTimeParam]->format(\DateTime::ATOM), 0, 16);
-      }
+        }
     }
 
-    return $this->get(null, $queryParams);
+      return $this->get(null, $queryParams);
   }
 
   /**
@@ -42,8 +44,9 @@ class MessageEvents extends APIResource
    *
    * @return array The event field descriptions.
    */
-  public function documentation() {
-    return $this->get("events/documentation");
+  public function documentation()
+  {
+      return $this->get('events/documentation');
   }
 
   /**
@@ -54,7 +57,8 @@ class MessageEvents extends APIResource
    *
    * @return array Sample events.
    */
-  public function samples(Array $events = []) {
-    return $this->get("events/samples", ["events"=>$events]);
+  public function samples(array $events = [])
+  {
+      return $this->get('events/samples', ['events' => $events]);
   }
 }

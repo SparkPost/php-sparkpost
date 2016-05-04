@@ -95,28 +95,30 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($testBody, $this->resource->get('test'));
     }
 
-  public function testGetCommaSeparated() {
-    $testBody = ['results'=>['my'=>'test']];
-    $requestArray = [
-        "param1" => "param1val",
-        "param2" => ["param2val1", "param2val2"]
+    public function testGetCommaSeparated()
+    {
+        $testBody = ['results' => ['my' => 'test']];
+        $requestArray = [
+        'param1' => 'param1val',
+        'param2' => ['param2val1', 'param2val2'],
     ];
-    $expectedGetParams = "param1=param1val&param2=" . urlencode("param2val1,param2val2");
+        $expectedGetParams = 'param1=param1val&param2='.urlencode('param2val1,param2val2');
 
-    $responseMock = Mockery::mock();
-    $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+        $responseMock = Mockery::mock();
+        $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       with(matchesPattern("/.*\/test\?{$expectedGetParams}/"), 'GET', Mockery::type('array'), null)->
       andReturn($responseMock);
-    $responseMock->shouldReceive('getStatusCode')->andReturn(200);
-    $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
+        $responseMock->shouldReceive('getStatusCode')->andReturn(200);
+        $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($testBody));
 
-    $this->assertEquals($testBody, $this->resource->get('test', $requestArray));
-  }
+        $this->assertEquals($testBody, $this->resource->get('test', $requestArray));
+    }
 
-  public function testDelete() {
-    $responseMock = Mockery::mock();
-    $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+    public function testDelete()
+    {
+        $responseMock = Mockery::mock();
+        $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       with('/.*\/test/', 'DELETE', Mockery::type('array'), null)->
       andReturn($responseMock);
@@ -141,36 +143,37 @@ class APIResourceTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-  public function testAdapter403Exception() {
-    $testBody = [ 'errors' => [
+    public function testAdapter403Exception()
+    {
+        $testBody = ['errors' => [
       [
-        'message' => 'Forbidden.'
-      ]
+        'message' => 'Forbidden.',
+      ],
     ]];
-    try {
-      $responseMock = Mockery::mock();
-      $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+        try {
+            $responseMock = Mockery::mock();
+            $this->sparkPostMock->httpAdapter->shouldReceive('send')->
       once()->
       andReturn($responseMock);
-      $responseMock->shouldReceive('getStatusCode')->andReturn(403);
-      $responseMock->shouldReceive('getBody')->andReturn(json_encode($testBody));
+            $responseMock->shouldReceive('getStatusCode')->andReturn(403);
+            $responseMock->shouldReceive('getBody')->andReturn(json_encode($testBody));
 
-      $this->resource->get('test');
+            $this->resource->get('test');
+        } catch (\Exception $e) {
+            $this->assertRegExp('/Request forbidden/', $e->getMessage());
+        }
     }
-    catch(\Exception $e) {
-      $this->assertRegExp('/Request forbidden/', $e->getMessage());
-    }
-  }
 
-  public function testAdapter4XXException() {
-    try {
-      $testBody = ['errors'=>['my'=>'test']];
-      $responseMock = Mockery::mock();
-      $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+    public function testAdapter4XXException()
+    {
+        try {
+            $testBody = ['errors' => ['my' => 'test']];
+            $responseMock = Mockery::mock();
+            $this->sparkPostMock->httpAdapter->shouldReceive('send')->
         once()->
         andReturn($responseMock);
-      $responseMock->shouldReceive('getStatusCode')->andReturn(400);
-      $responseMock->shouldReceive('getBody')->andReturn(json_encode($testBody));
+            $responseMock->shouldReceive('getStatusCode')->andReturn(400);
+            $responseMock->shouldReceive('getBody')->andReturn(json_encode($testBody));
 
             $this->resource->get('test');
         } catch (\Exception $e) {

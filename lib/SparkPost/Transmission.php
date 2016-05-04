@@ -38,7 +38,7 @@ class Transmission extends APIResource
     'trackClicks' => 'options.click_tracking',
     'trackOpens' => 'options.open_tracking',
     'transactional' => 'options.transactional',
-    'useDraftTemplate' => 'use_draft_template'
+    'useDraftTemplate' => 'use_draft_template',
   ];
 
   /**
@@ -90,14 +90,13 @@ class Transmission extends APIResource
    *
    * @return array API repsonse represented as key-value pairs
    */
-  public function send( $transmissionConfig )
+  public function send($transmissionConfig)
   {
-    if(isset($transmissionConfig["startTime"]) && $transmissionConfig["startTime"] instanceof \DateTime)
-      {
-        $transmissionConfig["startTime"] = $transmissionConfig["startTime"]->format(\DateTime::ATOM);
+      if (isset($transmissionConfig['startTime']) && $transmissionConfig['startTime'] instanceof \DateTime) {
+          $transmissionConfig['startTime'] = $transmissionConfig['startTime']->format(\DateTime::ATOM);
       }
 
-    return $this->create( $transmissionConfig );
+      return $this->create($transmissionConfig);
   }
 
   /**

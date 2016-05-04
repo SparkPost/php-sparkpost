@@ -19,7 +19,7 @@ try {
     $results = $sparky->transmission->find('Your Transmission ID');
     echo 'Congrats! You retrieved your transmission from SparkPost!';
 } catch (\Exception $exception) {
-    echo $exception->getAPIMessage() . "\n";
-    echo $exception->getAPICode() . "\n";
-    echo $exception->getAPIDescription() . "\n";
+    echo $exception->getAPIMessage()."\n";
+    echo $exception->getAPICode()."\n";
+    echo $exception->getAPIDescription()."\n";
 }

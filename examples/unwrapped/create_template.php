@@ -21,12 +21,12 @@ try {
 
     $templateConfig = [
         'name' => 'Summer Sale!',
-        'id'=>'summer-sale',
-        'content'=> [
+        'id' => 'summer-sale',
+        'content' => [
             'from' => 'from@sparkpostbox.com',
             'subject' => 'Summer deals',
-            'html' => '<b>Check out these deals!</b>'
-        ]
+            'html' => '<b>Check out these deals!</b>',
+        ],
     ];
     $results = $sparky->templates->create($templateConfig);
     echo 'Congrats! You created a template using SparkPost!';
