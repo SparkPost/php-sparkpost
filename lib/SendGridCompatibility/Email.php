@@ -18,7 +18,7 @@ class Email
      * adds addresses as recipients.
      *
      * @param string $address
-     * @param string $name optional
+     * @param string $name    optional
      *
      * @return $this
      */
@@ -184,7 +184,7 @@ class Email
      * Adds transmission level substitution data.
      *
      * @param string $name
-     * @param mixed $values
+     * @param mixed  $values
      *
      * @return $this
      */
@@ -202,7 +202,7 @@ class Email
      * Adds transmission level substitution data.
      *
      * @param string $name
-     * @param mixed $values
+     * @param mixed  $values
      */
     public function addSection($name, $values)
     {

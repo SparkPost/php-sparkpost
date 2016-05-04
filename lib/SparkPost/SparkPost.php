@@ -42,10 +42,10 @@ class SparkPost
      *
      * Sets up instances of sub libraries.
      *
-     * @param \Ivory\HttpAdapter\HttpAdapterInterface $httpAdapter - An adapter for making http requests
-     * @param string | array $settingsConfig - Hashmap that contains config values
-     *              for the SDK to connect to SparkPost. If its a string we assume that
-     *              its just they API Key.
+     * @param \Ivory\HttpAdapter\HttpAdapterInterface $httpAdapter    - An adapter for making http requests
+     * @param string | array                          $settingsConfig - Hashmap that contains config values
+     *                                                                for the SDK to connect to SparkPost. If its a string we assume that
+     *                                                                its just they API Key.
      */
     public function __construct($httpAdapter, $settingsConfig)
     {
@@ -121,8 +121,8 @@ class SparkPost
      * Allows the user to pass in values to override the defaults and set their API key.
      *
      * @param string | array $settingsConfig - Hashmap that contains config values
-     *              for the SDK to connect to SparkPost. If its a string we assume that
-     *              its just they API Key.
+     *                                       for the SDK to connect to SparkPost. If its a string we assume that
+     *                                       its just they API Key.
      *
      * @throws \Exception
      */

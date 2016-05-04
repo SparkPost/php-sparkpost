@@ -21,8 +21,8 @@ class MessageEvents extends APIResource
      *
      * @link https://developers.sparkpost.com/api/#/reference/message-events/events-documentation/search-for-message-events
      *
-     * @param array $queryParams  The query parameters.  Note that a query parameter containing an array
-     * is collapsed into a comma-separated list.
+     * @param array $queryParams The query parameters.  Note that a query parameter containing an array
+     *                           is collapsed into a comma-separated list.
      *
      * @return array The result of the query.
      */
@@ -53,7 +53,7 @@ class MessageEvents extends APIResource
      * List examples of the event data that will be included in a response from the MessageEvent::search() method.
      *
      * @param array $events (optional) Event types for which to get a sample payload.  If not provided, samples
-     * for all events will be returned.
+     *                      for all events will be returned.
      *
      * @return array Sample events.
      */
