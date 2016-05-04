@@ -20,7 +20,7 @@ try {
 
     $results = $sparky->webhooks->get();
 
-    echo 'Congrats you can use your SDK!';
+    echo 'Congrats! You got a list of all your webhooks from SparkPost!';
 } catch (\Exception $exception) {
     echo $exception->getMessage();
 }

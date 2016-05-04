@@ -5,13 +5,13 @@
 # SparkPost PHP Library
 
 [![Travis CI](https://travis-ci.org/SparkPost/php-sparkpost.svg?branch=master)](https://travis-ci.org/SparkPost/php-sparkpost)
-[![Coverage Status](https://coveralls.io/repos/SparkPost/php-sparkpost/badge.svg?branch=master&service=github)](https://coveralls.io/github/SparkPost/php-sparkpost?branch=master)
+[![Coverage Status](https://coveralls.io/repos/SparkPost/php-sparkpost/badge.svg?branch=master&service=github)](https://coveralls.io/github/SparkPost/php-sparkpost?branch=master) [![Slack Status](http://slack.sparkpost.com/badge.svg)](http://slack.sparkpost.com)
 
-The official PHP binding for your favorite SparkPost APIs!
+The official PHP library for using [the SparkPost REST API](https://developers.sparkpost.com).
 
-Before using this library, you must have a valid API Key.
+**Note: We understand that the ivory-http-adapter we use in this library is deprecated in favor of httplug. We use Ivory internally to make it simple for you to use whatever HTTP library you want. The deprecation won't affect or limit our ongoing support of this PHP library.**
 
-To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
+Before using this library, you must have a valid API Key. To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
 
 ## Installation
 The recommended way to install the SparkPost PHP Library is through composer.
@@ -68,26 +68,29 @@ $httpAdapter = new Guzzle6HttpAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
 
 try {
-  // Build your email and send it!
-  $results = $sparky->transmission->send([
-    'from'=>'From Envelope <from@sparkpostbox.com>',
-    'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
-    'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
-    'substitutionData'=>['name'=>'YOUR FIRST NAME'],
-    'subject'=>'First Mailing From PHP',
-    'recipients'=>[
-      [
-        'address'=>[
-          'name'=>'YOUR FULL NAME',
-          'email'=>'YOUR EMAIL ADDRESS'
+    // Build your email and send it!
+    $results = $sparky->transmission->send([
+        'from'=>[
+            'name' => 'From Envelope',
+            'email' => 'from@sparkpostbox.com>'
+        ],
+        'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
+        'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
+        'substitutionData'=>['name'=>'YOUR FIRST NAME'],
+        'subject'=>'First Mailing From PHP',
+        'recipients'=>[
+            [
+                'address'=>[
+                    'name'=>'YOUR FULL NAME',
+                    'email'=>'YOUR EMAIL ADDRESS'
+                ]
+            ]
         ]
-      ]
-    ]
-  ]);
-  echo 'Woohoo! You just sent your first mailing!';
+    ]);
+    echo 'Woohoo! You just sent your first mailing!';
 } catch (\Exception $err) {
-  echo 'Whoops! Something went wrong';
-  var_dump($err);
+    echo 'Whoops! Something went wrong';
+    var_dump($err);
 }
 ```
 
@@ -98,27 +101,31 @@ try {
 
 ## Field Descriptions
 ### Transmissions
-| Field Name       | Required?   | Description                                                                                                                | Data Type        |
-| ------------     | ----------- | -------------                                                                                                              | -----------      |
-| description      | no          | Field for describing what this transmission is for the user                                                                | String           |
-| campaign         | no          | Field for assigning a given transmission to a specific campaign, which is a logical container for similar transmissions    | String           |
-| metadata         | no          | Field for adding arbitrary key/value pairs which will be included in open/click tracking                                   | Object (Simple)  |
-| substitutionData | no          | Field for adding transmission level substitution data, which can be used in a variety of fields and in content             | Object (Complex) |
-| trackOpens       | no          | Field for enabling/disabling transmission level open tracking  (default: true)                                             | Boolean          |
-| trackClicks      | no          | Field for enabling/disabling transmission level click tracking (default: true)                                             | Boolean          |
-| useDraftTemplate | no          | Field for allowing the sending of a transmission using a draft of a stored template (default: false)                       | Boolean          |
-| replyTo          | no          | Field for specifying the email address that should be used when a recipient hits the reply button                          | String           |
-| subject          | yes         | Field for setting the subject line of a given transmission                                                                 | String           |
-| from             | yes         | Field for setting the from line of a given transmission                                                                    | String or Object |
-| html             | yes**       | Field for setting the HTML content of a given transmission                                                                 | String           |
-| text             | yes**       | Field for setting the Plain Text content of a given transmission                                                           | String           |
-| rfc822           | no**        | Field for setting the RFC-822 encoded content of a given transmission                                                      | String           |
-| template         | no**        | Field for specifying the Template ID of a stored template to be used when sending a given transmission                     | String           |
-| customHeaders    | no          | Field for specifying additional headers to be applied to a given transmission (other than Subject, From, To, and Reply-To) | Object (Simple)  |
-| recipients       | yes**       | Field for specifying who a given transmission should be sent to                                                            | Array of Objects |
-| recipientList    | no**        | Field for specifying a stored recipient list ID to be used for a given transmission                                        | String           |
+| Field Name       | Required?   | Description                                                                                                                                                       | Data Type        |
+| ------------     | ----------- | -------------                                                                                                                                                     | -----------      |
+| attachments      | no          | Field for attaching files - see Attachment Attributes in the [Transmssions API docs](https://developers.sparkpost.com/api/#/reference/transmissions)              | Array of Objects |
+| campaign         | no          | Field for assigning a given transmission to a specific campaign, which is a logical container for similar transmissions                                           | String           |
+| customHeaders    | no          | Field for specifying additional headers to be applied to a given transmission (other than Subject, From, To, and Reply-To)                                        | Object (Simple)  |
+| description      | no          | Field for describing what this transmission is for the user                                                                                                       | String           |
+| from             | yes**       | Field for setting the from line of a given transmission                                                                                                           | Object           |
+| html             | yes**       | Field for setting the HTML content of a given transmission                                                                                                        | String           |
+| inlineCss        | no          | Field for enabling/disabling CSS inlining                                                                                                                         | Boolean          |
+| inlineImages     | no          | Field for providing inline images - see Inline Image Attributes in the [Transmssions API docs](https://developers.sparkpost.com/api/#/reference/transmissions)    | Array of Objects |
+| metadata         | no          | Field for adding arbitrary key/value pairs which will be included in open/click tracking                                                                          | Object (Simple)  |
+| recipientList    | no**        | Field for specifying a stored recipient list ID to be used for a given transmission                                                                               | String           |
+| recipients       | yes**       | Field for specifying who a given transmission should be sent to                                                                                                   | Array of Objects |
+| replyTo          | no          | Field for specifying the email address that should be used when a recipient hits the reply button                                                                 | String           |
+| rfc822           | no**        | Field for setting the RFC-822 encoded content of a given transmission                                                                                             | String           |
+| subject          | yes         | Field for setting the subject line of a given transmission                                                                                                        | String           |
+| substitutionData | no          | Field for adding transmission level substitution data, which can be used in a variety of fields and in content                                                    | Object (Complex) |
+| template         | no**        | Field for specifying the Template ID of a stored template to be used when sending a given transmission                                                            | String           |
+| text             | yes**       | Field for setting the Plain Text content of a given transmission                                                                                                  | String           |
+| trackClicks      | no          | Field for enabling/disabling transmission level click tracking (default: true)                                                                                    | Boolean          |
+| trackOpens       | no          | Field for enabling/disabling transmission level open tracking  (default: true)                                                                                    | Boolean          |
+| transactional    | no          | Field for marking email as transactional (default: false)                                                                                                         | Boolean          |
+| useDraftTemplate | no          | Field for allowing the sending of a transmission using a draft of a stored template (default: false)                                                              | Boolean          |
 
-** - If using inline content then html or text are required. If using RFC-822 Inline Content, then rfc822 is required. If using a stored recipient list, then recipientList is required. If using a stored template, then template is required.
+** - If using inline content then html or text are required. If using RFC-822 Inline Content, then rfc822 is required. If using a stored recipient list, then recipientList is required. If using a stored template, then template is required but from is not as the values from the template will be used.
 
 ## Tips and Tricks
 ### General

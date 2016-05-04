@@ -17,19 +17,19 @@ $sparky = new SparkPost($httpAdapter, ['key' => $config['api-key']]);
 
 try {
     // define the endpoint
-  $sparky->setupUnwrapped('templates');
+    $sparky->setupUnwrapped('templates');
 
     $templateConfig = [
-    'name' => 'Summer Sale!',
-    'id' => 'summer-sale',
-    'content' => [
-      'from' => 'from@sparkpostbox.com',
-      'subject' => 'Summer deals',
-      'html' => '<b>Check out these deals!</b>',
-    ],
-  ];
+        'name' => 'Summer Sale!',
+        'id'=>'summer-sale',
+        'content'=> [
+            'from' => 'from@sparkpostbox.com',
+            'subject' => 'Summer deals',
+            'html' => '<b>Check out these deals!</b>'
+        ]
+    ];
     $results = $sparky->templates->create($templateConfig);
-    echo 'Congrats you can use your SDK!';
+    echo 'Congrats! You created a template using SparkPost!';
 } catch (\Exception $exception) {
     echo $exception->getMessage();
 }

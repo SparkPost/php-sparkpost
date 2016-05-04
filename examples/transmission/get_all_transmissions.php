@@ -17,7 +17,9 @@ $sparky = new SparkPost($httpAdapter, ['key' => $config['api-key']]);
 
 try {
     $results = $sparky->transmission->all();
-    echo 'Congrats you can use your SDK!';
+    echo 'Congrats! You got a list of all your transmissions from SparkPost!';
 } catch (\Exception $exception) {
-    echo $exception->getMessage();
+    echo $exception->getAPIMessage() . "\n";
+    echo $exception->getAPICode() . "\n";
+    echo $exception->getAPIDescription() . "\n";
 }

@@ -150,8 +150,13 @@ class APIResource
    * assembles a URL for a request.
    *
    * @param string $resourcePath path after the initial endpoint
+<<<<<<< HEAD
    * @param array $options array with an optional value of query with values to build a querystring from.
    *
+=======
+   * @param array $options array with an optional value of query with values to build a querystring from.  Any
+   *                        query elements that are themselves arrays will be imploded into a comma separated list.
+>>>>>>> master
    * @return string the assembled URL
    */
   private function buildUrl($resourcePath, $options)
@@ -161,10 +166,24 @@ class APIResource
           $url .= $resourcePath;
       }
 
+<<<<<<< HEAD
       if (!empty($options['query'])) {
           $queryString = http_build_query($options['query']);
           $url .= '?'.$queryString;
       }
+=======
+    if( !empty($options['query'])) {
+      // check each query element - if it's an array, implode it to match the API-accepted format
+      foreach($options['query'] as &$element) {
+        if(is_array($element)) {
+          $element = implode(",", $element);
+        }
+      }
+
+      $queryString = http_build_query($options['query']);
+      $url .= '?'.$queryString;
+    }
+>>>>>>> master
 
       return $url;
   }
@@ -219,12 +238,30 @@ class APIResource
 
       // Handle 4XX responses, 5XX responses will throw an HttpAdapterException
       if ($statusCode < 400) {
-          return json_decode($response->getBody()->getContents(), true);
-      } else {
-          if ($statusCode === 404) {
-              throw new APIResponseException('The specified resource does not exist', 404);
-          }
-          throw new APIResponseException('Received bad response from '.ucfirst($this->endpoint).' API: '.$statusCode);
+        return json_decode($response->getBody()->getContents(), true);
+      }
+      elseif ($statusCode === 403) {
+        $response = json_decode($response->getBody(), true);
+        throw new APIResponseException(
+          'Request forbidden',
+          $statusCode,
+          isset($response['errors'][0]['message']) ? $response['errors'][0]['message'] : "Request forbidden",
+          isset($response['errors'][0]['code']) ? $response['errors'][0]['code'] : 1100,
+          isset($response['errors'][0]['description']) ? $response['errors'][0]['description'] : "Does this API Key have the correct permissions?"
+        );
+      }
+      elseif ($statusCode === 404) {
+        throw new APIResponseException('The specified resource does not exist', 404);
+      }
+      else {
+        $response = json_decode($response->getBody(), true);
+        throw new APIResponseException(
+          'Received bad response from ' . ucfirst($this->endpoint),
+          $statusCode,
+          isset($response['errors'][0]['message']) ? $response['errors'][0]['message'] : "",
+          isset($response['errors'][0]['code']) ? $response['errors'][0]['code'] : 0,
+          isset($response['errors'][0]['description']) ? $response['errors'][0]['description'] : ""
+        );
       }
     }
 
@@ -236,7 +273,7 @@ class APIResource
             throw $exception;
         }
 
-        throw new APIResponseException('Unable to contact '.ucfirst($this->endpoint).' API: '.$exception->getMessage());
+        throw new APIResponseException('Unable to contact ' . ucfirst($this->endpoint) . ' API: ' . $exception->getMessage(), $exception->getCode());
     }
   }
 }

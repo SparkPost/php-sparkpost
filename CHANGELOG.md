@@ -3,7 +3,23 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
-- All content has been released to date.
+- There is no unreleased code at this time.
+
+## [1.1.0] - 2016-05-02
+### Added
+- Message Events API added.
+
+### Changed
+- Transmission API now accepts a DateTime object for startDate
+
+## [1.0.3] - 2016-03-25
+### Added
+- Support for attachments, inline attachments, inline css, sandbox, start time, and transactional options in `Transmission` class
+- API response exceptions now include message, code, and description from API
+
+## [1.0.2] - 2016-02-28
+### Fixed
+- Miscellaneous code cleanups related to docs and namespacing
 
 ## [1.0.1] - 2016-02-24
 ### Added
@@ -26,5 +42,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - README now has proper code blocks denoting PHP language
 
-[unreleased]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.1...HEAD
+[unreleased]: https://github.com/sparkpost/php-sparkpost/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.3...v1.1.0
+[1.0.3]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.0...v1.0.1
+

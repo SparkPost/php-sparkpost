@@ -7,7 +7,13 @@ use Ivory\HttpAdapter\HttpAdapterInterface;
 
 class SparkPost
 {
-    public $transmission;
+  public $transmission;
+  public $messageEvents;
+
+  /**
+   * Library version, used for setting User-Agent.
+   */
+  private $version = '1.1.0';
 
   /**
    * Connection config for making requests.
@@ -45,9 +51,10 @@ class SparkPost
   {
       //config needs to be setup before adapter because of default adapter settings
     $this->setConfig($settingsConfig);
-      $this->setHttpAdapter($httpAdapter);
+    $this->setHttpAdapter($httpAdapter);
 
-      $this->transmission = new Transmission($this);
+    $this->transmission = new Transmission($this);
+    $this->messageEvents = new MessageEvents($this);
   }
 
   /**
@@ -88,16 +95,11 @@ class SparkPost
    */
   private function getHttpConfig($config)
   {
-      // get composer.json to extract version number
-    $composerFile = file_get_contents(dirname(__FILE__).'/../../composer.json');
-      $composer = json_decode($composerFile, true);
-
-    // create Configuration for http adapter
-    $httpConfig = new Configuration();
-      $baseUrl = $config['protocol'].'://'.$config['host'].($config['port'] ? ':'.$config['port'] : '').'/api/'.$config['version'];
+      // create Configuration for http adapter
+      $httpConfig = new Configuration();
+      $baseUrl = $config['protocol'] . '://' . $config['host'] . ($config['port'] ? ':' . $config['port'] : '') . '/api/' . $config['version'];
       $httpConfig->setBaseUri($baseUrl);
-      $httpConfig->setUserAgent('php-sparkpost/'.$composer['version']);
-
+      $httpConfig->setUserAgent('php-sparkpost/' . $this->version);
       return $httpConfig;
   }
 
@@ -131,7 +133,7 @@ class SparkPost
     }
 
     // Validate API key because its required
-    if (!isset($settingsConfig['key']) || empty(trim($settingsConfig['key']))) {
+    if (!isset($settingsConfig['key']) || !preg_match('/\S/', $settingsConfig['key'])){
         throw new \Exception('You must provide an API key');
     }
 
