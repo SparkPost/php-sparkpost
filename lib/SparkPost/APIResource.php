@@ -62,7 +62,8 @@ class APIResource
             // use only defined parameter mappings to construct $model
             $mapPath = static::$parameterMappings[$mapKey];
         } else {
-            return;
+            // fallback to the user requested parameter
+            $mapPath = $mapKey;
         }
 
         $path = explode('.', $mapPath);
