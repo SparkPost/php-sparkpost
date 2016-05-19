@@ -97,6 +97,7 @@ try {
 ## Learn More
 * For more detailed examples, check our examples:
   * [Transmissions](https://github.com/SparkPost/php-sparkpost/tree/master/examples/transmission)
+  * [Suppression](https://github.com/SparkPost/php-sparkpost/tree/master/examples/SuppressionLists)
 * Read our REST API documentation - <http://www.sparkpost.com/docs/introduction>
 
 ## Field Descriptions
