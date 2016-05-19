@@ -4,11 +4,13 @@ namespace SparkPost;
 
 use Ivory\HttpAdapter\Configuration;
 use Ivory\HttpAdapter\HttpAdapterInterface;
+use SparkPost\SuppressionHandler;
 
 class SparkPost
 {
     public $transmission;
     public $messageEvents;
+    public $suppression;
 
     /**
      * Library version, used for setting User-Agent.
@@ -55,6 +57,7 @@ class SparkPost
 
         $this->transmission = new Transmission($this);
         $this->messageEvents = new MessageEvents($this);
+        $this->suppression = new SuppressionHandler($this);
     }
 
     /**
