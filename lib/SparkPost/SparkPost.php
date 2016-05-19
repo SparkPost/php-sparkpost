@@ -35,6 +35,7 @@ class SparkPost
         'strictSSL' => true,
         'key' => '',
         'version' => 'v1',
+        'timeout' => 10
     ];
 
     /**
@@ -99,6 +100,7 @@ class SparkPost
         $httpConfig = new Configuration();
         $baseUrl = $config['protocol'].'://'.$config['host'].($config['port'] ? ':'.$config['port'] : '').'/api/'.$config['version'];
         $httpConfig->setBaseUri($baseUrl);
+        $httpConfig->setTimeout($this->config['timeout']);
         $httpConfig->setUserAgent('php-sparkpost/'.$this->version);
 
         return $httpConfig;
