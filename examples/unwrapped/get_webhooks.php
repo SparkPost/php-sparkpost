@@ -22,5 +22,7 @@ try {
 
     echo 'Congrats! You got a list of all your webhooks from SparkPost!';
 } catch (\Exception $exception) {
-    echo $exception->getMessage();
+    echo $exception->getAPIMessage()."\n";
+    echo $exception->getAPICode()."\n";
+    echo $exception->getAPIDescription()."\n";
 }
