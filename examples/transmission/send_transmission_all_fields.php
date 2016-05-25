@@ -13,7 +13,7 @@ use GuzzleHttp\Client;
 use Ivory\HttpAdapter\Guzzle6HttpAdapter;
 
 $httpAdapter = new Guzzle6HttpAdapter(new Client());
-$sparky = new SparkPost($httpAdapter, ['key' => $config['api-key']]);
+$sparky = new SparkPost($httpAdapter, ['key' => $config['api-key'], 'timeout' => 0]]);
 
 $data = file_get_contents('/path/to/test.csv');
 
