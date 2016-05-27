@@ -4,6 +4,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [1.2.1] - 2016-05-27
+### Fixed
+- [#111](https://github.com/SparkPost/php-sparkpost/pull/111) allow pass through of timeout setting in http config
+
 ## [1.2.0] - 2016-05-04
 ### Added
 - [EditorConfig](http://editorconfig.org/) file to maintain consistent coding style
@@ -52,8 +56,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - README now has proper code blocks denoting PHP language
 
-[unreleased]: https://github.com/sparkpost/php-sparkpost/compare/v1.2.0...HEAD
-[1.2.0]: https://github.com/sparkpost/php-sparkpost/compare/v1.1.0...v1.2.0
+[unreleased]: https://github.com/sparkpost/php-sparkpost/compare/1.2.1...HEAD
+[1.2.1]: https://github.com/sparkpost/php-sparkpost/compare/1.2.0...1.2.1
+[1.2.0]: https://github.com/sparkpost/php-sparkpost/compare/v1.1.0...1.2.0
 [1.1.0]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.3...v1.1.0
 [1.0.3]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.1...v1.0.2
