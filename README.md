@@ -9,8 +9,6 @@
 
 The official PHP library for using [the SparkPost REST API](https://developers.sparkpost.com).
 
-**Note: We understand that the ivory-http-adapter we use in this library is deprecated in favor of httplug. We use Ivory internally to make it simple for you to use whatever HTTP library you want. The deprecation won't affect or limit our ongoing support of this PHP library.**
-
 Before using this library, you must have a valid API Key. To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
 
 ## Installation
@@ -38,107 +36,125 @@ use SparkPost\SparkPost;
 
 Because of dependency collision, we have opted to use a request adapter rather than
 requiring a request library.  This means that your application will need to pass in
-a request adapter to the constructor of the SparkPost Library.  We use the [Ivory HTTP Adapter] (https://github.com/egeloen/ivory-http-adapter) in SparkPost. Please visit their repo
-for a list of supported adapters.  If you don't currently use a request library, you will
-need to require one and create an adapter from it and pass it along.  The example below uses the
-GuzzleHttp Client Library.
+a request adapter to the constructor of the SparkPost Library.  We use the [HTTPlug](https://github.com/php-http/httplug) in SparkPost. Please visit their repo for a list of supported adapters.  If you don't currently use a request library, you will
+need to require one and create an adapter from it and pass it along. The example below uses the GuzzleHttp Client Library.
 
 An Adapter can be setup like so:
 
 ```php
+<?php
 use SparkPost\SparkPost;
 use GuzzleHttp\Client;
-use Ivory\HttpAdapter\Guzzle6HttpAdapter;
+use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
-$httpAdapter = new Guzzle6HttpAdapter(new Client());
+$httpAdapter = new GuzzleAdapter(new Client());
 $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
+?>
 ```
 
-## Getting Started:  Your First Mailing
-For this example to work as is, [Guzzle 6 will need to be installed](http://docs.guzzlephp.org/en/latest/overview.html#installation).  Otherwise another adapter can be used for your specific setup.  See "Setting up a Request Adapter" above.
+## Initialization
+#### new Sparkpost(httpAdapter, options)
+* `httpAdapter`
+    * Required: Yes
+    * HTTP client or adapter supported by HTTPlug
+* `options.key`
+    * Required: Yes
+    * Type: `String`
+    * A valid Sparkpost API key
+* `options.host`
+    * Required: No
+    * Type: `String`
+    * Default: `api.sparkpost.com`
+* `options.protocol`
+    * Required: No
+    * Type: `String`
+    * Default: `https`
+* `options.port`
+    * Required: No
+    * Type: `Number`
+    * Default: 443
+* `options.strictSSL`
+    * Required: No
+    * Type: `Boolean`
+    * Default: `true`
+* `options.version`
+    * Required: No
+    * Type: `String`
+    * Default: `v1`
+* `options.timeout`
+    * Required: No
+    * Type: `Number`
+    * Default: `10`
 
+## Methods
+### request(method, uri [, payload])
+* `method`
+    * Required: Yes
+    * Type: `String`
+    * HTTP method for request
+* `uri`
+    * Required: Yes
+    * Type: `String`
+    * The URI to recieve the request
+* `payload`
+    * Required: No
+    * Type: `Array`
+    * If the method is `GET` the values are encoded into the URL. Otherwise, if the method is `POST`, `PUT`, or `DELETE` the payload is used for the request body.
+
+#### Handling Response
+The request function returns a promise. You can wait for the promise or you can handle it asynchronously.
+
+##### Wait
 ```php
-require 'vendor/autoload.php';
-
-use SparkPost\SparkPost;
-use GuzzleHttp\Client;
-use Ivory\HttpAdapter\Guzzle6HttpAdapter;
-
-$httpAdapter = new Guzzle6HttpAdapter(new Client());
-$sparky = new SparkPost($httpAdapter, ['key'=>'YOUR API KEY']);
-
+<?php
 try {
-    // Build your email and send it!
-    $results = $sparky->transmission->send([
-        'from'=>[
-            'name' => 'From Envelope',
-            'email' => 'from@sparkpostbox.com>'
-        ],
-        'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
-        'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
-        'substitutionData'=>['name'=>'YOUR FIRST NAME'],
-        'subject'=>'First Mailing From PHP',
-        'recipients'=>[
-            [
-                'address'=>[
-                    'name'=>'YOUR FULL NAME',
-                    'email'=>'YOUR EMAIL ADDRESS'
-                ]
-            ]
-        ]
-    ]);
-    echo 'Woohoo! You just sent your first mailing!';
-} catch (\Exception $err) {
-    echo 'Whoops! Something went wrong';
-    var_dump($err);
+    $response = $promise->wait();
+} catch (Exception $e) {
+    echo $exception->getMessage();
 }
+?>
 ```
 
-## Learn More
-* For more detailed examples, check our examples:
-  * [Transmissions](https://github.com/SparkPost/php-sparkpost/tree/master/examples/transmission)
-* Read our REST API documentation - <http://www.sparkpost.com/docs/introduction>
+##### Asynchronously
+```php
+<?php
+$promise->then(
+    // Success callback
+    function ($response) {
+        echo $response->getStatusCode();
+        echo $response->getBody();
+    },
+    // Failure callback
+    function (\Exception $e) {
+        echo $exception->getMessage();
+    }
+);
+?>
+```
 
-## Field Descriptions
-### Transmissions
-| Field Name       | Required?   | Description                                                                                                                                                       | Data Type        |
-| ------------     | ----------- | -------------                                                                                                                                                     | -----------      |
-| attachments      | no          | Field for attaching files - see Attachment Attributes in the [Transmssions API docs](https://developers.sparkpost.com/api/#/reference/transmissions)              | Array of Objects |
-| campaign         | no          | Field for assigning a given transmission to a specific campaign, which is a logical container for similar transmissions                                           | String           |
-| customHeaders    | no          | Field for specifying additional headers to be applied to a given transmission (other than Subject, From, To, and Reply-To)                                        | Object (Simple)  |
-| description      | no          | Field for describing what this transmission is for the user                                                                                                       | String           |
-| from             | yes**       | Field for setting the from line of a given transmission                                                                                                           | Object           |
-| html             | yes**       | Field for setting the HTML content of a given transmission                                                                                                        | String           |
-| inlineCss        | no          | Field for enabling/disabling CSS inlining                                                                                                                         | Boolean          |
-| inlineImages     | no          | Field for providing inline images - see Inline Image Attributes in the [Transmssions API docs](https://developers.sparkpost.com/api/#/reference/transmissions)    | Array of Objects |
-| metadata         | no          | Field for adding arbitrary key/value pairs which will be included in open/click tracking                                                                          | Object (Simple)  |
-| recipientList    | no**        | Field for specifying a stored recipient list ID to be used for a given transmission                                                                               | String           |
-| recipients       | yes**       | Field for specifying who a given transmission should be sent to                                                                                                   | Array of Objects |
-| replyTo          | no          | Field for specifying the email address that should be used when a recipient hits the reply button                                                                 | String           |
-| rfc822           | no**        | Field for setting the RFC-822 encoded content of a given transmission                                                                                             | String           |
-| subject          | yes         | Field for setting the subject line of a given transmission                                                                                                        | String           |
-| substitutionData | no          | Field for adding transmission level substitution data, which can be used in a variety of fields and in content                                                    | Object (Complex) |
-| template         | no**        | Field for specifying the Template ID of a stored template to be used when sending a given transmission                                                            | String           |
-| text             | yes**       | Field for setting the Plain Text content of a given transmission                                                                                                  | String           |
-| trackClicks      | no          | Field for enabling/disabling transmission level click tracking (default: true)                                                                                    | Boolean          |
-| trackOpens       | no          | Field for enabling/disabling transmission level open tracking  (default: true)                                                                                    | Boolean          |
-| transactional    | no          | Field for marking email as transactional (default: false)                                                                                                         | Boolean          |
-| useDraftTemplate | no          | Field for allowing the sending of a transmission using a draft of a stored template (default: false)                                                              | Boolean          |
+### setHttpAdapter(httpAdapter)
+* `httpAdapter`
+    *  Required: Yes
+    * HTTP client or adapter supported by HTTPlug
 
-** - If using inline content then html or text are required. If using RFC-822 Inline Content, then rfc822 is required. If using a stored recipient list, then recipientList is required. If using a stored template, then template is required but from is not as the values from the template will be used.
-
-## Tips and Tricks
-### General
-* You _must_ provide at least an API key when instantiating the SparkPost Library - `[ 'key'=>'184ac5480cfdd2bb2859e4476d2e5b1d2bad079bf' ]`
-* The library's features are namespaced under the various SparkPost API names.
-
-### Transmissions
-* If you specify a stored recipient list and inline recipients in a Transmission, you will receive an error.
-* If you specify HTML and/or Plain Text content and then provide RFC-822 encoded content, you will receive an error.
-    * RFC-822 content is not valid with any other content type.
-* If you specify a stored template and also provide inline content via `html` or `text`, you will receive an error.
-* By default, open and click tracking are enabled for a transmission.
-* By default, a transmission will use the published version of a stored template.
+## Endpoints
+### transmission
+* **get([transmissionID] [, payload])**
+    * `transmissionID` - see `uri` request options
+    * `payload` - see request options
+* **post(payload)**
+    * `payload` - see request options
+    * `payload.cc`
+        * Required: No
+        * Type: `Array`
+        * Recipients to recieve a carbon copy of the transmission
+    * `payload.bcc`
+        * Required: No
+        * Type: `Array`
+        * Recipients to descreetly recieve a carbon copy of the transmission
+* **delete(transmissionID)**
+    * `transmissionID` - see `uri` request options
+    * `payload` - see request options
 
 ### Contributing
 See [contributing](https://github.com/SparkPost/php-sparkpost/blob/master/CONTRIBUTING.md).
