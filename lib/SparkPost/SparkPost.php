@@ -9,9 +9,7 @@ class SparkPost
 {
     private $version = '2.0.0';
     private $config;
-
     public $httpClient;
-
     private $options;
 
     private static $defaultOptions = [
@@ -24,10 +22,10 @@ class SparkPost
         'timeout' => 10
     ];
 
-    public function __construct($httpAdapter, $options)
+    public function __construct(HttpClient $httpClient, $options)
     {
         $this->setOptions($options);
-        $this->setHttpAdapter($httpAdapter);
+        $this->setHttpClient($httpClient);
     }
 
     public function request($method, $uri, $payload = [])
@@ -49,7 +47,7 @@ class SparkPost
 
         $request = new Request($method, $url, $headers, $body);
 
-        return $httpClient->sendRequest($request);
+        return $httpClient->sendAsyncRequest($request);
     }
 
     public function getHttpHeaders()
@@ -60,11 +58,19 @@ class SparkPost
         ];
     }
 
-    public function getUrl($uri, $params) {
-        return '';
+    public function getUrl($path, $params) {
+        $options = $this->options;
+
+        for ($index = 0; $index < count($params); $index++) { 
+            if (is_array($params[$index]))
+                $params[$index] = implode(',', $params);
+        }
+        $paramsString = http_build_query($params);
+
+        return $options['protocol'].'://'.$options['host'].($options['port'] ? ':'.$options['port'] : '').'/api/'.$options['version'].'/'.$path.($paramsString ? '?'.$paramsString : '');
     }
 
-    public function setHttpAdapter(HttpClient $httpClient)
+    public function setHttpClient(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
     }
