@@ -47,16 +47,20 @@ use SparkPost\SparkPost;
 use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
-$httpAdapter = new GuzzleAdapter(new Client());
-$sparky = new SparkPost($httpAdapter, ['key'=>'YOUR_API_KEY']);
+$httpClient = new GuzzleAdapter(new Client());
+$sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 ?>
 ```
 
 ## Initialization
-#### new Sparkpost(httpAdapter, options)
-* `httpAdapter`
+#### new Sparkpost(httpClient, options)
+* `httpClient`
     * Required: Yes
     * HTTP client or adapter supported by HTTPlug
+* `options`
+    * Required: Yes
+    * Type: `String` or `Array`
+    * A valid Sparkpost API key or an array of options
 * `options.key`
     * Required: Yes
     * Type: `String`
@@ -73,10 +77,6 @@ $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR_API_KEY']);
     * Required: No
     * Type: `Number`
     * Default: 443
-* `options.strictSSL`
-    * Required: No
-    * Type: `Boolean`
-    * Default: `true`
 * `options.version`
     * Required: No
     * Type: `String`
@@ -86,8 +86,9 @@ $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR_API_KEY']);
     * Type: `Number`
     * Default: `10`
 
+
 ## Methods
-### request(method, uri [, payload])
+### request(method, uri [, payload [, headers]])
 * `method`
     * Required: Yes
     * Type: `String`
@@ -100,11 +101,22 @@ $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR_API_KEY']);
     * Required: No
     * Type: `Array`
     * If the method is `GET` the values are encoded into the URL. Otherwise, if the method is `POST`, `PUT`, or `DELETE` the payload is used for the request body.
+* `headers`
+    * Required: No
+    * Type: `Array`
+    * If the method is `GET` the values are encoded into the URL. Otherwise, if the method is `POST`, `PUT`, or `DELETE` the payload is used for the request body.
 
-### setHttpAdapter(httpAdapter)
-* `httpAdapter`
+### setHttpClient(httpClient)
+* `httpClient`
     *  Required: Yes
     * HTTP client or adapter supported by HTTPlug
+
+### setOptions(options)
+* `options`
+    *  Required: Yes
+    *  Type: `Array`
+    * See initialization
+
 
 ## Endpoints
 ### transmissions
@@ -123,7 +135,6 @@ $sparky = new SparkPost($httpAdapter, ['key'=>'YOUR_API_KEY']);
         * Recipients to descreetly recieve a carbon copy of the transmission
 * **delete(transmissionID)**
     * `transmissionID` - see `uri` request options
-    * `payload` - see request options
 
 ## Examples
 
@@ -134,8 +145,8 @@ use SparkPost\SparkPost;
 use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
-$httpAdapter = new GuzzleAdapter(new Client());
-$sparky = new SparkPost($httpAdapter, ['key'=>'YOUR_API_KEY']);
+$httpClient = new GuzzleAdapter(new Client());
+$sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 
 $promise = $sparky->transmissions->post([
     'content' => [
@@ -148,7 +159,7 @@ $promise = $sparky->transmissions->post([
         'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!'
     ],
     'substitution_data'=> ['name'=>'YOUR_FIRST_NAME'],
-    'recipients'= [
+    'recipients'=> [
         [ 'address' => '<YOUR_EMAIL_ADDRESS>' ]
     ],
     'bcc' =>  [
@@ -166,8 +177,8 @@ use SparkPost\SparkPost;
 use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
-$httpAdapter = new GuzzleAdapter(new Client());
-$sparky = new SparkPost($httpAdapter, ['key'=>'YOUR_API_KEY']);
+$httpClient = new GuzzleAdapter(new Client());
+$sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 
 $promise = $sparky->request('GET', 'metrics/ip-pools', [
     'from' => '2015-12-01T08:00',
@@ -190,8 +201,8 @@ try {
     echo $response->getStatusCode();
     echo $response->getBody();
 } catch (Exception $e) {
-    echo $e->getStatusCode();
-    echo $e->getBody();
+    echo $e->getCode();
+    echo $e->getMessage();
 }
 ?>
 ```
@@ -207,8 +218,8 @@ $promise->then(
     },
     // Failure callback
     function (Exception $e) {
-        echo $e->getStatusCode();
-        echo $e->getBody();
+        echo $e->getCode();
+        echo $e->getMessage();
     }
 );
 ?>
@@ -218,9 +229,9 @@ $promise->then(
 The promise will throw an exception if the server returns a status code of `400` or higher.
 
 ### Exception
-* **getStatusCode()**
+* **getCode()**
     * Returns the response status code of `400` or higher
-* **getBody()**
+* **getMessage()**
     * Returns the body of response as an `Array`
 
 
