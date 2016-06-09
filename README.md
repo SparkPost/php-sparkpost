@@ -104,7 +104,7 @@ $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 * `headers`
     * Required: No
     * Type: `Array`
-    * If the method is `GET` the values are encoded into the URL. Otherwise, if the method is `POST`, `PUT`, or `DELETE` the payload is used for the request body.
+    * Custom headers to be sent with the request.
 
 ### setHttpClient(httpClient)
 * `httpClient`
