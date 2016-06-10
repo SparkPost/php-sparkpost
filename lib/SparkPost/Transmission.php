@@ -33,12 +33,14 @@ class Transmission extends Resource
         }
 
         //loop through all BCC recipients
-        foreach ($bccList as $bccRecipient) { 
-            $newRecipient = [
-                    'address' => $bccRecipient['address'],
-                    'header_to' => $originalRecipient,
-            ];
-            array_push($recipientsList, $newRecipient);
+        if(isset($bccList)){
+            foreach ($bccList as $bccRecipient) { 
+                $newRecipient = [
+                        'address' => $bccRecipient['address'],
+                        'header_to' => $originalRecipient,
+                ];
+                array_push($recipientsList, $newRecipient);
+            }
         }
         
         //Delete the BCC object/array
@@ -62,23 +64,26 @@ class Transmission extends Resource
             $originalRecipient = '&lt;' . $modifiedPayload['recipients'][0]['address'] 
                 . '&gt;';
         }
+        
+        if(isset($ccList)){
+             foreach ($ccList as $ccRecipient) {
+                $newRecipient = [
+                        'address' => $ccRecipient['address'],
+                        'header_to' => $originalRecipient,
+                ];
 
-        foreach ($ccList as $ccRecipient) {
-            $newRecipient = [
-                    'address' => $ccRecipient['address'],
-                    'header_to' => $originalRecipient,
-            ];
-            
-            //if name exists, then use "Name" <Email> format. Otherwise, just email will suffice. 
-            if(isset($ccRecipient['name'])) {
-                $ccCustomHeadersList = $ccCustomHeadersList . ' "' . $ccRecipient['name'] 
-                    . '" &lt;' . $ccRecipient['address'] . '&gt;,';
-            } else {
-                $ccCustomHeadersList = $ccCustomHeadersList . ' ' . $ccRecipient['address'];
-            }
-            
-            array_push($recipientsList, $newRecipient);
+                //if name exists, then use "Name" <Email> format. Otherwise, just email will suffice. 
+                if(isset($ccRecipient['name'])) {
+                    $ccCustomHeadersList = $ccCustomHeadersList . ' "' . $ccRecipient['name'] 
+                        . '" &lt;' . $ccRecipient['address'] . '&gt;,';
+                } else {
+                    $ccCustomHeadersList = $ccCustomHeadersList . ' ' . $ccRecipient['address'];
+                }
+
+                array_push($recipientsList, $newRecipient);
+            }   
         }
+        
         
         //Creates customHeaders and adds CSV list of CC emails
         $customHeaders = array("CC" => $ccCustomHeadersList); 
