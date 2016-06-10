@@ -23,8 +23,4 @@ class Resource
         echo $payload;
         return $this->sparkpost->request('POST', $endpoint, $payload);
     }
-    
-    public function test(){
-        echo "TEST";
-    }
 }
