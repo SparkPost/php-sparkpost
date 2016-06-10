@@ -2,135 +2,183 @@
 
 namespace SparkPost;
 
-/**
- * SDK interface for managing transmissions.
- */
-class Transmission extends APIResource
+require '../../vendor/autoload.php';
+
+class Transmission extends Resource
 {
-    public $endpoint = 'transmissions';
+    protected $endpoint = 'transmission';
 
-    /**
-     * Mapping for values passed into the send method to the values needed for the Transmission API.
-     *
-     * @var array
-     */
-    protected static $parameterMappings = [
-        'attachments' => 'content.attachments',
-        'campaign' => 'campaign_id',
-        'customHeaders' => 'content.headers',
-        'description' => 'description',
-        'from' => 'content.from',
-        'html' => 'content.html',
-        'inlineCss' => 'options.inline_css',
-        'inlineImages' => 'content.inline_images',
-        'metadata' => 'metadata',
-        'recipientList' => 'recipients.list_id',
-        'recipients' => 'recipients',
-        'replyTo' => 'content.reply_to',
-        'returnPath' => 'return_path',
-        'rfc822' => 'content.email_rfc822',
-        'sandbox' => 'options.sandbox',
-        'startTime' => 'options.start_time',
-        'subject' => 'content.subject',
-        'substitutionData' => 'substitution_data',
-        'template' => 'content.template_id',
-        'text' => 'content.text',
-        'trackClicks' => 'options.click_tracking',
-        'trackOpens' => 'options.open_tracking',
-        'transactional' => 'options.transactional',
-        'useDraftTemplate' => 'use_draft_template',
-    ];
-
-    /**
-     * Sets up default structure and default values for the model that is acceptable by the API.
-     *
-     * @var array
-     */
-    protected static $structure = [
-        'return_path' => 'default@sparkpostmail.com',
-        'content' => [
-            'html' => null,
-            'text' => null,
-            'email_rfc822' => null,
-        ],
-        'use_draft_template' => false,
-    ];
-
-    /**
-     * Method for issuing POST request to the Transmissions API.
-     *
-     *  This method assumes that all the appropriate fields have
-     *  been populated by the user through configuration.  Acceptable
-     *  configuration values are:
-     *  'attachments': array,
-     *  'campaign': string,
-     *  'customHeaders': array,
-     *  'description': string,
-     *  'from': string,
-     *  'html': string,
-     *  'inlineCss': boolean,
-     *  'inlineImages': array,
-     *  'metadata': array,
-     *  'recipientList': string,
-     *  'recipients': array,
-     *  'replyTo': string,
-     *  'rfc822': string,
-     *  'sandbox': boolean,
-     *  'startTime': string | \DateTime,
-     *  'subject': string,
-     *  'substitutionData': array,
-     *  'template': string,
-     *  'text': string,
-     *  'trackClicks': boolean,
-     *  'trackOpens': boolean,
-     *  'transactional': boolean,
-     *  'useDraftTemplate': boolean
-     *
-     * @param array $transmissionConfig
-     *
-     * @return array API repsonse represented as key-value pairs
-     */
-    public function send($transmissionConfig)
-    {
-        if (isset($transmissionConfig['startTime']) && $transmissionConfig['startTime'] instanceof \DateTime) {
-            $transmissionConfig['startTime'] = $transmissionConfig['startTime']->format(\DateTime::ATOM);
-        }
-
-        return $this->create($transmissionConfig);
+    public function __constructor(SparkPost $sparkpost){
+        parent::__construct($sparkpost, $endpoint);
     }
 
-    /**
-     * Method for retrieving information about all transmissions
-     *  Wrapper method for a cleaner interface.
-     *
-     * @param null|string $campaignID
-     * @param null|string $templateID
-     *
-     * @return array result Set of transmissions
-     */
-    public function all($campaignID = null, $templateID = null)
+    public function fixBlindCarbonCopy($payload)
     {
-        $options = [];
-        if ($campaignID !== null) {
-            $options['campaign_id'] = $campaignID;
-        }
-        if ($templateID !== null) {
-            $options['template_id'] = $templateID;
-        }
 
-        return $this->get(null, $options);
+        //TODO: Manage recipients. "Vincent Song <vincentsong@sparkpost.com>"
+
+        $modifiedPayload = $payload;
+        $bccList = &$modifiedPayload['bcc'];
+        $recipientsList = &$modifiedPayload['recipients'];
+       
+        if(isset($modifiedPayload['recipients'][0]['name'])) //if a name exists, then do "name" <email>. Otherwise, just do <email>
+        {
+            $originalRecipient = '"'.$modifiedPayload['recipients'][0]['name'].'" &lt;'.$modifiedPayload['recipients'][0]['address'].'&gt;';
+        } else {
+            $originalRecipient = '&lt;'.$modifiedPayload['recipients'][0]['address'].'&gt;';
+        } //Format: Original Recipient" <original.recipient@example.com>
+
+        foreach ($bccList as $bccRecipient) { //loop through all BCC recipients
+            $newRecipient = [
+                    'address' => $bccRecipient['address'],
+                    'header_to' => $originalRecipient,
+            ];
+            array_push($recipientsList, $newRecipient);
+        }
+        
+        unset($modifiedPayload['bcc']); //Delete the BCC object/array
+
+        return $modifiedPayload;
     }
 
-    /**
-     * Method for retrieving information about a single transmission
-     *  Wrapper method for a cleaner interface.
-     *
-     * @param string $transmissionID Identifier of the transmission to be found
-     *
-     * @return array result Single transmission represented in key-value pairs
-     */
-    public function find($transmissionID)
+    public function fixCarbonCopy($payload)
     {
-        return $this->get($transmissionID);
+
+        $ccCustomHeadersList = "";
+        $modifiedPayload = $payload;
+        $ccList = &$modifiedPayload['cc'];
+        $recipientsList = &$modifiedPayload['recipients'];
+        
+        if(isset($modifiedPayload['recipients'][0]['name'])) //if a name exists, then do "name" <email>. Otherwise, just do <email>
+        {
+            $originalRecipient = '"'.$modifiedPayload['recipients'][0]['name'].'" &lt;'.$modifiedPayload['recipients'][0]['address'].'&gt;';
+        } else {
+            $originalRecipient = '&lt;'.$modifiedPayload['recipients'][0]['address'].'&gt;';
+        }
+
+        foreach ($ccList as $ccRecipient) {
+            $newRecipient = [
+                    'address' => $ccRecipient['address'],
+                    'header_to' => $originalRecipient,
+            ];
+            
+            //if name exists, then use "Name" <Email> format. Otherwise, just email will suffice. 
+            
+            if(isset($ccRecipient['name'])){
+                $ccCustomHeadersList = $ccCustomHeadersList . ' "' . $ccRecipient['name'] . '" &lt;' . $ccRecipient['address'] . '&gt;,';
+            } else {
+                $ccCustomHeadersList = $ccCustomHeadersList . ' ' . $ccRecipient['address'];
+            }
+            
+            array_push($recipientsList, $newRecipient);
+        }
+        
+        $customHeaders = array("CC" => $ccCustomHeadersList); //Creates customHeaders and adds CSV list of CC emails
+        $modifiedPayload['customHeaders'] = $customHeaders; 
+        
+        unset($modifiedPayload['cc']); //delete CC
+        
+        return $modifiedPayload;
+    }
+
+    public function post($payload)
+    {
+        $modifiedPayload = $this->fixBlindCarbonCopy($payload); //Accounts for any BCCs
+        $modifiedPayload = $this->fixCarbonCopy($modifiedPayload); //Accounts for any CCs
+        parent::post($modifiedPayload);
     }
 }
+
+//$testPayload = 
+//[
+//    'content' => [
+//        'from' => [
+//            'name' => 'Sparkpost Team',
+//            'email' => 'from@sparkpostbox.com',
+//        ],
+//        'subject' => 'First Mailing From PHP',
+//        'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
+//        'text' => 'Congratulations, {{name}}!! You just sent your very first mailing!',
+//    ],
+//    'substitution_data' => ['name' => 'YOUR_FIRST_NAME'],
+//    'recipients' => [
+//        [
+//            'address' => 'EMAIL_ADDRESS1',
+//            'name' => 'NAME_1'
+//        ],
+//    ],
+//    'bcc' => [
+//        [
+//            'address' => 'BCC_EMAIL_ADDRESS1',
+//            'name' => 'BCC_NAME1'
+//        ],
+//        [
+//            'address' => 'BCC_EMAIL_ADDRESS2',
+//            'name' => 'BCC_NAME2'
+//        ],
+//    ], 
+//    'cc' => [
+//        [
+//            'address' => 'CC_EMAIL_ADDRESS1',
+//            'name' => 'CC_NAME1'
+//        ],
+//        [
+//            'address' => 'CC_EMAIL_ADDRESS2',
+//            'name' => 'CC_NAME2'
+//        ],
+//        [
+//            'address' => 'CC_EMAIL_ADDRESS3',
+//        ]
+//    ]
+//];
+//$transmission = new Transmission();
+//$transmission->post($testPayload);
+
+//$output = 
+//[
+//    'content' => [
+//        'from' => [
+//            'name' => 'Sparkpost Team',
+//            'email' => 'from@sparkpostbox.com',
+//        ],
+//        'subject' => 'First Mailing From PHP',
+//        'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
+//        'text' => 'Congratulations, {{name}}!! You just sent your very first mailing!',
+//    ],
+//    'substitution_data' => ['name' => 'YOUR_FIRST_NAME'],
+//    'recipients' => [
+//        [
+//            'address' => 'EMAIL_ADDRESS1',
+//            'name' => 'NAME_1'
+//        ],
+//        [
+//            'address' => 'BCC_EMAIL_ADDRESS1',
+//            'header_to' => '"NAME_1" <EMAIL_ADDRESS1>'
+//        ],
+//        [
+//            'address' => 'BCC_EMAIL_ADDRESS2',
+//            'header_to' => '"NAME_1" <EMAIL_ADDRESS1>'
+//        ],
+//        [
+//            'address' => 'CC_EMAIL_ADDRESS1',
+//            'header_to' => '"NAME_1" <EMAIL_ADDRESS1>'
+//        ],
+//        [
+//            'address' => 'CC_EMAIL_ADDRESS2',
+//            'header_to' => '"NAME_1" <EMAIL_ADDRESS1>'
+//        ],
+//        [
+//            'address' => 'CC_EMAIL_ADDRESS3',
+//            'header_to' => '"NAME_1" <EMAIL_ADDRESS1>'
+//        ],
+//    ],
+//    'customHeaders' => [
+//        'CC' => '"CC_NAME1" <CC_EMAIL_ADDRESS1>, "CC_NAME2" <CC_EMAIL_ADDRESS2>, CC_EMAIL_ADDRESS3'
+//    ]
+//];
+
+
+
+
+
+
