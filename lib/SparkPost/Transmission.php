@@ -2,20 +2,14 @@
 
 namespace SparkPost;
 
-require '../../vendor/autoload.php';
-
 class Transmission extends Resource
 {
     protected $endpoint = 'transmissions';
     protected $customHeaders = array();
 
-//    public function __construct(SparkPost $sparkpost)
-//    {
-//        parent::__construct($sparkpost, $endpoint);
-//    }
-    
-    public function __construct(){
-        
+    public function __construct(SparkPost $sparkpost)
+    {
+        parent::__construct($sparkpost, $endpoint);
     }
 
     public function fixBlindCarbonCopy($payload)
