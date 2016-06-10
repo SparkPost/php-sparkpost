@@ -18,7 +18,8 @@ class SparkPost
         'port' => 443,
         'key' => '',
         'version' => 'v1',
-        'timeout' => 10
+        'timeout' => 10,
+        'async' => true
     ];
 
     public $transmissions;
@@ -30,7 +31,16 @@ class SparkPost
         $this->setupEndpoints();
     }
 
-    public function request($method = 'GET', $uri = '', $payload = [], $headers = [])
+    public function request($method = 'GET', $uri = '', $payload = [], $headers = []) {
+        if ($this->options['async'] === true && $this->httpClient instanceof HttpAsyncClient) {
+            $this->syncRequest($method = 'GET', $uri = '', $payload = [], $headers = []);
+        }
+        else {
+            $this->asyncRequest($method = 'GET', $uri = '', $payload = [], $headers = []);
+        }
+    }
+
+    public function syncRequest($method = 'GET', $uri = '', $payload = [], $headers = [])
     {
         $request = $this->buildRequest($method, $uri, $payload, $headers);
         try
