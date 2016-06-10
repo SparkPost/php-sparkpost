@@ -13,14 +13,14 @@ class Resource
         $this->endpoint = $endpoint;
     }
 
-    public function get($uri, $payload)
+    public function get($uri, $payload, $header)
     {
-        return $this->sparkpost->request('GET', $this->endpoint.'/'.$uri, $payload);
+        return $this->sparkpost->request('GET', $this->endpoint.'/'.$uri, $payload, $header);
     }
 
-    public function post($payload)
+    public function post($payload, $header)
     {
         echo $payload;
-        return $this->sparkpost->request('POST', $endpoint, $payload);
+        return $this->sparkpost->request('POST', $this->endpoint, $payload, $header);
     }
 }
