@@ -33,10 +33,10 @@ class SparkPost
 
     public function request($method = 'GET', $uri = '', $payload = [], $headers = []) {
         if ($this->options['async'] === true && $this->httpClient instanceof HttpAsyncClient) {
-            $this->syncRequest($method = 'GET', $uri = '', $payload = [], $headers = []);
+            $this->asyncRequest($method, $uri, $payload, $headers);
         }
         else {
-            $this->asyncRequest($method = 'GET', $uri = '', $payload = [], $headers = []);
+            $this->syncRequest($method, $uri, $payload, $headers);
         }
     }
 
