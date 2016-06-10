@@ -3,10 +3,8 @@
 namespace SparkPost;
 
 use Http\Promise\Promise as HttpPromise;
-use SparkPost\Response as SparkPostResponse;
-use SparkPost\Exception as SparkPostException;
 
-class Promise implements HttpPromise
+class SparkPostPromise implements HttpPromise
 {
 	private $promise;
 
@@ -19,7 +17,7 @@ class Promise implements HttpPromise
 		function($response) {
 			$onFulfilled(new SparkPostResponse($response));
 		},
-		function(Exception $exception) {
+		function(\Exception $exception) {
 			$onRejected(new SparkPostException($exception));
 		});
 	}
@@ -35,7 +33,7 @@ class Promise implements HttpPromise
 		    $response = $this->promise->wait($unwrap);
 		    return new SparkPostResponse($response);
 		}
-		catch (Exception $exception)
+		catch (\Exception $exception)
 		{
 		   throw new SparkPostException($exception);
 		}

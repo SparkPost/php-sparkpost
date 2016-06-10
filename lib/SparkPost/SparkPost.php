@@ -3,27 +3,25 @@
 namespace SparkPost;
 
 use Http\Client\HttpClient;
+use Http\Client\HttpAsyncClient;
 use GuzzleHttp\Psr7\Request as Request;
-use SparkPost\Promise as SparkPostPromise;
 
 class SparkPost
 {
     private $version = '2.0.0';
-    private $config;
     public $httpClient;
     private $options;
-
-    public $transmissions;
 
     private static $defaultOptions = [
         'host' => 'api.sparkpost.com',
         'protocol' => 'https',
         'port' => 443,
-        'strictSSL' => true,
         'key' => '',
         'version' => 'v1',
         'timeout' => 10
     ];
+
+    public $transmissions;
 
     public function __construct(HttpClient $httpClient, $options)
     {
@@ -32,12 +30,36 @@ class SparkPost
         $this->setupEndpoints();
     }
 
-    public function request($method = '', $uri = '', $payload = [], $headers = [])
+    public function request($method = 'GET', $uri = '', $payload = [], $headers = [])
+    {
+        $request = $this->buildRequest($method, $uri, $payload, $headers);
+        try
+        {
+            return new SparkPostResponse($this->httpClient->sendRequest($request));
+        }
+        catch (\Exception $exception)
+        {
+           throw new SparkPostException($exception);
+        }
+    }
+
+    public function asyncRequest($method = 'GET', $uri = '', $payload = [], $headers = [])
+    {
+        if ($this->httpClient instanceof HttpAsyncClient) {
+            $request = $this->buildRequest($method, $uri, $payload, $headers);
+            return new SparkPostPromise($this->httpClient->sendAsyncRequest($request));
+        }
+        else {
+            throw new Exception('Your http client can not send asynchronous requests.');
+        }
+    }
+
+    private function buildRequest($method, $uri, $payload, $headers)
     {
         
         $method = trim(strtoupper($method));
         
-        if ($method === 'GET') {
+        if ($method === 'GET'){
             $params = $payload;
             $body = [];
         }
@@ -49,19 +71,21 @@ class SparkPost
         $url = $this->getUrl($uri, $params);
         $headers = $this->getHttpHeaders($headers);
 
-        $request = new Request($method, $url, $headers, json_encode($body));
-
-        $promise = $this->httpClient->sendAsyncRequest($request);
-
-        return new SparkPostPromise($promise);
+        return new Request($method, $url, $headers, json_encode($body));
     }
 
-    public function getHttpHeaders($headers)
+    public function getHttpHeaders($headers = [])
     {
-        return [
+        $constantHeaders = [
             'Authorization' => $this->options['key'],
-            'Content-Type' => 'application/json',
+            'Content-Type' => 'application/json'
         ];
+
+        foreach ($constantHeaders as $key => $value) {
+            $headers[$key] = $value;
+        }
+
+        return $headers;
     }
 
     public function getUrl($path, $params) {
@@ -71,6 +95,7 @@ class SparkPost
             if (is_array($params[$index]))
                 $params[$index] = implode(',', $params);
         }
+
         $paramsString = http_build_query($params);
 
         return $options['protocol'].'://'.$options['host'].($options['port'] ? ':'.$options['port'] : '').'/api/'.$options['version'].'/'.$path.($paramsString ? '?'.$paramsString : '');
