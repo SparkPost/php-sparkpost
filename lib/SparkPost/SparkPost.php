@@ -2,151 +2,143 @@
 
 namespace SparkPost;
 
-use Ivory\HttpAdapter\Configuration;
-use Ivory\HttpAdapter\HttpAdapterInterface;
+use Http\Client\HttpClient;
+use Http\Client\HttpAsyncClient;
+use GuzzleHttp\Psr7\Request as Request;
 
 class SparkPost
 {
-    public $transmission;
-    public $messageEvents;
+    private $version = '2.0.0';
+    public $httpClient;
+    private $options;
 
-    /**
-     * Library version, used for setting User-Agent.
-     */
-    private $version = '1.2.1';
-
-    /**
-     * Connection config for making requests.
-     */
-    private $config;
-
-    /**
-     * @var \Ivory\HttpAdapter\HttpAdapterInterface to make requests through.
-     */
-    public $httpAdapter;
-
-    /**
-     * Default config values. Passed in values will override these.
-     */
-    private static $apiDefaults = [
+    private static $defaultOptions = [
         'host' => 'api.sparkpost.com',
         'protocol' => 'https',
         'port' => 443,
-        'strictSSL' => true,
         'key' => '',
         'version' => 'v1',
-        'timeout' => 10
+        'timeout' => 10,
+        'async' => true
     ];
 
-    /**
-     * Sets up httpAdapter and config.
-     *
-     * Sets up instances of sub libraries.
-     *
-     * @param \Ivory\HttpAdapter\HttpAdapterInterface $httpAdapter    - An adapter for making http requests
-     * @param string | array                          $settingsConfig - Hashmap that contains config values
-     *                                                                for the SDK to connect to SparkPost. If its a string we assume that
-     *                                                                its just they API Key.
-     */
-    public function __construct($httpAdapter, $settingsConfig)
-    {
-        //config needs to be setup before adapter because of default adapter settings
-        $this->setConfig($settingsConfig);
-        $this->setHttpAdapter($httpAdapter);
+    public $transmissions;
 
-        $this->transmission = new Transmission($this);
-        $this->messageEvents = new MessageEvents($this);
+    public function __construct(HttpClient $httpClient, $options)
+    {
+        $this->setOptions($options);
+        $this->setHttpClient($httpClient);
+        $this->setupEndpoints();
     }
 
-    /**
-     * Creates an unwrapped api interface for endpoints that aren't yet supported.
-     * The new resource is attached to this object as well as returned.
-     *
-     * @param string $endpoint
-     *
-     * @return APIResource - the unwrapped resource
-     */
-    public function setupUnwrapped($endpoint)
-    {
-        $this->{$endpoint} = new APIResource($this);
-        $this->{$endpoint}->endpoint = $endpoint;
-
-        return $this->{$endpoint};
+    public function request($method = 'GET', $uri = '', $payload = [], $headers = []) {
+        if ($this->options['async'] === true && $this->httpClient instanceof HttpAsyncClient) {
+            $this->asyncRequest($method, $uri, $payload, $headers);
+        }
+        else {
+            $this->syncRequest($method, $uri, $payload, $headers);
+        }
     }
 
-    /**
-     * Merges passed in headers with default headers for http requests.
-     */
-    public function getHttpHeaders()
+    public function syncRequest($method = 'GET', $uri = '', $payload = [], $headers = [])
     {
-        $defaultOptions = [
-            'Authorization' => $this->config['key'],
-            'Content-Type' => 'application/json',
+        $request = $this->buildRequest($method, $uri, $payload, $headers);
+        try
+        {
+            return new SparkPostResponse($this->httpClient->sendRequest($request));
+        }
+        catch (\Exception $exception)
+        {
+           throw new SparkPostException($exception);
+        }
+    }
+
+    public function asyncRequest($method = 'GET', $uri = '', $payload = [], $headers = [])
+    {
+        if ($this->httpClient instanceof HttpAsyncClient) {
+            $request = $this->buildRequest($method, $uri, $payload, $headers);
+            return new SparkPostPromise($this->httpClient->sendAsyncRequest($request));
+        }
+        else {
+            throw new Exception('Your http client can not send asynchronous requests.');
+        }
+    }
+
+    private function buildRequest($method, $uri, $payload, $headers)
+    {
+        
+        $method = trim(strtoupper($method));
+        
+        if ($method === 'GET'){
+            $params = $payload;
+            $body = [];
+        }
+        else {
+            $params = [];
+            $body = $payload;
+        }
+
+        $url = $this->getUrl($uri, $params);
+        $headers = $this->getHttpHeaders($headers);
+
+        return new Request($method, $url, $headers, json_encode($body));
+    }
+
+    public function getHttpHeaders($headers = [])
+    {
+        $constantHeaders = [
+            'Authorization' => $this->options['key'],
+            'Content-Type' => 'application/json'
         ];
 
-        return $defaultOptions;
+        foreach ($constantHeaders as $key => $value) {
+            $headers[$key] = $value;
+        }
+
+        return $headers;
     }
 
-    /**
-     * Helper function for getting the configuration for http requests.
-     *
-     * @param array $config
-     *
-     * @return Configuration
-     */
-    private function getHttpConfig($config)
-    {
-        // create Configuration for http adapter
-        $httpConfig = new Configuration();
-        $baseUrl = $config['protocol'].'://'.$config['host'].($config['port'] ? ':'.$config['port'] : '').'/api/'.$config['version'];
-        $httpConfig->setBaseUri($baseUrl);
-        $httpConfig->setTimeout($this->config['timeout']);
-        $httpConfig->setUserAgent('php-sparkpost/'.$this->version);
+    public function getUrl($path, $params) {
+        $options = $this->options;
 
-        return $httpConfig;
+        for ($index = 0; $index < count($params); $index++) { 
+            if (is_array($params[$index]))
+                $params[$index] = implode(',', $params);
+        }
+
+        $paramsString = http_build_query($params);
+
+        return $options['protocol'].'://'.$options['host'].($options['port'] ? ':'.$options['port'] : '').'/api/'.$options['version'].'/'.$path.($paramsString ? '?'.$paramsString : '');
     }
 
-    /**
-     * Validates and sets up the httpAdapter.
-     *
-     * @param $httpAdapter \Ivory\HttpAdapter\HttpAdapterInterface to make requests through.
-     *
-     * @throws \Exception
-     */
-    public function setHttpAdapter(HttpAdapterInterface $httpAdapter)
+    public function setHttpClient(HttpClient $httpClient)
     {
-        $this->httpAdapter = $httpAdapter;
-        $this->httpAdapter->setConfiguration($this->getHttpConfig($this->config));
+        $this->httpClient = $httpClient;
     }
 
-    /**
-     * Allows the user to pass in values to override the defaults and set their API key.
-     *
-     * @param string | array $settingsConfig - Hashmap that contains config values
-     *                                       for the SDK to connect to SparkPost. If its a string we assume that
-     *                                       its just they API Key.
-     *
-     * @throws \Exception
-     */
-    public function setConfig($settingsConfig)
+    public function setOptions($options)
     {
-        // if the config map is a string we should assume that its an api key
-        if (is_string($settingsConfig)) {
-            $settingsConfig = ['key' => $settingsConfig];
+        // if the options map is a string we should assume that its an api key
+        if (is_string($options)) {
+            $options = ['key' => $options];
         }
 
         // Validate API key because its required
-        if (!isset($settingsConfig['key']) || !preg_match('/\S/', $settingsConfig['key'])) {
+        if (!isset($this->options['key']) && (!isset($options['key']) || !preg_match('/\S/', $options['key']))) {
             throw new \Exception('You must provide an API key');
         }
 
-        $this->config = self::$apiDefaults;
+        $this->options = isset($this->options) ? $this->options : self::$defaultOptions;
 
-        // set config, overriding defaults
-        foreach ($settingsConfig as $configOption => $configValue) {
-            if (key_exists($configOption, $this->config)) {
-                $this->config[$configOption] = $configValue;
+        // set options, overriding defaults
+        foreach ($options as $option => $value) {
+            if (key_exists($option, $this->options)) {
+                $this->options[$option] = $value;
             }
         }
+    }
+
+    private function setupEndpoints() {
+        $this->transmissions = new Transmission($this);
     }
 }

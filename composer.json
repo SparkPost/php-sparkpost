@@ -16,19 +16,20 @@
   },
   "require": {
     "php": ">=5.5.0",
-    "egeloen/http-adapter": "*"
+    "php-http/client-implementation": "^1.0",
+    "guzzlehttp/psr7": "1.3.*"
   },
   "require-dev": {
     "phpunit/phpunit": "4.3.*",
-    "guzzlehttp/guzzle": "6.*",
+    "guzzlehttp/guzzle": "5.*",
+    "php-http/guzzle5-adapter": "*",
+    "php-http/message": "*",
     "mockery/mockery": "^0.9.4",
-    "satooshi/php-coveralls": "dev-master",
     "fabpot/php-cs-fixer": "^1.11"
   },
   "autoload": {
     "psr-4": {
       "SparkPost\\": "lib/SparkPost/",
-      "SparkPost\\SendGridCompatibility\\": "lib/SendGridCompatibility/",
       "SparkPost\\Test\\TestUtils\\": "test/unit/TestUtils/"
     }
   }
