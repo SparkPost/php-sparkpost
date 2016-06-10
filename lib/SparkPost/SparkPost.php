@@ -129,5 +129,6 @@ class SparkPost
     }
 
     private function setupEndpoints() {
+        $this->transmissions = new Transmission($this);
     }
 }
