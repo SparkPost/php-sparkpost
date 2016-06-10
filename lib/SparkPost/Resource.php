@@ -7,7 +7,7 @@ class Resource
     protected $sparkpost;
     protected $endpoint;
 
-    public function __constructor(SparkPost $sparkpost, $endpoint)
+    public function __construct(SparkPost $sparkpost, $endpoint)
     {
         $this->sparkpost = $sparkpost;
         $this->endpoint = $endpoint;

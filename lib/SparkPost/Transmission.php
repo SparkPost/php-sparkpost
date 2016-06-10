@@ -6,9 +6,9 @@ require '../../vendor/autoload.php';
 
 class Transmission extends Resource
 {
-    protected $endpoint = 'transmission';
+    protected $endpoint = 'transmissions';
 
-    public function __constructor(SparkPost $sparkpost)
+    public function __construct(SparkPost $sparkpost)
     {
         parent::__construct($sparkpost, $endpoint);
     }
@@ -26,10 +26,10 @@ class Transmission extends Resource
         if(isset($modifiedPayload['recipients'][0]['name']))
         {
             $originalRecipient = '"' . $modifiedPayload['recipients'][0]['name'] 
-                . '" &lt;' . $modifiedPayload['recipients'][0]['address'] . '&gt;';
+                . '" <' . $modifiedPayload['recipients'][0]['address'] . '>';
         } else {
-            $originalRecipient = '&lt;' . $modifiedPayload['recipients'][0]['address'] 
-                . '&gt;';
+            $originalRecipient = '<' . $modifiedPayload['recipients'][0]['address'] 
+                . '>';
         }
 
         //loop through all BCC recipients
@@ -59,10 +59,10 @@ class Transmission extends Resource
         //if a name exists, then do "name" <email>. Otherwise, just do <email>
         if(isset($modifiedPayload['recipients'][0]['name'])) {
             $originalRecipient = '"' . $modifiedPayload['recipients'][0]['name'] 
-                . '" &lt;' . $modifiedPayload['recipients'][0]['address'] . '&gt;';
+                . '" <' . $modifiedPayload['recipients'][0]['address'] . '>';
         } else {
-            $originalRecipient = '&lt;' . $modifiedPayload['recipients'][0]['address'] 
-                . '&gt;';
+            $originalRecipient = '<' . $modifiedPayload['recipients'][0]['address'] 
+                . '<';
         }
         
         if(isset($ccList)){
@@ -75,7 +75,7 @@ class Transmission extends Resource
                 //if name exists, then use "Name" <Email> format. Otherwise, just email will suffice. 
                 if(isset($ccRecipient['name'])) {
                     $ccCustomHeadersList = $ccCustomHeadersList . ' "' . $ccRecipient['name'] 
-                        . '" &lt;' . $ccRecipient['address'] . '&gt;,';
+                        . '" <' . $ccRecipient['address'] . '>,';
                 } else {
                     $ccCustomHeadersList = $ccCustomHeadersList . ' ' . $ccRecipient['address'];
                 }
@@ -88,7 +88,8 @@ class Transmission extends Resource
         //Creates customHeaders and adds CSV list of CC emails
         $customHeaders = array("CC" => $ccCustomHeadersList); 
         $modifiedPayload['customHeaders'] = $customHeaders; 
-        //delete CC    
+        
+        //delete CC
         unset($modifiedPayload['cc']);
         
         return $modifiedPayload;
