@@ -104,9 +104,53 @@ class Transmission extends Resource
     {
         $modifiedPayload = $this->fixBlindCarbonCopy($payload); //Accounts for any BCCs
         $modifiedPayload = $this->fixCarbonCopy($modifiedPayload); //Accounts for any CCs
-        //return parent::post($modifiedPayload, $this->customHeaders);
+        return parent::post($modifiedPayload, $this->customHeaders);
     }
 }
+
+$testPayload = 
+[
+    'content' => [
+        'from' => [
+            'name' => 'Sparkpost Team',
+            'email' => 'from@sparkpostbox.com',
+        ],
+        'subject' => 'First Mailing From PHP',
+        'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
+        'text' => 'Congratulations, {{name}}!! You just sent your very first mailing!',
+    ],
+    'substitution_data' => ['name' => 'YOUR_FIRST_NAME'],
+    'recipients' => [
+        [
+            'address' => 'EMAIL_ADDRESS1',
+            'name' => 'NAME_1'
+        ],
+    ],
+    'bcc' => [
+        [
+            'address' => 'BCC_EMAIL_ADDRESS1',
+            'name' => 'BCC_NAME1'
+        ],
+        [
+            'address' => 'BCC_EMAIL_ADDRESS2',
+            'name' => 'BCC_NAME2'
+        ],
+    ], 
+    'cc' => [
+        [
+            'address' => 'CC_EMAIL_ADDRESS1',
+            'name' => 'CC_NAME1'
+        ],
+        [
+            'address' => 'CC_EMAIL_ADDRESS2',
+            'name' => 'CC_NAME2'
+        ],
+        [
+            'address' => 'CC_EMAIL_ADDRESS3',
+        ]
+    ]
 ];
+$transmission = new Transmission();
+$transmission->post($testPayload);
 
 ?>
