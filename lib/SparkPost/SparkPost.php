@@ -2,8 +2,9 @@
 
 namespace SparkPost;
 
-use GuzzleHttp\Psr7\Request as Request;
 use Http\Client\HttpClient;
+use GuzzleHttp\Psr7\Request as Request;
+use SparkPost\Promise as SparkPostPromise;
 
 class SparkPost
 {
@@ -11,6 +12,8 @@ class SparkPost
     private $config;
     public $httpClient;
     private $options;
+
+    public $transmissions;
 
     private static $defaultOptions = [
         'host' => 'api.sparkpost.com',
@@ -26,31 +29,34 @@ class SparkPost
     {
         $this->setOptions($options);
         $this->setHttpClient($httpClient);
+        $this->setupEndpoints();
     }
 
-    public function request($method, $uri, $payload = [])
+    public function request($method = '', $uri = '', $payload = [], $headers = [])
     {
         
         $method = trim(strtoupper($method));
         
         if ($method === 'GET') {
             $params = $payload;
-            $body = null;
+            $body = [];
         }
         else {
-            $params = null;
+            $params = [];
             $body = $payload;
         }
 
         $url = $this->getUrl($uri, $params);
-        $headers = $this->getHttpHeaders();
+        $headers = $this->getHttpHeaders($headers);
 
-        $request = new Request($method, $url, $headers, $body);
+        $request = new Request($method, $url, $headers, json_encode($body));
 
-        return $httpClient->sendAsyncRequest($request);
+        $promise = $this->httpClient->sendAsyncRequest($request);
+
+        return new SparkPostPromise($promise);
     }
 
-    public function getHttpHeaders()
+    public function getHttpHeaders($headers)
     {
         return [
             'Authorization' => $this->options['key'],
@@ -87,7 +93,7 @@ class SparkPost
             throw new \Exception('You must provide an API key');
         }
 
-        $this->options = $this->options || self::$defaultOptions;
+        $this->options = isset($this->options) ? $this->options : self::$defaultOptions;
 
         // set options, overriding defaults
         foreach ($options as $option => $value) {
@@ -95,5 +101,8 @@ class SparkPost
                 $this->options[$option] = $value;
             }
         }
+    }
+
+    private function setupEndpoints() {
     }
 }
