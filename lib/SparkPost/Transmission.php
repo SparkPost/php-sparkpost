@@ -2,8 +2,6 @@
 
 namespace SparkPost;
 
-require '../../vendor/autoload.php';
-
 class Transmission extends Resource
 {
     protected $endpoint = 'transmissions';
@@ -82,7 +80,12 @@ class Transmission extends Resource
 
                 array_push($recipientsList, $newRecipient);
             }   
+            
+            //Creates customHeaders and adds CSV list of CC emails
+            $customHeaders = array("CC" => $ccCustomHeadersList); 
+            $modifiedPayload['customHeaders'] = $customHeaders; 
         }
+        
         
         
         //Creates customHeaders and adds CSV list of CC emails
