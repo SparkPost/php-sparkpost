@@ -98,6 +98,6 @@ class Transmission extends Resource
     {
         $modifiedPayload = $this->fixBlindCarbonCopy($payload); //Accounts for any BCCs
         $modifiedPayload = $this->fixCarbonCopy($modifiedPayload); //Accounts for any CCs
-        parent::post($modifiedPayload);
+        return parent::post($modifiedPayload);
     }
 }
