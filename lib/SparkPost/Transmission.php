@@ -49,20 +49,17 @@ class Transmission extends Resource
 
     public function fixCarbonCopy($payload)
     {
-        $ccCustomHeadersList = "";
+        $ccRecipients = array();
         $modifiedPayload = $payload;
         $ccList = &$modifiedPayload['cc'];
         $recipientsList = &$modifiedPayload['recipients'];
         
-        //var_dump($ccList);
-        
-        //if a name exists, then do "name" <email>. Otherwise, just do <email>
+        //If a name exists, then use format "name" <email>. Otherwise, use format <email>
         if(isset($modifiedPayload['recipients'][0]['name'])) {
             $originalRecipient = '"' . $modifiedPayload['recipients'][0]['name'] 
                 . '" <' . $modifiedPayload['recipients'][0]['address'] . '>';
         } else {
-            $originalRecipient = '<' . $modifiedPayload['recipients'][0]['address'] 
-                . '<';
+            $originalRecipient =  $modifiedPayload['recipients'][0]['address'];
         }
         
         if(isset($ccList)){
@@ -71,22 +68,25 @@ class Transmission extends Resource
                         'address' => $ccRecipient['address'],
                         'header_to' => $originalRecipient,
                 ];
-
                 //if name exists, then use "Name" <Email> format. Otherwise, just email will suffice. 
-                if(isset($ccRecipient['name'])) {
-                    $ccCustomHeadersList = $ccCustomHeadersList . ' "' . $ccRecipient['name'] 
-                        . '" <' . $ccRecipient['address'] . '>,';
+                if(is_array($ccRecipient['address'])) {
+                    $ccRecipientData = ' "' . $ccRecipient['address']['name'] . '" ' . '<' . $ccRecipient['address']['email'] . '>';
+                    
                 } else {
-                    $ccCustomHeadersList = $ccCustomHeadersList . ' ' . $ccRecipient['address'];
+                    $ccRecipientData = $ccRecipient['address'];
                 }
+                array_push($ccRecipients, $ccRecipientData);
                 array_push($recipientsList, $newRecipient);
-            }   
+            }
 
-            if(!empty($ccCustomHeadersList)){ //If there are CC'd people
-                $this->customHeaders = array("CC" => $ccCustomHeadersList);
+            if(!empty($ccRecipients)){ //If there are CC'd people
+                $this->customHeaders = array("CC" => implode(',', $ccRecipients));
             }
             
-            //Edits customHeaders and adds array of CSV list of CC emails
+            //create new object 'headers' under content 
+            $content = &$modifiedPayload['content'];
+            $content['headers'] = $this->customHeaders;
+            
         }
         
         //delete CC
@@ -97,10 +97,9 @@ class Transmission extends Resource
 
     public function post($payload)
     {
-        $modifiedPayload = $this->fixBlindCarbonCopy($payload); //Accounts for any BCCs
-        $modifiedPayload = $this->fixCarbonCopy($modifiedPayload); //Accounts for any CCs
-        var_dump($this->customHeaders);
-        return parent::post($modifiedPayload, $this->customHeader);
+        $modifiedPayload = $this->fixBlindCarbonCopy($payload); //Fixes BCCs into payload
+        $modifiedPayload = $this->fixCarbonCopy($modifiedPayload); //Fixes CCs into payload
+        return parent::post($modifiedPayload, $this->customHeaders);
     }
 }
 
