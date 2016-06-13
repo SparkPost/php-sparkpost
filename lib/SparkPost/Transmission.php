@@ -4,12 +4,11 @@ namespace SparkPost;
 
 class Transmission extends Resource
 {
-    protected $endpoint = 'transmissions';
     protected $customHeaders = array();
 
     public function __construct(SparkPost $sparkpost)
     {
-        parent::__construct($sparkpost, $endpoint);
+        parent::__construct($sparkpost, 'transmissions');
     }
 
     public function fixBlindCarbonCopy($payload)
@@ -55,6 +54,8 @@ class Transmission extends Resource
         $ccList = &$modifiedPayload['cc'];
         $recipientsList = &$modifiedPayload['recipients'];
         
+        //var_dump($ccList);
+        
         //if a name exists, then do "name" <email>. Otherwise, just do <email>
         if(isset($modifiedPayload['recipients'][0]['name'])) {
             $originalRecipient = '"' . $modifiedPayload['recipients'][0]['name'] 
@@ -78,14 +79,14 @@ class Transmission extends Resource
                 } else {
                     $ccCustomHeadersList = $ccCustomHeadersList . ' ' . $ccRecipient['address'];
                 }
-
+                array_push($recipientsList, $newRecipient);
             }   
-            
+
             if(!empty($ccCustomHeadersList)){ //If there are CC'd people
                 $this->customHeaders = array("CC" => $ccCustomHeadersList);
-            } 
-            //Edits customHeaders and adds array of CSV list of CC emails
+            }
             
+            //Edits customHeaders and adds array of CSV list of CC emails
         }
         
         //delete CC
@@ -98,7 +99,8 @@ class Transmission extends Resource
     {
         $modifiedPayload = $this->fixBlindCarbonCopy($payload); //Accounts for any BCCs
         $modifiedPayload = $this->fixCarbonCopy($modifiedPayload); //Accounts for any CCs
-        return parent::post($modifiedPayload, $this->customHeaders);
+        var_dump($this->customHeaders);
+        return parent::post($modifiedPayload, $this->customHeader);
     }
 }
 

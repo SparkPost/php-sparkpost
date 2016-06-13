@@ -20,7 +20,7 @@ class Resource
 
     public function post($payload, $header)
     {
-        echo $payload;
+        echo "<textarea>" . json_encode($payload) . "</textarea>";
         return $this->sparkpost->request('POST', $this->endpoint, $payload, $header);
     }
 }
