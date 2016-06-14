@@ -5,24 +5,25 @@ namespace SparkPost;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\StreamInterface as StreamInterface;
 
-class SparkPostResponse implements ResponseInterface {
-
+class SparkPostResponse implements ResponseInterface
+{
     /**
-     * ResponseInterface to be wrapped by SparkPostResponse
+     * ResponseInterface to be wrapped by SparkPostResponse.
      */
-	private $response;
+    private $response;
 
     /**
-     * set the response to be wrapped
+     * set the response to be wrapped.
      *
      * @param ResponseInterface $response
      */
-	public function __construct(ResponseInterface $response) {
-		$this->response = $response;
-	}
+    public function __construct(ResponseInterface $response)
+    {
+        $this->response = $response;
+    }
 
     /**
-     * Returns the body
+     * Returns the body.
      *
      * @return array $body - the json decoded body from the http response
      */
@@ -30,14 +31,13 @@ class SparkPostResponse implements ResponseInterface {
     {
         $body = $this->response->getBody();
         $body_string = $body->__toString();
-        
+
         if (is_string($body_string)) {
             $json = json_decode($body_string, true);
-            
+
             if (json_last_error() == JSON_ERROR_NONE) {
                 return $json;
-            }
-            else {
+            } else {
                 return $body;
             }
         }
@@ -96,7 +96,7 @@ class SparkPostResponse implements ResponseInterface {
         return $this->response->withBody($body);
     }
 
-	public function getStatusCode()
+    public function getStatusCode()
     {
         return $this->response->getStatusCode();
     }
@@ -105,12 +105,9 @@ class SparkPostResponse implements ResponseInterface {
     {
         return $this->response->withStatus($code, $reasonPhrase);
     }
-    
+
     public function getReasonPhrase()
     {
         $this->response->getReasonPhrase();
     }
-
 }
-
-?>

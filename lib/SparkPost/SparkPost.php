@@ -8,24 +8,23 @@ use GuzzleHttp\Psr7\Request as Request;
 
 class SparkPost
 {
-
     /**
      * Library version, used for setting User-Agent.
      */
     private $version = '2.0.0';
 
     /**
-     * HttpClient used to make requests
+     * HttpClient used to make requests.
      */
     public $httpClient;
 
     /**
-     * Options for requests
+     * Options for requests.
      */
     private $options;
 
     /**
-     * Default options for requests that can be overridden with the setOptions function
+     * Default options for requests that can be overridden with the setOptions function.
      */
     private static $defaultOptions = [
         'host' => 'api.sparkpost.com',
@@ -34,21 +33,19 @@ class SparkPost
         'key' => '',
         'version' => 'v1',
         'timeout' => 10,
-        'async' => true
+        'async' => true,
     ];
 
-
     /**
-     * Instance of Transmission class
+     * Instance of Transmission class.
      */
     public $transmissions;
 
     /**
-     * Sets up the SparkPost instance
+     * Sets up the SparkPost instance.
      * 
      * @param HttpClient $httpClient - An httplug client or adapter
      * @param array      $options    - An array to overide default options or a string to be used as an API key
-     *
      */
     public function __construct(HttpClient $httpClient, $options)
     {
@@ -57,57 +54,54 @@ class SparkPost
         $this->setupEndpoints();
     }
 
-
     /**
-     * Sends either sync or async request based on async option
+     * Sends either sync or async request based on async option.
      *
      * @param string $method
      * @param string $uri
      * @param array  $payload - either used as the request body or url query params
-     * @param array  $headers 
+     * @param array  $headers
      * 
      * @return SparkPostPromise or SparkPostResponse depending on sync or async request
      */
-    public function request($method = 'GET', $uri = '', $payload = [], $headers = []) {
+    public function request($method = 'GET', $uri = '', $payload = [], $headers = [])
+    {
         if ($this->options['async'] === true) {
             return $this->asyncRequest($method, $uri, $payload, $headers);
-        }
-        else {
+        } else {
             return $this->syncRequest($method, $uri, $payload, $headers);
         }
     }
 
     /**
-     * Sends sync request to SparkPost API
+     * Sends sync request to SparkPost API.
      *
      * @param string $method
      * @param string $uri
      * @param array  $payload
-     * @param array  $headers 
+     * @param array  $headers
      * 
      * @return SparkPostResponse
+     *
      * @throws SparkPostException
      */
     public function syncRequest($method = 'GET', $uri = '', $payload = [], $headers = [])
     {
         $request = $this->buildRequest($method, $uri, $payload, $headers);
-        try
-        {
+        try {
             return new SparkPostResponse($this->httpClient->sendRequest($request));
-        }
-        catch (\Exception $exception)
-        {
-           throw new SparkPostException($exception);
+        } catch (\Exception $exception) {
+            throw new SparkPostException($exception);
         }
     }
 
     /**
-     * Sends async request to SparkPost API
+     * Sends async request to SparkPost API.
      *
      * @param string $method
      * @param string $uri
      * @param array  $payload
-     * @param array  $headers 
+     * @param array  $headers
      * 
      * @return SparkPostPromise
      */
@@ -115,32 +109,31 @@ class SparkPost
     {
         if ($this->httpClient instanceof HttpAsyncClient) {
             $request = $this->buildRequest($method, $uri, $payload, $headers);
+
             return new SparkPostPromise($this->httpClient->sendAsyncRequest($request));
-        }
-        else {
+        } else {
             throw new Exception('Your http client does not support asynchronous requests. Please use a different client or use synchronous requests.');
         }
     }
 
     /** 
-     * Builds request from given params
+     * Builds request from given params.
+     *
      * @param string $method
      * @param string $uri
      * @param array  $payload
-     * @param array  $headers 
+     * @param array  $headers
      *
      * @return GuzzleHttp\Psr7\Request - A Psr7 compliant request
      */
     private function buildRequest($method, $uri, $payload, $headers)
     {
-        
         $method = trim(strtoupper($method));
-        
-        if ($method === 'GET'){
+
+        if ($method === 'GET') {
             $params = $payload;
             $body = [];
-        }
-        else {
+        } else {
             $params = [];
             $body = $payload;
         }
@@ -152,18 +145,18 @@ class SparkPost
     }
 
     /**
-     * Returns an array for the request headers
+     * Returns an array for the request headers.
      *
      * @param array $headers - any custom headers for the request
      *
      * @return array $headers - headers for the request
-     */ 
+     */
     public function getHttpHeaders($headers = [])
     {
         $constantHeaders = [
             'Authorization' => $this->options['key'],
             'Content-Type' => 'application/json',
-            'User-Agent' => 'php-sparkpost/'.$this->version
+            'User-Agent' => 'php-sparkpost/'.$this->version,
         ];
 
         foreach ($constantHeaders as $key => $value) {
@@ -174,19 +167,21 @@ class SparkPost
     }
 
     /**
-     * Builds the request url from the options and given params
+     * Builds the request url from the options and given params.
      *
-     * @param string $path - the path in the url to hit
+     * @param string $path   - the path in the url to hit
      * @param array  $params - query parameters to be encoded into the url
      *
      * @return string $url - the url to send the desired request to
      */
-    public function getUrl($path, $params) {
+    public function getUrl($path, $params)
+    {
         $options = $this->options;
 
-        for ($index = 0; $index < count($params); $index++) { 
-            if (is_array($params[$index]))
+        for ($index = 0; $index < count($params); ++$index) {
+            if (is_array($params[$index])) {
                 $params[$index] = implode(',', $params);
+            }
         }
 
         $paramsString = http_build_query($params);
@@ -195,17 +190,17 @@ class SparkPost
     }
 
     /** 
-     * Sets $httpClient to be used for request
+     * Sets $httpClient to be used for request.
      *
      * @param Http\Client\HttpClient $httpClient - the client to be used for request
-     */ 
+     */
     public function setHttpClient(HttpClient $httpClient)
     {
         $this->httpClient = $httpClient;
     }
 
     /**
-     * Sets the options from the param and defaults for the SparkPost object
+     * Sets the options from the param and defaults for the SparkPost object.
      *
      * @param array $options - either an string API key or an array of options
      */
@@ -232,9 +227,10 @@ class SparkPost
     }
 
     /**
-     * Sets up any endpoints from custom classes e.g. $this->transmissions
+     * Sets up any endpoints from custom classes e.g. $this->transmissions.
      */
-    private function setupEndpoints() {
+    private function setupEndpoints()
+    {
         $this->transmissions = new Transmission($this);
     }
 }

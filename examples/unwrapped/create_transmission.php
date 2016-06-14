@@ -24,8 +24,8 @@ try {
             [
                 'address' => [
                     'email' => 'john.doe@example.com',
-                ]
-            ]
+                ],
+            ],
         ],
         'content' => [
             'from' => [
@@ -34,8 +34,8 @@ try {
             ],
             'html' => '<p>Hello World!</p>',
             'text' => 'Hello World!',
-            'subject' => 'Example Email'
-        ]
+            'subject' => 'Example Email',
+        ],
     ];
     $results = $sparky->transmissions->create($message);
     echo 'Congrats! You sent a message using SparkPost!';
@@ -44,4 +44,3 @@ try {
     echo $exception->getAPICode()."\n";
     echo $exception->getAPIDescription()."\n";
 }
-
