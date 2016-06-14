@@ -162,7 +162,8 @@ class SparkPost
     {
         $constantHeaders = [
             'Authorization' => $this->options['key'],
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
+            'User-Agent' => 'php-sparkpost/'.$this->version
         ];
 
         foreach ($constantHeaders as $key => $value) {
