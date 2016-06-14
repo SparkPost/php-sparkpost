@@ -22,7 +22,7 @@ class SparkPost
         'async' => true
     ];
 
-    public $transmissions;
+    public $transmission;
 
     public function __construct(HttpClient $httpClient, $options)
     {
@@ -32,7 +32,7 @@ class SparkPost
     }
 
     public function request($method = 'GET', $uri = '', $payload = [], $headers = []) {
-        if ($this->options['async'] === true && $this->httpClient instanceof HttpAsyncClient) {
+        if ($this->options['async'] === true) {
             $this->asyncRequest($method, $uri, $payload, $headers);
         }
         else {
@@ -60,7 +60,7 @@ class SparkPost
             return new SparkPostPromise($this->httpClient->sendAsyncRequest($request));
         }
         else {
-            throw new Exception('Your http client can not send asynchronous requests.');
+            throw new Exception('Your http client does not support asynchronous requests. Please use a different client or use synchronous requests.');
         }
     }
 
@@ -139,6 +139,6 @@ class SparkPost
     }
 
     private function setupEndpoints() {
-        $this->transmissions = new Transmission($this);
+        $this->transmission = new Transmission($this);
     }
 }
