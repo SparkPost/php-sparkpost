@@ -7,12 +7,25 @@ use Psr\Http\Message\StreamInterface as StreamInterface;
 
 class SparkPostResponse implements ResponseInterface {
 
+    /**
+     * ResponseInterface to be wrapped by SparkPostResponse
+     */
 	private $response;
 
+    /**
+     * set the response to be wrapped
+     *
+     * @param ResponseInterface $response
+     */
 	public function __construct(ResponseInterface $response) {
 		$this->response = $response;
 	}
 
+    /**
+     * Returns the body
+     *
+     * @return array $body - the json decoded body from the http response
+     */
     public function getBody()
     {
         $body = $this->response->getBody();
@@ -33,7 +46,6 @@ class SparkPostResponse implements ResponseInterface {
     }
 
     // pass these down to the response given in the constructor
-
     public function getProtocolVersion()
     {
         return $this->response->getProtocolVersion();
