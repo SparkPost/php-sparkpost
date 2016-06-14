@@ -26,7 +26,7 @@ Add composer install directory to $PATH `~/.composer/vendor/bin/`
 
 #### Install PHPUnit for Testing
 ```
-composer global require "phpunit/phpunit=4.3.*"
+composer global require "phpunit/phpunit=4.8.*"
 ```
 
 We recommend increasing PHP’s memory limit, by default it uses 128MB.  We ran into some issues during local development without doing so.  You can do this by editing your php.ini file and modifying `memory_limit`.  We set ours to `memory_limit = 1024M`.
