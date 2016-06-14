@@ -59,6 +59,13 @@ try {
                 'data' => base64_encode($data),
             ],
         ],
+        'inlineImages' => [
+            [
+                'type' => 'image/png',
+                'name' => 'cid-name',
+                'data' => base64_encode($data),
+            ],
+        ],
     ]);
 
     echo 'Congrats! You sent an email using SparkPost!';
