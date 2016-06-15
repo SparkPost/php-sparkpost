@@ -19,12 +19,14 @@ class SparkPostException extends \Exception
     public function __construct(\Exception $exception)
     {
         $message = $exception->getMessage();
+        $code = $exception->getCode();
         if ($exception instanceof HttpException) {
             $message = $exception->getResponse()->getBody()->__toString();
             $this->body = json_decode($message, true);
+            $code = $exception->getResponse()->getStatusCode();
         }
 
-        parent::__construct($message, $exception->getCode(), $exception->getPrevious());
+        parent::__construct($message, $code, $exception->getPrevious());
     }
 
     /**
