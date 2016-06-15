@@ -112,7 +112,7 @@ class SparkPost
 
             return new SparkPostPromise($this->httpClient->sendAsyncRequest($request));
         } else {
-            throw new Exception('Your http client does not support asynchronous requests. Please use a different client or use synchronous requests.');
+            throw new \Exception('Your http client does not support asynchronous requests. Please use a different client or use synchronous requests.');
         }
     }
 
@@ -126,7 +126,7 @@ class SparkPost
      *
      * @return GuzzleHttp\Psr7\Request - A Psr7 compliant request
      */
-    private function buildRequest($method, $uri, $payload, $headers)
+    public function buildRequest($method, $uri, $payload, $headers)
     {
         $method = trim(strtoupper($method));
 
@@ -174,17 +174,20 @@ class SparkPost
      *
      * @return string $url - the url to send the desired request to
      */
-    public function getUrl($path, $params)
+    public function getUrl($path, $params = [])
     {
         $options = $this->options;
 
-        for ($index = 0; $index < count($params); ++$index) {
-            if (is_array($params[$index])) {
-                $params[$index] = implode(',', $params);
+        $paramsArray = [];
+        foreach ($params as $key => $value) {
+            if (is_array($value)) {
+                $value = implode(',', $value);
             }
+
+            array_push($paramsArray, $key.'='.$value);
         }
 
-        $paramsString = http_build_query($params);
+        $paramsString = implode('&', $paramsArray);
 
         return $options['protocol'].'://'.$options['host'].($options['port'] ? ':'.$options['port'] : '').'/api/'.$options['version'].'/'.$path.($paramsString ? '?'.$paramsString : '');
     }
