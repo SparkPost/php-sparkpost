@@ -32,17 +32,9 @@ class SparkPostResponse implements ResponseInterface
         $body = $this->response->getBody();
         $body_string = $body->__toString();
 
-        if (is_string($body_string)) {
-            $json = json_decode($body_string, true);
+        $json = json_decode($body_string, true);
 
-            if (json_last_error() == JSON_ERROR_NONE) {
-                return $json;
-            } else {
-                return $body;
-            }
-        }
-
-        return $body;
+        return $json;    
     }
 
     // pass these down to the response given in the constructor
@@ -108,6 +100,6 @@ class SparkPostResponse implements ResponseInterface
 
     public function getReasonPhrase()
     {
-        $this->response->getReasonPhrase();
+        return $this->response->getReasonPhrase();
     }
 }
