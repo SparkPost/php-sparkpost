@@ -22,13 +22,6 @@ class Transmission extends Resource
         return $modifiedPayload;
     }
     
-    
-    /*
-        cases:
-        1) 'vincentwsong@gmail.com'
-        2) '"Vincent Song" <vincentwsong@gmail.com>'
-        3) 'vincent song vincentwsong@gmail.com'
-    */
     public function shorthandRecipientsParser($value){
 
         if(!is_array($value)){ //if the given value isn't an array
@@ -41,7 +34,8 @@ class Transmission extends Resource
                 if(preg_match('/<(.+)>/', $value, $matches)){ //if <EMAIL> is found
                     $email = $matches[1];
                     if(!$this->isEmail($email)){
-                        throw new \Exception("Invalid email address. Use format \"NAME_HERE\" <EMAIL_HERE>");
+                        throw new \Exception("Invalid email address. Use format 
+                        \"NAME_HERE\" <EMAIL_HERE>");
                     } else {
                       $newPerson = [
                             'name' => trim($name,'""'),
@@ -50,7 +44,8 @@ class Transmission extends Resource
                         return $newPerson;
                     }
                 } else { //Has name, needs email in <EMAIL> format
-                    throw new \Exception("Invalid email address. Use format \"NAME_HERE\" <EMAIL_HERE>");
+                    throw new \Exception("Invalid email address. Use format 
+                    \"NAME_HERE\" <EMAIL_HERE>");
                 }
             } else if ($this->isEmail($value)){ //if the original $value is just an email, like postmaster@sparkpost.com
                 $newPerson = [
@@ -59,7 +54,6 @@ class Transmission extends Resource
                 
                 return $newPerson;
             } else { //$value isn't a valid email at all. E.g. postmastersparkpost.com
-                //echo $value;
                 throw new \Exception("Invalid email address.");
             }
         } else { //it's already an object, nothing we can do here
@@ -78,14 +72,12 @@ class Transmission extends Resource
 
     public function fixBlindCarbonCopy($payload)
     {
-        //TODO: Manage recipients. "Vincent Song <vincentsong@sparkpost.com>"
         
         $modifiedPayload = $payload;
         $bccList = &$modifiedPayload['bcc'];
         $recipientsList = &$modifiedPayload['recipients'];
         
-        //Format: Original Recipient" <original.recipient@example.com>
-        //if a name exists, then do "name" <email>. Otherwise, just do <email>
+        //if a name exists, then use format "name" <email>. Otherwise, just use format <email>
         if(isset($modifiedPayload['recipients'][0]['name']))
         {
             $originalRecipient = '"' . $modifiedPayload['recipients'][0]['name'] 
@@ -95,7 +87,7 @@ class Transmission extends Resource
                 . '>';
         }
 
-        //loop through all BCC recipients
+        //If there's a list of BCC recipients, loop through them.
         if(isset($bccList)){
             foreach ($bccList as $bccRecipient) { 
                 $newRecipient = [
@@ -106,7 +98,7 @@ class Transmission extends Resource
             }
         }
         
-        //Delete the BCC object/array
+        //Delete the original BCC object from the payload.
         unset($modifiedPayload['bcc']); 
 
         return $modifiedPayload;
@@ -135,7 +127,8 @@ class Transmission extends Resource
                 ];
                 //if name exists, then use "Name" <Email> format. Otherwise, just email will suffice. 
                 if(is_array($ccRecipient['address'])) { 
-                    $ccRecipientData = ' "' . $ccRecipient['address']['name'] . '" ' . '<' . $ccRecipient['address']['email'] . '>';
+                    $ccRecipientData = ' "' . $ccRecipient['address']['name'] 
+                        . '" ' . '<' . $ccRecipient['address']['email'] . '>';
                     
                 } else {
                     $ccRecipientData = $ccRecipient['address'];
@@ -164,7 +157,7 @@ class Transmission extends Resource
     {
         $modifiedPayload = $this->fixBlindCarbonCopy($payload); //Fixes BCCs into payload
         $modifiedPayload = $this->fixCarbonCopy($modifiedPayload); //Fixes CCs into payload
-        $modifiedPayload = $this->fixShorthandRecipients($modifiedPayload);
+        $modifiedPayload = $this->fixShorthandRecipients($modifiedPayload); //Fixes shorthand recipients format
         return parent::post($modifiedPayload, $this->customHeaders);
     }
 }
