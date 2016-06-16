@@ -212,7 +212,7 @@ class APIResource
      *
      * @throws APIResponseException
      */
-    private function callResource($action, $resourcePath = null, $options = [])
+    protected function callResource($action, $resourcePath = null, $options = [])
     {
         $action = strtoupper($action); // normalize
 

@@ -8,6 +8,7 @@ use Ivory\HttpAdapter\HttpAdapterInterface;
 class SparkPost
 {
     public $transmission;
+    public $template;
     public $messageEvents;
 
     /**
@@ -55,6 +56,7 @@ class SparkPost
         $this->setHttpAdapter($httpAdapter);
 
         $this->transmission = new Transmission($this);
+        $this->template = new Template($this);
         $this->messageEvents = new MessageEvents($this);
     }
 
