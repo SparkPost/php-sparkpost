@@ -13,13 +13,37 @@ class Resource
         $this->endpoint = $endpoint;
     }
 
-    public function get($uri, $payload, $header)
+    public function get($uri, $payload, $headers)
     {
-        return $this->sparkpost->request('GET', $this->endpoint.'/'.$uri, $payload, $header);
+        return $this->request('GET', $uri, $payload, $headers);
     }
 
-    public function post($payload, $header)
+    public function put($uri, $payload, $headers)
     {
-        return $this->sparkpost->request('POST', $this->endpoint, $payload, $header);
+        return $this->request('PUT', $uri, $payload, $headers);
+    }
+
+    public function post($payload, $headers)
+    {
+        return $this->request('POST', '', $payload, $headers);
+    }
+
+    public function delete($uri, $payload, $headers)
+    {
+        return $this->request('DELETE', $uri, $payload, $headers);
+    }
+
+    public function request($method = 'GET', $uri = '', $payload = [], $headers = [])
+    {
+
+        if (is_array($uri)) {
+            $headers = $payload;
+            $payload = $uri;
+            $uri = '';
+        }
+
+        $uri = $this->endpoint.'/'.$uri;
+
+        return $this->sparkpost->request($method, $uri, $payload, $headers);
     }
 }
