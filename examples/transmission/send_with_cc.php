@@ -36,8 +36,8 @@ try {
                     'email' => 'original.recipient@example.com',
                 ],
                 'substitution_data' => [
-                    'recipient_type' => 'Original'
-                ]
+                    'recipient_type' => 'Original',
+                ],
             ],
             [
                 'address' => [
@@ -46,13 +46,13 @@ try {
                     'header_to' => '"Original Recipient" <original.recipient@example.com>',
                 ],
                 'substitution_data' => [
-                    'recipient_type' => 'CC'
-                ]
+                    'recipient_type' => 'CC',
+                ],
             ],
         ],
         'customHeaders' => [
-            'CC' => '"Carbon Copy Recipient" <cc.recipient@example.com>'
-        ]
+            'CC' => '"Carbon Copy Recipient" <cc.recipient@example.com>',
+        ],
     ]);
     echo 'Congrats! You sent an email with cc using SparkPost!';
 } catch (\Exception $exception) {
