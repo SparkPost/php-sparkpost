@@ -31,7 +31,7 @@ class Resource
      *
      * @see SparkPost->request()
      */
-    public function get($uri, $payload, $headers)
+    public function get($uri = '', $payload = [], $headers = [])
     {
         return $this->request('GET', $uri, $payload, $headers);
     }
@@ -41,7 +41,7 @@ class Resource
      *
      * @see SparkPost->request()
      */
-    public function put($uri, $payload, $headers)
+    public function put($uri = '', $payload = [], $headers = [])
     {
         return $this->request('PUT', $uri, $payload, $headers);
     }
@@ -51,7 +51,7 @@ class Resource
      *
      * @see SparkPost->request()
      */
-    public function post($payload, $headers)
+    public function post($payload = [], $headers = [])
     {
         return $this->request('POST', '', $payload, $headers);
     }
@@ -61,7 +61,7 @@ class Resource
      *
      * @see SparkPost->request()
      */
-    public function delete($uri, $payload, $headers)
+    public function delete($uri = '', $payload = [], $headers = [])
     {
         return $this->request('DELETE', $uri, $payload, $headers);
     }
