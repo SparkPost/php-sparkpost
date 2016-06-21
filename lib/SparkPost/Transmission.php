@@ -14,12 +14,25 @@ class Transmission extends Resource
      *
      * @return SparkPostPromise or SparkPostResponse depending on sync or async request
      */
-    public function post($payload, $headers = [])
+    public function post($payload = [], $headers = [])
     {
+        $payload = $this->formatPayload($payload);
+        return parent::post($payload, $headers);
+    }
+
+    /**
+     * Runs the given payload through the formatting methods
+     *
+     * @param array $payload - the request body
+     *
+     * @return array - the modified request body 
+     */
+    public function formatPayload($payload) {
         $payload = $this->formatBlindCarbonCopy($payload); //Fixes BCCs into payload
         $payload = $this->formatCarbonCopy($payload); //Fixes CCs into payload
         $payload = $this->formatShorthandRecipients($payload); //Fixes shorthand recipients format
-        return parent::post($payload, $headers);
+
+        return $payload;
     }
 
     /**
