@@ -230,7 +230,7 @@ class SparkPost
     }
 
     /**
-     * Sets up any endpoints from custom classes e.g. $this->transmissions.
+     * Sets up any endpoints to custom classes e.g. $this->transmissions.
      */
     private function setupEndpoints()
     {
