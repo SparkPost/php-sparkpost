@@ -19,7 +19,6 @@ class Transmission extends Resource
         $payload = $this->formatBlindCarbonCopy($payload); //Fixes BCCs into payload
         $payload = $this->formatCarbonCopy($payload); //Fixes CCs into payload
         $payload = $this->formatShorthandRecipients($payload); //Fixes shorthand recipients format
-        echo json_encode($payload);
         return parent::post($payload, $headers);
     }
 
@@ -136,7 +135,7 @@ class Transmission extends Resource
                 $return['email'] = $matches[2];
             }
             else {
-                throw \Exception('Invalid address format: '.$address);
+                throw new \Exception('Invalid address format: '.$address);
             }
 
         }
