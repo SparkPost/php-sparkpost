@@ -21,7 +21,7 @@ class Transmission extends Resource
     }
 
     /**
-     * Runs the given payload through the formatting methods
+     * Runs the given payload through the formatting functions
      *
      * @param array $payload - the request body
      *
