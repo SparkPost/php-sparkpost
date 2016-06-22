@@ -1,5 +1,5 @@
-{
-  "name": "sparkpost/php-sparkpost",
+ {
+  "name": "sparkpost/sparkpost",
   "description": "Client library for interfacing with the SparkPost API.",
   "license": "Apache 2.0",
   "authors": [
