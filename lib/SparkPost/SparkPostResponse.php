@@ -34,10 +34,12 @@ class SparkPostResponse implements ResponseInterface
 
         $json = json_decode($body_string, true);
 
-        return $json;    
+        return $json;
     }
 
-    // pass these down to the response given in the constructor
+    /**
+     * pass these down to the response given in the constructor
+     */
     public function getProtocolVersion()
     {
         return $this->response->getProtocolVersion();

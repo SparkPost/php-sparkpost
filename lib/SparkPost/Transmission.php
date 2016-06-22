@@ -10,24 +10,26 @@ class Transmission extends Resource
     }
 
     /**
-     * Send post request to transmission endpoint after formatting cc, bcc, and expanding the shorthand emails
+     * Send post request to transmission endpoint after formatting cc, bcc, and expanding the shorthand emails.
      *
      * @return SparkPostPromise or SparkPostResponse depending on sync or async request
      */
     public function post($payload = [], $headers = [])
     {
         $payload = $this->formatPayload($payload);
+
         return parent::post($payload, $headers);
     }
 
     /**
-     * Runs the given payload through the formatting functions
+     * Runs the given payload through the formatting functions.
      *
      * @param array $payload - the request body
      *
      * @return array - the modified request body 
      */
-    public function formatPayload($payload) {
+    public function formatPayload($payload)
+    {
         $payload = $this->formatBlindCarbonCopy($payload); //Fixes BCCs into payload
         $payload = $this->formatCarbonCopy($payload); //Fixes CCs into payload
         $payload = $this->formatShorthandRecipients($payload); //Fixes shorthand recipients format
@@ -36,7 +38,7 @@ class Transmission extends Resource
     }
 
     /**
-     * Formats bcc list into recipients list
+     * Formats bcc list into recipients list.
      *
      * @param array $payload - the request body
      *
@@ -44,9 +46,9 @@ class Transmission extends Resource
      */
     private function formatBlindCarbonCopy($payload)
     {
-        
+
         //If there's a list of BCC recipients, move then into the correct format
-        if(isset($payload['bcc'])) {
+        if (isset($payload['bcc'])) {
             $payload = $this->addListToRecipients($payload, 'bcc');
         }
 
@@ -54,7 +56,7 @@ class Transmission extends Resource
     }
 
     /**
-     * Formats cc list into recipients list and adds the CC header to the content
+     * Formats cc list into recipients list and adds the CC header to the content.
      *
      * @param array $payload - the request body
      *
@@ -62,9 +64,9 @@ class Transmission extends Resource
      */
     private function formatCarbonCopy($payload)
     {
-        if(isset($payload['cc'])) {
+        if (isset($payload['cc'])) {
             $ccAddresses = [];
-            for ($i = 0; $i < count($payload['cc']); $i++) { 
+            for ($i = 0; $i < count($payload['cc']); ++$i) {
                 array_push($ccAddresses, $this->toAddressString($payload['cc'][$i]['address']));
             }
 
@@ -80,7 +82,7 @@ class Transmission extends Resource
     }
 
     /**
-     * Formats all recipients into the long form of [ "name" => "John", "email" => "john@exmmple.com" ]
+     * Formats all recipients into the long form of [ "name" => "John", "email" => "john@exmmple.com" ].
      *
      * @param array $payload - the request body
      *
@@ -88,10 +90,9 @@ class Transmission extends Resource
      */
     private function formatShorthandRecipients($payload)
     {
-        
         $payload['content']['from'] = $this->toAddressObject($payload['content']['from']);
-        
-        for($i = 0; $i < count($payload['recipients']); $i++) {  
+
+        for ($i = 0; $i < count($payload['recipients']); ++$i) {
             $payload['recipients'][$i]['address'] = $this->toAddressObject($payload['recipients'][$i]['address']);
         }
 
@@ -99,7 +100,7 @@ class Transmission extends Resource
     }
 
     /**
-     * Loops through the given listName in the payload and adds all the recipients to the recipients list after removing their names
+     * Loops through the given listName in the payload and adds all the recipients to the recipients list after removing their names.
      *
      * @param array $payload  - the request body
      * @param array $listName - the name of the array in the payload to be moved to the recipients list
@@ -112,14 +113,15 @@ class Transmission extends Resource
         foreach ($payload[$listName] as $recipient) {
             $recipient['address'] = $this->toAddressObject($recipient['address']);
             $recipient['address']['header_to'] = $originalAddress;
-            
+
             // remove name from address - name is only put in the header for cc and not at all for bcc
-            if (isset($recipient['address']['name']))
+            if (isset($recipient['address']['name'])) {
                 unset($recipient['address']['name']);
+            }
 
             array_push($payload['recipients'], $recipient);
         }
-        
+
         //Delete the original object from the payload.
         unset($payload[$listName]);
 
@@ -127,7 +129,7 @@ class Transmission extends Resource
     }
 
     /**
-     * Takes the shorthand form of an email address and converts it to the long form
+     * Takes the shorthand form of an email address and converts it to the long form.
      * 
      * @param $address - the shorthand form of an email address "Name <Email address>"
      * 
@@ -141,37 +143,32 @@ class Transmission extends Resource
 
             if ($this->isEmail($address)) {
                 $return['email'] = $address;
-            }
-            else if(preg_match('/"?(.[^"]+)"?\s*<(.+)>/', $address, $matches)) {
+            } elseif (preg_match('/"?(.[^"]*)?"?\s*<(.+)>/', $address, $matches)) {
                 $name = trim($matches[1]);
                 $return['name'] = $matches[1];
                 $return['email'] = $matches[2];
-            }
-            else {
+            } else {
                 throw new \Exception('Invalid address format: '.$address);
             }
-
         }
 
         return $return;
     }
 
     /**
-     * Takes the longhand form of an email address and converts it to the shorthand form
+     * Takes the longhand form of an email address and converts it to the shorthand form.
      * 
      * @param $address - the longhand form of an email address [ "name" => "John", "email" => "john@exmmple.com" ]
-     * 
      * @param string - the shorthand form of an email address "Name <Email address>"
      */
     private function toAddressString($address)
     {
         // convert object to string
-        if(!is_string($address)) {
+        if (!is_string($address)) {
             if (isset($address['name'])) {
-                $address = '"' . $address['name'] . '" <' . $address['email'] . '>';    
-            }
-            else {
-                $address = $address['email'];       
+                $address = '"'.$address['name'].'" <'.$address['email'].'>';
+            } else {
+                $address = $address['email'];
             }
         }
 
@@ -179,19 +176,17 @@ class Transmission extends Resource
     }
 
     /**
-     * Checks if a string is an email
+     * Checks if a string is an email.
      * 
      * @param string $email - a string that might be an email address
-     * 
-     * @param boolean - true if the given string is an email
+     * @param bool - true if the given string is an email
      */
-    private function isEmail($email){
-        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+    private function isEmail($email)
+    {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return true;
         } else {
             return false;
         }
     }
 }
-
-?>

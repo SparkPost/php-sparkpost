@@ -29,12 +29,14 @@ class SparkPostPromise implements HttpPromise
      */
     public function then(callable $onFulfilled = null, callable $onRejected = null)
     {
-        return $this->promise->then(function($response) use ($onFulfilled) {
-            if (isset($onFulfilled))
+        return $this->promise->then(function ($response) use ($onFulfilled) {
+            if (isset($onFulfilled)) {
                 $onFulfilled(new SparkPostResponse($response));
-        }, function($exception) use ($onRejected) {
-            if (isset($onRejected))
+            }
+        }, function ($exception) use ($onRejected) {
+            if (isset($onRejected)) {
                 $onRejected(new SparkPostException($exception));
+            }
         });
     }
 
@@ -61,6 +63,7 @@ class SparkPostPromise implements HttpPromise
     {
         try {
             $response = $this->promise->wait($unwrap);
+
             return $response ? new SparkPostResponse($response) : $response;
         } catch (\Exception $exception) {
             throw new SparkPostException($exception);

@@ -5,17 +5,17 @@ namespace SparkPost;
 class Resource
 {
     /**
-     * SparkPost object used to make requests
+     * SparkPost object used to make requests.
      */
     protected $sparkpost;
 
     /**
-     * The api endpoint that gets prepended to all requests send through this resource
+     * The api endpoint that gets prepended to all requests send through this resource.
      */
     protected $endpoint;
 
     /**
-     * Sets up the Resource
+     * Sets up the Resource.
      *
      * @param SparKPost $sparkpost - the sparkpost instance that this resource is attached to
      * @param string    $endpoint  - the endpoint that this resource wraps
@@ -27,7 +27,7 @@ class Resource
     }
 
     /**
-     * Sends get request to API at the set endpoint
+     * Sends get request to API at the set endpoint.
      *
      * @see SparkPost->request()
      */
@@ -37,7 +37,7 @@ class Resource
     }
 
     /**
-     * Sends put request to API at the set endpoint
+     * Sends put request to API at the set endpoint.
      *
      * @see SparkPost->request()
      */
@@ -47,7 +47,7 @@ class Resource
     }
 
     /**
-     * Sends post request to API at the set endpoint
+     * Sends post request to API at the set endpoint.
      *
      * @see SparkPost->request()
      */
@@ -57,7 +57,7 @@ class Resource
     }
 
     /**
-     * Sends delete request to API at the set endpoint
+     * Sends delete request to API at the set endpoint.
      *
      * @see SparkPost->request()
      */
@@ -67,7 +67,7 @@ class Resource
     }
 
     /**
-     * Sends requests to SparkPost object to the resource endpoint
+     * Sends requests to SparkPost object to the resource endpoint.
      *
      * @see SparkPost->request()
      *
@@ -75,7 +75,6 @@ class Resource
      */
     public function request($method = 'GET', $uri = '', $payload = [], $headers = [])
     {
-
         if (is_array($uri)) {
             $headers = $payload;
             $payload = $uri;
@@ -83,7 +82,7 @@ class Resource
         }
 
         $uri = $this->endpoint.'/'.$uri;
-
+        
         return $this->sparkpost->request($method, $uri, $payload, $headers);
     }
 }

@@ -3,16 +3,6 @@
 namespace SparkPost\Test;
 
 use SparkPost\SparkPost;
-use SparkPost\SparkPostResponse;
-use SparkPost\SparkPostPromise;
-use Psr\Http\Message\ResponseInterface;
-use Http\Promise\Promise;
-use GuzzleHttp\Promise\Promise as GuzzlePromise;
-use GuzzleHttp\Promise\FulfilledPromise as GuzzleFulfilledPromise;
-use GuzzleHttp\Promise\RejectedPromise as GuzzleRejectedPromise;
-use Http\Adapter\Guzzle6\Promise as GuzzleAdapterPromise;
-use Http\Client\Exception\HttpException;
-use Http\Adapter\Guzzle6\Client;
 use Mockery;
 use SparkPost\Test\TestUtils\ClassUtils;
 
@@ -25,7 +15,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
 
     private $postTransmissionPayload = [
         'content' => [
-            'from' => [ 'name' => 'Sparkpost Team', 'email' => 'postmaster@sendmailfor.me' ],
+            'from' => ['name' => 'Sparkpost Team', 'email' => 'postmaster@sendmailfor.me'],
             'subject' => 'First Mailing From PHP',
             'text' => 'Congratulations, {{name}}!! You just sent your very first mailing!',
         ],
@@ -34,26 +24,26 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
             [
                 'address' => [
                     'name' => 'Vincent',
-                    'email' => 'vincent.song@sparkpost.com'
-                ]
+                    'email' => 'vincent.song@sparkpost.com',
+                ],
             ],
-            [ 'address' => 'test@example.com' ]
+            ['address' => 'test@example.com'],
         ],
         'cc' => [
             [
                 'address' => [
-                    'email' => 'avi.goldman@sparkpost.com'
+                    'email' => 'avi.goldman@sparkpost.com',
                 ],
-            ]
+            ],
         ],
         'bcc' => [
             ['address' => 'Emely Giraldo <emely.giraldo@sparkpost.com>'],
-        ]
+        ],
 
     ];
-    
+
     private $getTransmissionPayload = [
-        'campaign_id' => 'thanksgiving'
+        'campaign_id' => 'thanksgiving',
     ];
 
     /**
@@ -83,7 +73,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
     public function testInvalidEmailFormat()
     {
         $this->postTransmissionPayload['recipients'][] = [
-            'address' => 'invalid email format'
+            'address' => 'invalid email format',
         ];
 
         $response = $this->resource->transmissions->post($this->postTransmissionPayload);
