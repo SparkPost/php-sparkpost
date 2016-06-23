@@ -56,7 +56,7 @@ try {
     $response = $promise->wait();
     echo $response->getStatusCode()."\n";
     print_r($response->getBody());
-} catch (Exception $e) {
+} catch (\Exception $e) {
     echo $e->getCode()."\n";
     echo $e->getMessage()."\n";
 }
