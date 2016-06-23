@@ -20,7 +20,7 @@ $promise = $sparky->transmissions->get();
 try {
     $response = $promise->wait();
     echo $response->getStatusCode()."\n";
-    print_r($response->getBody());
+    print_r($response->getBody())."\n";
 } catch (\Exception $e) {
     echo $e->getCode()."\n";
     echo $e->getMessage()."\n";
