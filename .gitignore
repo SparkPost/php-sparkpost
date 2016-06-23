@@ -3,7 +3,7 @@
 .settings
 .buildpath
 test/output/
-examples/example-config.json
+examples/example-options.json
 .idea
 /composer.phar
 test.php

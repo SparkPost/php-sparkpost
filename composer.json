@@ -9,8 +9,8 @@
   ],
   "minimum-stability": "stable",
   "scripts": {
-    "post-install-cmd": "if [ ! -f 'examples/example-config.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json; fi",
-    "post-update-cmd": "if [ ! -f 'examples/example-config.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json; fi",
+    "post-install-cmd": "if [ ! -f 'examples/example-options.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-options.json; fi",
+    "post-update-cmd": "if [ ! -f 'examples/example-options.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-options.json; fi",
     "test": "phpunit ./test/unit/",
     "fix-style": "php-cs-fixer fix ."
   },
