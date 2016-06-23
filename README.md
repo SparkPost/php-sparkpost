@@ -20,7 +20,7 @@ curl -sS https://getcomposer.org/installer | php
 ```
 
 Next, run the Composer command to install the SparkPost PHP Library:
-**Please note: The composer package `sparkpost/php-sparkpost` has been abandoned in favor of `sparkpost/sparkpost`**
+###### Please note: The composer package `sparkpost/php-sparkpost` has been abandoned in favor of `sparkpost/sparkpost`
 
 ```
 composer require sparkpost/sparkpost
