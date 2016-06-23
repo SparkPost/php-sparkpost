@@ -32,7 +32,6 @@ class SparkPost
         'port' => 443,
         'key' => '',
         'version' => 'v1',
-        'timeout' => 10,
         'async' => true,
     ];
 
