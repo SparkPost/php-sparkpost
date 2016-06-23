@@ -17,7 +17,7 @@ class Resource
     /**
      * Sets up the Resource.
      *
-     * @param SparKPost $sparkpost - the sparkpost instance that this resource is attached to
+     * @param SparkPost $sparkpost - the sparkpost instance that this resource is attached to
      * @param string    $endpoint  - the endpoint that this resource wraps
      */
     public function __construct(SparkPost $sparkpost, $endpoint)
@@ -82,7 +82,7 @@ class Resource
         }
 
         $uri = $this->endpoint.'/'.$uri;
-        
+
         return $this->sparkpost->request($method, $uri, $payload, $headers);
     }
 }

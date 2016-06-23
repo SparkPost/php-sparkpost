@@ -10,7 +10,7 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 $httpClient = new GuzzleAdapter(new Client());
 
-/**
+/*
  * configure options in example-options.json
  */
 $sparky = new SparkPost($httpClient, $options);
@@ -19,10 +19,9 @@ $promise = $sparky->transmissions->get();
 
 try {
     $response = $promise->wait();
-    echo $response->getStatusCode() . "\n";
+    echo $response->getStatusCode()."\n";
     print_r($response->getBody());
 } catch (Exception $e) {
-    echo $e->getCode() . "\n";
-    echo $e->getMessage() . "\n";
+    echo $e->getCode()."\n";
+    echo $e->getMessage()."\n";
 }
-?>

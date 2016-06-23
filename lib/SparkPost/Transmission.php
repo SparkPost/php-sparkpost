@@ -137,22 +137,22 @@ class Transmission extends Resource
      */
     private function toAddressObject($address)
     {
-        $return = $address;
-        if (is_string($address)) {
-            $return = [];
+        $formatted = $address;
+        if (is_string($formatted)) {
+            $formatted = [];
 
             if ($this->isEmail($address)) {
-                $return['email'] = $address;
+                $formatted['email'] = $address;
             } elseif (preg_match('/"?(.[^"]*)?"?\s*<(.+)>/', $address, $matches)) {
                 $name = trim($matches[1]);
-                $return['name'] = $matches[1];
-                $return['email'] = $matches[2];
+                $formatted['name'] = $matches[1];
+                $formatted['email'] = $matches[2];
             } else {
                 throw new \Exception('Invalid address format: '.$address);
             }
         }
 
-        return $return;
+        return $formatted;
     }
 
     /**

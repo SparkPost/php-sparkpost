@@ -38,7 +38,7 @@ class SparkPostResponse implements ResponseInterface
     }
 
     /**
-     * pass these down to the response given in the constructor
+     * pass these down to the response given in the constructor.
      */
     public function getProtocolVersion()
     {
