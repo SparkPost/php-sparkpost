@@ -291,8 +291,4 @@ An exception will be thrown in two cases: there is a problem with the request or
 
 
 ### Contributing
-See [contributing](https://github.com/SparkPost/php-sparkpost/blob/master/CONTRIBUTING.md).rray`
-
-
-### Contributing
 See [contributing](https://github.com/SparkPost/php-sparkpost/blob/master/CONTRIBUTING.md).
