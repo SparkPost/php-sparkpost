@@ -13,3 +13,5 @@ php-sparkpost is maintained by Message Systems.
 * Chris Wilson, [@yepher](https://github.com/yepher)
 * Maxim Dzhuliy, [@max-si-m](https://github.com/max-si-m)
 * [@chandon](https://github.com/chandon)
+* Avi Goldman, [@avrahamgoldman](https://github.com/avrahamgoldman)
+* Vincent Song, [@vwsong](https://github.com/vwsong)

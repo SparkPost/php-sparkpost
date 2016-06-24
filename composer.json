@@ -9,26 +9,26 @@
   ],
   "minimum-stability": "stable",
   "scripts": {
-    "post-install-cmd": "if [ ! -f 'examples/example-config.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json; fi",
-    "post-update-cmd": "if [ ! -f 'examples/example-config.json' ]; then echo '{\n\t\"api-key\":\"Your API Key\"\n}' >> examples/example-config.json; fi",
+    "post-install-cmd": "if [ ! -f 'examples/example-options.json' ]; then echo '{\n\t\"key\":\"YOUR_API_KEY\"\n}' >> examples/example-options.json; fi",
+    "post-update-cmd": "if [ ! -f 'examples/example-options.json' ]; then echo '{\n\t\"key\":\"YOUR_API_KEY\"\n}' >> examples/example-options.json; fi",
     "test": "phpunit ./test/unit/",
     "fix-style": "php-cs-fixer fix ."
   },
   "require": {
     "php": ">=5.5.0",
-    "egeloen/http-adapter": "*"
+    "php-http/client-implementation": "^1.0",
+    "guzzlehttp/psr7": "1.3.*"
   },
   "require-dev": {
-    "phpunit/phpunit": "4.3.*",
     "guzzlehttp/guzzle": "6.*",
+    "php-http/guzzle6-adapter": "*",
+    "php-http/message": "*",
     "mockery/mockery": "^0.9.4",
-    "satooshi/php-coveralls": "dev-master",
     "fabpot/php-cs-fixer": "^1.11"
   },
   "autoload": {
     "psr-4": {
       "SparkPost\\": "lib/SparkPost/",
-      "SparkPost\\SendGridCompatibility\\": "lib/SendGridCompatibility/",
       "SparkPost\\Test\\TestUtils\\": "test/unit/TestUtils/"
     }
   }

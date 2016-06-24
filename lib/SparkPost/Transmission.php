@@ -2,135 +2,191 @@
 
 namespace SparkPost;
 
-/**
- * SDK interface for managing transmissions.
- */
-class Transmission extends APIResource
+class Transmission extends Resource
 {
-    public $endpoint = 'transmissions';
-
-    /**
-     * Mapping for values passed into the send method to the values needed for the Transmission API.
-     *
-     * @var array
-     */
-    protected static $parameterMappings = [
-        'attachments' => 'content.attachments',
-        'campaign' => 'campaign_id',
-        'customHeaders' => 'content.headers',
-        'description' => 'description',
-        'from' => 'content.from',
-        'html' => 'content.html',
-        'inlineCss' => 'options.inline_css',
-        'inlineImages' => 'content.inline_images',
-        'metadata' => 'metadata',
-        'recipientList' => 'recipients.list_id',
-        'recipients' => 'recipients',
-        'replyTo' => 'content.reply_to',
-        'returnPath' => 'return_path',
-        'rfc822' => 'content.email_rfc822',
-        'sandbox' => 'options.sandbox',
-        'startTime' => 'options.start_time',
-        'subject' => 'content.subject',
-        'substitutionData' => 'substitution_data',
-        'template' => 'content.template_id',
-        'text' => 'content.text',
-        'trackClicks' => 'options.click_tracking',
-        'trackOpens' => 'options.open_tracking',
-        'transactional' => 'options.transactional',
-        'useDraftTemplate' => 'use_draft_template',
-    ];
-
-    /**
-     * Sets up default structure and default values for the model that is acceptable by the API.
-     *
-     * @var array
-     */
-    protected static $structure = [
-        'return_path' => 'default@sparkpostmail.com',
-        'content' => [
-            'html' => null,
-            'text' => null,
-            'email_rfc822' => null,
-        ],
-        'use_draft_template' => false,
-    ];
-
-    /**
-     * Method for issuing POST request to the Transmissions API.
-     *
-     *  This method assumes that all the appropriate fields have
-     *  been populated by the user through configuration.  Acceptable
-     *  configuration values are:
-     *  'attachments': array,
-     *  'campaign': string,
-     *  'customHeaders': array,
-     *  'description': string,
-     *  'from': string,
-     *  'html': string,
-     *  'inlineCss': boolean,
-     *  'inlineImages': array,
-     *  'metadata': array,
-     *  'recipientList': string,
-     *  'recipients': array,
-     *  'replyTo': string,
-     *  'rfc822': string,
-     *  'sandbox': boolean,
-     *  'startTime': string | \DateTime,
-     *  'subject': string,
-     *  'substitutionData': array,
-     *  'template': string,
-     *  'text': string,
-     *  'trackClicks': boolean,
-     *  'trackOpens': boolean,
-     *  'transactional': boolean,
-     *  'useDraftTemplate': boolean
-     *
-     * @param array $transmissionConfig
-     *
-     * @return array API repsonse represented as key-value pairs
-     */
-    public function send($transmissionConfig)
+    public function __construct(SparkPost $sparkpost)
     {
-        if (isset($transmissionConfig['startTime']) && $transmissionConfig['startTime'] instanceof \DateTime) {
-            $transmissionConfig['startTime'] = $transmissionConfig['startTime']->format(\DateTime::ATOM);
-        }
-
-        return $this->create($transmissionConfig);
+        parent::__construct($sparkpost, 'transmissions');
     }
 
     /**
-     * Method for retrieving information about all transmissions
-     *  Wrapper method for a cleaner interface.
+     * Send post request to transmission endpoint after formatting cc, bcc, and expanding the shorthand emails.
      *
-     * @param null|string $campaignID
-     * @param null|string $templateID
-     *
-     * @return array result Set of transmissions
+     * @return SparkPostPromise or SparkPostResponse depending on sync or async request
      */
-    public function all($campaignID = null, $templateID = null)
+    public function post($payload = [], $headers = [])
     {
-        $options = [];
-        if ($campaignID !== null) {
-            $options['campaign_id'] = $campaignID;
-        }
-        if ($templateID !== null) {
-            $options['template_id'] = $templateID;
-        }
+        $payload = $this->formatPayload($payload);
 
-        return $this->get(null, $options);
+        return parent::post($payload, $headers);
     }
 
     /**
-     * Method for retrieving information about a single transmission
-     *  Wrapper method for a cleaner interface.
+     * Runs the given payload through the formatting functions.
      *
-     * @param string $transmissionID Identifier of the transmission to be found
+     * @param array $payload - the request body
      *
-     * @return array result Single transmission represented in key-value pairs
+     * @return array - the modified request body 
      */
-    public function find($transmissionID)
+    public function formatPayload($payload)
     {
-        return $this->get($transmissionID);
+        $payload = $this->formatBlindCarbonCopy($payload); //Fixes BCCs into payload
+        $payload = $this->formatCarbonCopy($payload); //Fixes CCs into payload
+        $payload = $this->formatShorthandRecipients($payload); //Fixes shorthand recipients format
+
+        return $payload;
+    }
+
+    /**
+     * Formats bcc list into recipients list.
+     *
+     * @param array $payload - the request body
+     *
+     * @return array - the modified request body 
+     */
+    private function formatBlindCarbonCopy($payload)
+    {
+
+        //If there's a list of BCC recipients, move then into the correct format
+        if (isset($payload['bcc'])) {
+            $payload = $this->addListToRecipients($payload, 'bcc');
+        }
+
+        return $payload;
+    }
+
+    /**
+     * Formats cc list into recipients list and adds the CC header to the content.
+     *
+     * @param array $payload - the request body
+     *
+     * @return array - the modified request body 
+     */
+    private function formatCarbonCopy($payload)
+    {
+        if (isset($payload['cc'])) {
+            $ccAddresses = [];
+            for ($i = 0; $i < count($payload['cc']); ++$i) {
+                array_push($ccAddresses, $this->toAddressString($payload['cc'][$i]['address']));
+            }
+
+            // set up the content headers as either what it was before or an empty array
+            $payload['content']['headers'] = isset($payload['content']['headers']) ? $payload['content']['headers'] : [];
+            // add cc header
+            $payload['content']['headers']['CC'] = implode(',', $ccAddresses);
+
+            $payload = $this->addListToRecipients($payload, 'cc');
+        }
+
+        return $payload;
+    }
+
+    /**
+     * Formats all recipients into the long form of [ "name" => "John", "email" => "john@exmmple.com" ].
+     *
+     * @param array $payload - the request body
+     *
+     * @return array - the modified request body 
+     */
+    private function formatShorthandRecipients($payload)
+    {
+        $payload['content']['from'] = $this->toAddressObject($payload['content']['from']);
+
+        for ($i = 0; $i < count($payload['recipients']); ++$i) {
+            $payload['recipients'][$i]['address'] = $this->toAddressObject($payload['recipients'][$i]['address']);
+        }
+
+        return $payload;
+    }
+
+    /**
+     * Loops through the given listName in the payload and adds all the recipients to the recipients list after removing their names.
+     *
+     * @param array $payload  - the request body
+     * @param array $listName - the name of the array in the payload to be moved to the recipients list
+     *
+     * @return array - the modified request body 
+     */
+    private function addListToRecipients($payload, $listName)
+    {
+        $originalAddress = $this->toAddressString($payload['recipients'][0]['address']);
+        foreach ($payload[$listName] as $recipient) {
+            $recipient['address'] = $this->toAddressObject($recipient['address']);
+            $recipient['address']['header_to'] = $originalAddress;
+
+            // remove name from address - name is only put in the header for cc and not at all for bcc
+            if (isset($recipient['address']['name'])) {
+                unset($recipient['address']['name']);
+            }
+
+            array_push($payload['recipients'], $recipient);
+        }
+
+        //Delete the original object from the payload.
+        unset($payload[$listName]);
+
+        return $payload;
+    }
+
+    /**
+     * Takes the shorthand form of an email address and converts it to the long form.
+     * 
+     * @param $address - the shorthand form of an email address "Name <Email address>"
+     * 
+     * @return array - the longhand form of an email address [ "name" => "John", "email" => "john@exmmple.com" ]
+     */
+    private function toAddressObject($address)
+    {
+        $formatted = $address;
+        if (is_string($formatted)) {
+            $formatted = [];
+
+            if ($this->isEmail($address)) {
+                $formatted['email'] = $address;
+            } elseif (preg_match('/"?(.[^"]*)?"?\s*<(.+)>/', $address, $matches)) {
+                $name = trim($matches[1]);
+                $formatted['name'] = $matches[1];
+                $formatted['email'] = $matches[2];
+            } else {
+                throw new \Exception('Invalid address format: '.$address);
+            }
+        }
+
+        return $formatted;
+    }
+
+    /**
+     * Takes the longhand form of an email address and converts it to the shorthand form.
+     * 
+     * @param $address - the longhand form of an email address [ "name" => "John", "email" => "john@exmmple.com" ]
+     * @param string - the shorthand form of an email address "Name <Email address>"
+     */
+    private function toAddressString($address)
+    {
+        // convert object to string
+        if (!is_string($address)) {
+            if (isset($address['name'])) {
+                $address = '"'.$address['name'].'" <'.$address['email'].'>';
+            } else {
+                $address = $address['email'];
+            }
+        }
+
+        return $address;
+    }
+
+    /**
+     * Checks if a string is an email.
+     * 
+     * @param string $email - a string that might be an email address
+     * @param bool - true if the given string is an email
+     */
+    private function isEmail($email)
+    {
+        if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

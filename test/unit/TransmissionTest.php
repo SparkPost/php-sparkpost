@@ -2,15 +2,49 @@
 
 namespace SparkPost\Test;
 
-use SparkPost\Transmission;
-use SparkPost\Test\TestUtils\ClassUtils;
+use SparkPost\SparkPost;
 use Mockery;
+use SparkPost\Test\TestUtils\ClassUtils;
 
 class TransmissionTest extends \PHPUnit_Framework_TestCase
 {
     private static $utils;
-    private $sparkPostMock;
+    private $clientMock;
+    /** @var SparkPost */
     private $resource;
+
+    private $postTransmissionPayload = [
+        'content' => [
+            'from' => ['name' => 'Sparkpost Team', 'email' => 'postmaster@sendmailfor.me'],
+            'subject' => 'First Mailing From PHP',
+            'text' => 'Congratulations, {{name}}!! You just sent your very first mailing!',
+        ],
+        'substitution_data' => ['name' => 'Avi'],
+        'recipients' => [
+            [
+                'address' => [
+                    'name' => 'Vincent',
+                    'email' => 'vincent.song@sparkpost.com',
+                ],
+            ],
+            ['address' => 'test@example.com'],
+        ],
+        'cc' => [
+            [
+                'address' => [
+                    'email' => 'avi.goldman@sparkpost.com',
+                ],
+            ],
+        ],
+        'bcc' => [
+            ['address' => 'Emely Giraldo <emely.giraldo@sparkpost.com>'],
+        ],
+
+    ];
+
+    private $getTransmissionPayload = [
+        'campaign_id' => 'thanksgiving',
+    ];
 
     /**
      * (non-PHPdoc).
@@ -21,11 +55,10 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->sparkPostMock = Mockery::mock('SparkPost\SparkPost', function ($mock) {
-            $mock->shouldReceive('getHttpHeaders')->andReturn([]);
-        });
-        $this->sparkPostMock->httpAdapter = Mockery::mock();
-        $this->resource = new Transmission($this->sparkPostMock);
+        //setup mock for the adapter
+        $this->clientMock = Mockery::mock('Http\Adapter\Guzzle6\Client');
+
+        $this->resource = new SparkPost($this->clientMock, ['key' => 'SPARKPOST_API_KEY', 'async' => false]);
         self::$utils = new ClassUtils($this->resource);
     }
 
@@ -34,81 +67,111 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
         Mockery::close();
     }
 
-    public function testSend()
+    /**
+     * @expectedException Exception
+     */
+    public function testInvalidEmailFormat()
     {
-        $responseMock = Mockery::mock();
-        $body = ['text' => 'awesomesauce', 'content' => ['subject' => 'awesomeness']];
-        $responseBody = ['results' => 'yay'];
+        $this->postTransmissionPayload['recipients'][] = [
+            'address' => 'invalid email format',
+        ];
 
-        $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-            once()->
-            with('/.*\/transmissions/', 'POST', Mockery::type('array'), Mockery::type('string'))->
-            andReturn($responseMock);
-        $responseMock->shouldReceive('getStatusCode')->andReturn(200);
-
-        $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
-
-        $this->assertEquals($responseBody, $this->resource->send($body));
+        $response = $this->resource->transmissions->post($this->postTransmissionPayload);
     }
 
-    public function testSendDateTimeConversion()
+    public function testGet()
     {
-        $testStartTime = new \DateTime('2016-08-27 13:01:02', new \DateTimeZone('UTC'));
+        $responseMock = Mockery::mock('Psr\Http\Message\ResponseInterface');
+        $responseBodyMock = Mockery::mock();
 
-        $responseMock = Mockery::mock();
         $responseBody = ['results' => 'yay'];
-        $this->sparkPostMock->httpAdapter->shouldReceive('send')->
-            once()->
-            with('/.*\/transmissions/', 'POST', Mockery::type('array'), matchesPattern('/"start_time":"2016-08-27T13:01:02\+00:00"/'))->
-            andReturn($responseMock);
-        $responseMock->shouldReceive('getStatusCode')->andReturn(200);
-        $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
 
-        $this->assertEquals($responseBody, $this->resource->send(['startTime' => $testStartTime]));
+        $this->resource->httpClient->shouldReceive('sendRequest')->
+            once()->
+            with(Mockery::type('GuzzleHttp\Psr7\Request'))->
+            andReturn($responseMock);
+
+        $responseMock->shouldReceive('getStatusCode')->andReturn(200);
+        $responseMock->shouldReceive('getBody')->andReturn($responseBodyMock);
+        $responseBodyMock->shouldReceive('__toString')->andReturn(json_encode($responseBody));
+
+        $response = $this->resource->transmissions->get($this->getTransmissionPayload);
+
+        $this->assertEquals($responseBody, $response->getBody());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testAllWithFilter()
+    public function testPut()
     {
-        $responseMock = Mockery::mock();
+        $responseMock = Mockery::mock('Psr\Http\Message\ResponseInterface');
+        $responseBodyMock = Mockery::mock();
+
         $responseBody = ['results' => 'yay'];
-        $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+
+        $this->resource->httpClient->shouldReceive('sendRequest')->
             once()->
-            with('/.*transmissions.*?campaign_id=campaign&template_id=template/', 'GET', Mockery::type('array'), null)->
+            with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($responseMock);
+
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
+        $responseMock->shouldReceive('getBody')->andReturn($responseBodyMock);
+        $responseBodyMock->shouldReceive('__toString')->andReturn(json_encode($responseBody));
 
-        $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
+        $response = $this->resource->transmissions->put($this->getTransmissionPayload);
 
-        $this->assertEquals($responseBody, $this->resource->all('campaign', 'template'));
+        $this->assertEquals($responseBody, $response->getBody());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testAllWithOutFilter()
+    public function testPost()
     {
-        $responseMock = Mockery::mock();
+        $responseMock = Mockery::mock('Psr\Http\Message\ResponseInterface');
+        $responseBodyMock = Mockery::mock();
+
         $responseBody = ['results' => 'yay'];
-        $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+
+        $this->resource->httpClient->shouldReceive('sendRequest')->
             once()->
-            with('/.*\/transmissions/', 'GET', Mockery::type('array'), null)->
+            with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($responseMock);
+
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
+        $responseMock->shouldReceive('getBody')->andReturn($responseBodyMock);
+        $responseBodyMock->shouldReceive('__toString')->andReturn(json_encode($responseBody));
 
-        $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
+        $response = $this->resource->transmissions->post($this->postTransmissionPayload);
 
-        $this->assertEquals($responseBody, $this->resource->all());
+        $this->assertEquals($responseBody, $response->getBody());
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function testFind()
+    public function testDelete()
     {
-        $responseMock = Mockery::mock();
+        $responseMock = Mockery::mock('Psr\Http\Message\ResponseInterface');
+        $responseBodyMock = Mockery::mock();
+
         $responseBody = ['results' => 'yay'];
-        $this->sparkPostMock->httpAdapter->shouldReceive('send')->
+
+        $this->resource->httpClient->shouldReceive('sendRequest')->
             once()->
-            with('/.*\/transmissions.*\/test/', 'GET', Mockery::type('array'), null)->
+            with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($responseMock);
+
         $responseMock->shouldReceive('getStatusCode')->andReturn(200);
+        $responseMock->shouldReceive('getBody')->andReturn($responseBodyMock);
+        $responseBodyMock->shouldReceive('__toString')->andReturn(json_encode($responseBody));
 
-        $responseMock->shouldReceive('getBody->getContents')->andReturn(json_encode($responseBody));
+        $response = $this->resource->transmissions->delete($this->getTransmissionPayload);
 
-        $this->assertEquals($responseBody, $this->resource->find('test'));
+        $this->assertEquals($responseBody, $response->getBody());
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testFormatPayload()
+    {
+        $correctFormattedPayload = json_decode('{"content":{"from":{"name":"Sparkpost Team","email":"postmaster@sendmailfor.me"},"subject":"First Mailing From PHP","text":"Congratulations, {{name}}!! You just sent your very first mailing!","headers":{"CC":"avi.goldman@sparkpost.com"}},"substitution_data":{"name":"Avi"},"recipients":[{"address":{"name":"Vincent","email":"vincent.song@sparkpost.com"}},{"address":{"email":"test@example.com"}},{"address":{"email":"emely.giraldo@sparkpost.com","header_to":"\"Vincent\" <vincent.song@sparkpost.com>"}},{"address":{"email":"avi.goldman@sparkpost.com","header_to":"\"Vincent\" <vincent.song@sparkpost.com>"}}]}', true);
+
+        $formattedPayload = $this->resource->transmissions->formatPayload($this->postTransmissionPayload);
+        $this->assertEquals($correctFormattedPayload, $formattedPayload);
     }
 }
