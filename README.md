@@ -12,6 +12,8 @@ The official PHP library for using [the SparkPost REST API](https://developers.s
 Before using this library, you must have a valid API Key. To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
 
 ## Installation
+**Please note: The composer package `sparkpost/php-sparkpost` has been changed to `sparkpost/sparkpost` starting with version 2.0.**
+
 The recommended way to install the SparkPost PHP Library is through composer.
 
 ```
@@ -22,7 +24,7 @@ curl -sS https://getcomposer.org/installer | php
 Next, run the Composer command to install the SparkPost PHP Library:
 
 ```
-composer require sparkpost/php-sparkpost
+composer require sparkpost/sparkpost
 ```
 
 After installing, you need to require Composer's autoloader:
@@ -36,13 +38,15 @@ use SparkPost\SparkPost;
 
 Because of dependency collision, we have opted to use a request adapter rather than
 requiring a request library.  This means that your application will need to pass in
-a request adapter to the constructor of the SparkPost Library.  We use the [HTTPlug](https://github.com/php-http/httplug) in SparkPost. Please visit their repo for a list of supported adapters.  If you don't currently use a request library, you will
-need to require one and create an adapter from it and pass it along. The example below uses the GuzzleHttp Client Library.
+a request adapter to the constructor of the SparkPost Library.  We use the [HTTPlug](https://github.com/php-http/httplug) in SparkPost. Please visit their repo for a list of supported [clients and adapters](http://docs.php-http.org/en/latest/clients.html).  If you don't currently use a request library, you will
+need to require one and create a client from it and pass it along. The example below uses the GuzzleHttp Client Library.
 
-An Adapter can be setup like so:
+An Client can be setup like so:
 
 ```php
 <?php
+require 'vendor/autoload.php';
+
 use SparkPost\SparkPost;
 use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
@@ -81,10 +85,11 @@ $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
     * Required: No
     * Type: `String`
     * Default: `v1`
-* `options.timeout`
+* `options.async`
     * Required: No
-    * Type: `Number`
-    * Default: `10`
+    * Type: `Boolean`
+    * Default: `true`
+    * `async` defines if the `request` function sends an asynchronous or synchronous request. If your client does not support async requests set this to `false`
 
 
 ## Methods
@@ -106,6 +111,12 @@ $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
     * Type: `Array`
     * Custom headers to be sent with the request.
 
+### syncRequest(method, uri [, payload [, headers]])
+Sends a synchronous request to the SparkPost API and returns a `SparkPostResponse`
+
+### asyncRequest(method, uri [, payload [, headers]])
+Sends an asynchronous request to the SparkPost API and returns a `SparkPostPromise`
+
 ### setHttpClient(httpClient)
 * `httpClient`
     *  Required: Yes
@@ -115,7 +126,7 @@ $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 * `options`
     *  Required: Yes
     *  Type: `Array`
-    * See initialization
+    * See constructor
 
 
 ## Endpoints
@@ -141,6 +152,8 @@ $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 ### Send An Email Using The Transmissions Endpoint
 ```php
 <?php
+require 'vendor/autoload.php';
+
 use SparkPost\SparkPost;
 use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
@@ -148,31 +161,51 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 $httpClient = new GuzzleAdapter(new Client());
 $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 
+$sparky = new SparkPost($httpClient, $options);
 $promise = $sparky->transmissions->post([
     'content' => [
-        'from'=> [
-            'name' => 'Sparkpost Team',
-            'email' => 'from@sparkpostbox.com'
+        'from' => [
+            'name' => 'SparkPost Team',
+            'email' => 'from@sparkpostbox.com',
         ],
-        'subject'=>'First Mailing From PHP',
-        'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
-        'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!'
+        'subject' => 'First Mailing From PHP',
+        'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
+        'text' => 'Congratulations, {{name}}!! You just sent your very first mailing!',
     ],
-    'substitution_data'=> ['name'=>'YOUR_FIRST_NAME'],
-    'recipients'=> [
-        [ 'address' => '<YOUR_EMAIL_ADDRESS>' ]
+    'substitution_data' => ['name' => 'YOUR_FIRST_NAME'],
+    'recipients' => [
+        [
+            'address' => [
+                'name' => 'YOUR_NAME',
+                'email' => 'YOUR_EMAIL',
+            ],
+        ],
     ],
-    'bcc' =>  [
-        ['address' => '<ANOTHER_EMAIL_ADDRESS>' ]
-    ]
+    'cc' => [
+        [
+            'address' => [
+                'name' => 'ANOTHER_NAME',
+                'email' => 'ANOTHER_EMAIL',
+            ],
+        ],
+    ],
+    'bcc' => [
+        [
+            'address' => [
+                'name' => 'AND_ANOTHER_NAME',
+                'email' => 'AND_ANOTHER_EMAIL',
+            ],
+        ],
+    ],
 ]);
-?>
 ```
 
 ### Send An API Call Using The Base Request Function
-We may not wrap every resource available in the SparkPost Client Library, for example the PHP Client Library does not wrap the Metrics resource. To allow you to use the full power of our API we created the `request` function which allows you to access the unwrapped resources.
+We provide a base request function to access any of our API resources.
 ```php
 <?php
+require 'vendor/autoload.php';
+
 use SparkPost\SparkPost;
 use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
@@ -181,58 +214,84 @@ $httpClient = new GuzzleAdapter(new Client());
 $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 
 $promise = $sparky->request('GET', 'metrics/ip-pools', [
-    'from' => '2015-12-01T08:00',
-    'to' => '2014-12-01T09:00',
+    'from' => '2014-12-01T09:00',
+    'to' => '2015-12-01T08:00',
     'timezone' => 'America/New_York',
-    'limit' => '5'
+    'limit' => '5',
 ]);
-?>
 ```
 
 
 ## Handling Responses
-The all API calls return a promise. You can wait for the promise to be fulfilled or you can handle it asynchronously.
+The API calls either return a `SparkPostPromise` or `SparkPostResponse` depending on if `async` is `true` or `false`
 
+### Synchronous
+```php
+$sparky->setOptions(['async' => false]);
+try {
+    $response = $sparky->transmissions->get();
+    
+    echo $response->getStatusCode()."\n";
+    print_r($response->getBody())."\n";
+}
+catch (\Exception $e) {
+    echo $e->getCode()."\n";
+    echo $e->getMessage()."\n";
+}
+```
+
+### Asynchronous
+Asynchronous an be handled in two ways: by passing callbacks or waiting for the promise to be fulfilled. Waiting acts like synchronous request.
 ##### Wait (Synchronous)
 ```php
-<?php
+$promise = $sparky->transmissions->get();
+
 try {
     $response = $promise->wait();
-    echo $response->getStatusCode();
-    echo $response->getBody();
-} catch (Exception $e) {
-    echo $e->getCode();
-    echo $e->getMessage();
+    echo $response->getStatusCode()."\n";
+    print_r($response->getBody())."\n";
+} catch (\Exception $e) {
+    echo $e->getCode()."\n";
+    echo $e->getMessage()."\n";
 }
-?>
+
+echo "I will print out after the promise is fulfilled";
 ```
 
 ##### Then (Asynchronous)
 ```php
-<?php
+$promise = $sparky->transmissions->get();
+
 $promise->then(
     // Success callback
     function ($response) {
-        echo $response->getStatusCode();
-        echo $response->getBody();
+        echo $response->getStatusCode()."\n";
+        print_r($response->getBody())."\n";
     },
     // Failure callback
     function (Exception $e) {
-        echo $e->getCode();
-        echo $e->getMessage();
+        echo $e->getCode()."\n";
+        echo $e->getMessage()."\n";
     }
 );
-?>
+
+echo "I will print out before the promise is fulfilled";
 ```
 
 ## Handling Exceptions
-The promise will throw an exception if the server returns a status code of `400` or higher.
+An exception will be thrown in two cases: there is a problem with the request or  the server returns a status code of `400` or higher.
 
-### Exception
+### SparkPostException
 * **getCode()**
     * Returns the response status code of `400` or higher
 * **getMessage()**
-    * Returns the body of response as an `Array`
+    * Returns the exception message
+* **getBody()**
+    * If there is a response body it returns it as an `Array`. Otherwise it returns `null`.
+
+
+### Contributing
+See [contributing](https://github.com/SparkPost/php-sparkpost/blob/master/CONTRIBUTING.md).rray`
 
 
 ### Contributing
