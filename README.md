@@ -13,6 +13,7 @@ Before using this library, you must have a valid API Key. To get an API Key, ple
 
 ## Installation
 **Please note: The composer package `sparkpost/php-sparkpost` has been changed to `sparkpost/sparkpost` starting with version 2.0.**
+
 The recommended way to install the SparkPost PHP Library is through composer.
 
 ```
@@ -200,7 +201,7 @@ $promise = $sparky->transmissions->post([
 ```
 
 ### Send An API Call Using The Base Request Function
-We provide a base request function to access any resource.  
+We provide a base request function to access any of our API resources.
 ```php
 <?php
 require 'vendor/autoload.php';
