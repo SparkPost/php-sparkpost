@@ -12,8 +12,8 @@ The official PHP library for using [the SparkPost REST API](https://developers.s
 Before using this library, you must have a valid API Key. To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
 
 ## Installation
-**Please note: The composer package `sparkpost/php-sparkpost` has been changed starting with version 2.0.
-The recommended way to install the SparkPost PHP Library is through composer.**
+**Please note: The composer package `sparkpost/php-sparkpost` has been changed to `sparkpost/sparkpost` starting with version 2.0.**
+The recommended way to install the SparkPost PHP Library is through composer.
 
 ```
 # Install Composer
