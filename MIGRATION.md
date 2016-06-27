@@ -17,7 +17,69 @@ Transmission endpoints are now under `$sparky->transmissions` instead of `$spark
 * The exceptions to the previous statement are `cc` and `bcc`. They are helpers to make it easier to add cc and bcc recipients. [Example](https://github.com/SparkPost/php-sparkpost/tree/2.0.0#send-an-email-using-the-transmissions-endpoint)
 
 ### Switched from Ivory Http Adapter to HTTPlug
-Ivory Http Adapter was deprecated in favor fo HTTPlug.
+Ivory Http Adapter was deprecated in favor of HTTPlug.
 
 ### Asynchronous support
 We addeded in support for [asynchronous calls](https://github.com/SparkPost/php-sparkpost/tree/2.0.0#asynchronous) (assuming your client supports it).
+
+### Example
+#### 2.0
+```php
+try {
+	$sparky->setOptions([ 'async' => false ]);
+    // Build your email and send it!
+    $results = $sparky->transmissions->post([
+    	'content'=>[
+	        'from'=>[
+	            'name' => 'From Envelope',
+	            'email' => 'from@sparkpostbox.com>'
+	        ],
+	        'subject'=>'First Mailing From PHP',
+	        'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
+	        'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
+	    ],
+        'substitution_data'=>['name'=>'YOUR FIRST NAME'],
+        'recipients'=>[
+            [
+                'address'=>[
+                    'name'=>'YOUR FULL NAME',
+                    'email'=>'YOUR EMAIL ADDRESS'
+                ]
+            ]
+        ]
+    ]);
+    echo 'Woohoo! You just sent your first mailing!';
+} catch (\Exception $err) {
+    echo 'Whoops! Something went wrong';
+    var_dump($err);
+}
+```
+
+#### 1.0
+```php
+try {
+    // Build your email and send it!
+    $results = $sparky->transmission->send([
+        'from'=>[
+            'name' => 'From Envelope',
+            'email' => 'from@sparkpostbox.com>'
+        ],
+        'html'=>'<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
+        'text'=>'Congratulations, {{name}}!! You just sent your very first mailing!',
+        'substitutionData'=>['name'=>'YOUR FIRST NAME'],
+        'subject'=>'First Mailing From PHP',
+        'recipients'=>[
+            [
+                'address'=>[
+                    'name'=>'YOUR FULL NAME',
+                    'email'=>'YOUR EMAIL ADDRESS'
+                ]
+            ]
+        ]
+    ]);
+    echo 'Woohoo! You just sent your first mailing!';
+} catch (\Exception $err) {
+    echo 'Whoops! Something went wrong';
+    var_dump($err);
+}
+```
