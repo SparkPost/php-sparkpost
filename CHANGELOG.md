@@ -4,6 +4,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.0.0] - 2016-06-24
+### Changed
+- [#123](https://github.com/SparkPost/php-sparkpost/pull/123) Rewrote docs and updated composer name
+- [#122](https://github.com/SparkPost/php-sparkpost/pull/122) Add transmission class and examples
+- [#121](https://github.com/SparkPost/php-sparkpost/pull/121) Update base resource and tests
+
 ## [1.2.1] - 2016-05-27
 ### Fixed
 - [#111](https://github.com/SparkPost/php-sparkpost/pull/111) allow pass through of timeout setting in http config
@@ -57,6 +63,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - README now has proper code blocks denoting PHP language
 
 [unreleased]: https://github.com/sparkpost/php-sparkpost/compare/1.2.1...HEAD
+[2.0.0]: https://github.com/sparkpost/php-sparkpost/compare/1.2.1...2.0.0
 [1.2.1]: https://github.com/sparkpost/php-sparkpost/compare/1.2.0...1.2.1
 [1.2.0]: https://github.com/sparkpost/php-sparkpost/compare/v1.1.0...1.2.0
 [1.1.0]: https://github.com/sparkpost/php-sparkpost/compare/v1.0.3...v1.1.0
