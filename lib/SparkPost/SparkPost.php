@@ -11,7 +11,7 @@ class SparkPost
     /**
      * Library version, used for setting User-Agent.
      */
-    private $version = '2.0.0';
+    private $version = '2.0.1';
 
     /**
      * HttpClient used to make requests.
@@ -42,7 +42,7 @@ class SparkPost
 
     /**
      * Sets up the SparkPost instance.
-     * 
+     *
      * @param HttpClient $httpClient - An httplug client or adapter
      * @param array      $options    - An array to overide default options or a string to be used as an API key
      */
@@ -60,7 +60,7 @@ class SparkPost
      * @param string $uri
      * @param array  $payload - either used as the request body or url query params
      * @param array  $headers
-     * 
+     *
      * @return SparkPostPromise or SparkPostResponse depending on sync or async request
      */
     public function request($method = 'GET', $uri = '', $payload = [], $headers = [])
@@ -79,7 +79,7 @@ class SparkPost
      * @param string $uri
      * @param array  $payload
      * @param array  $headers
-     * 
+     *
      * @return SparkPostResponse
      *
      * @throws SparkPostException
@@ -101,7 +101,7 @@ class SparkPost
      * @param string $uri
      * @param array  $payload
      * @param array  $headers
-     * 
+     *
      * @return SparkPostPromise
      */
     public function asyncRequest($method = 'GET', $uri = '', $payload = [], $headers = [])
@@ -115,7 +115,7 @@ class SparkPost
         }
     }
 
-    /** 
+    /**
      * Builds request from given params.
      *
      * @param string $method
@@ -191,7 +191,7 @@ class SparkPost
         return $options['protocol'].'://'.$options['host'].($options['port'] ? ':'.$options['port'] : '').'/api/'.$options['version'].'/'.$path.($paramsString ? '?'.$paramsString : '');
     }
 
-    /** 
+    /**
      * Sets $httpClient to be used for request.
      *
      * @param Http\Client\HttpClient $httpClient - the client to be used for request
