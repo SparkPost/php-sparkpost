@@ -90,7 +90,9 @@ class Transmission extends Resource
      */
     private function formatShorthandRecipients($payload)
     {
-        $payload['content']['from'] = $this->toAddressObject($payload['content']['from']);
+        if (isset($payload['content']['from'])) {
+            $payload['content']['from'] = $this->toAddressObject($payload['content']['from']);
+        }
 
         for ($i = 0; $i < count($payload['recipients']); ++$i) {
             $payload['recipients'][$i]['address'] = $this->toAddressObject($payload['recipients'][$i]['address']);
