@@ -21,7 +21,7 @@ The recommended way to install the SparkPost PHP Library is through composer.
 curl -sS https://getcomposer.org/installer | php
 ```
 
-Sparkpost requires php-http client. There are several [providers](https://packagist.org/providers/php-http/client-implementation) available. If you were using guzzle6 your install might look like this.
+Sparkpost requires php-http client (see [Setting up a Request Adapter](#setting-up-a-request-adapter)). There are several [providers](https://packagist.org/providers/php-http/client-implementation) available. If you were using guzzle6 your install might look like this.
 
 ```
 composer require guzzlehttp/guzzle
