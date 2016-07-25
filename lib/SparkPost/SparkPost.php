@@ -61,7 +61,7 @@ class SparkPost
      * @param array  $payload - either used as the request body or url query params
      * @param array  $headers
      *
-     * @return SparkPostPromise or SparkPostResponse depending on sync or async request
+     * @return SparkPostPromise|SparkPostResponse Promise or Response depending on sync or async request
      */
     public function request($method = 'GET', $uri = '', $payload = [], $headers = [])
     {
