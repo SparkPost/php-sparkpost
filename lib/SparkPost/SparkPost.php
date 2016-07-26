@@ -15,6 +15,8 @@ class SparkPost
 
     /**
      * HttpClient used to make requests.
+     * 
+     * @var HttpClient
      */
     public $httpClient;
 
@@ -37,6 +39,8 @@ class SparkPost
 
     /**
      * Instance of Transmission class.
+     * 
+     * @var Transmission
      */
     public $transmissions;
 
