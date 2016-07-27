@@ -86,7 +86,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
 
         $responseBody = ['results' => 'yay'];
 
-        $this->resource->httpClient->shouldReceive('sendRequest')->
+        $this->clientMock->shouldReceive('sendRequest')->
             once()->
             with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($responseMock);
@@ -108,7 +108,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
 
         $responseBody = ['results' => 'yay'];
 
-        $this->resource->httpClient->shouldReceive('sendRequest')->
+        $this->clientMock->shouldReceive('sendRequest')->
             once()->
             with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($responseMock);
@@ -130,7 +130,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
 
         $responseBody = ['results' => 'yay'];
 
-        $this->resource->httpClient->shouldReceive('sendRequest')->
+        $this->clientMock->shouldReceive('sendRequest')->
             once()->
             with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($responseMock);
@@ -152,7 +152,7 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
 
         $responseBody = ['results' => 'yay'];
 
-        $this->resource->httpClient->shouldReceive('sendRequest')->
+        $this->clientMock->shouldReceive('sendRequest')->
             once()->
             with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($responseMock);

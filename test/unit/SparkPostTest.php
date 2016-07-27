@@ -2,6 +2,9 @@
 
 namespace SparkPost\Test;
 
+use Http\Client\HttpAsyncClient;
+use Http\Client\HttpClient;
+use Http\Message\MessageFactory;
 use SparkPost\SparkPost;
 use SparkPost\SparkPostPromise;
 use GuzzleHttp\Promise\FulfilledPromise as GuzzleFulfilledPromise;
@@ -12,6 +15,7 @@ use SparkPost\Test\TestUtils\ClassUtils;
 
 class SparkPostTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var ClassUtils */
     private static $utils;
     private $clientMock;
     /** @var SparkPost */
@@ -58,12 +62,12 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
     {
         $responseMock = Mockery::mock('Psr\Http\Message\ResponseInterface');
         $this->resource->setOptions(['async' => false]);
-        $this->resource->httpClient->shouldReceive('sendRequest')->andReturn($responseMock);
+        $this->clientMock->shouldReceive('sendRequest')->andReturn($responseMock);
         $this->assertInstanceOf('SparkPost\SparkPostResponse', $this->resource->request('POST', 'transmissions', $this->postTransmissionPayload));
 
         $promiseMock = Mockery::mock('Http\Promise\Promise');
         $this->resource->setOptions(['async' => true]);
-        $this->resource->httpClient->shouldReceive('sendAsyncRequest')->andReturn($promiseMock);
+        $this->clientMock->shouldReceive('sendAsyncRequest')->andReturn($promiseMock);
         $this->assertInstanceOf('SparkPost\SparkPostPromise', $this->resource->request('GET', 'transmissions', $this->getTransmissionPayload));
     }
 
@@ -74,7 +78,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
 
         $responseBody = ['results' => 'yay'];
 
-        $this->resource->httpClient->shouldReceive('sendRequest')->
+        $this->clientMock->shouldReceive('sendRequest')->
             once()->
             with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($responseMock);
@@ -95,7 +99,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
 
         $responseBody = ['results' => 'failed'];
 
-        $this->resource->httpClient->shouldReceive('sendRequest')->
+        $this->clientMock->shouldReceive('sendRequest')->
             once()->
             with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andThrow($exceptionMock);
@@ -119,7 +123,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
 
         $responseBody = ['results' => 'yay'];
 
-        $this->resource->httpClient->shouldReceive('sendAsyncRequest')->
+        $this->clientMock->shouldReceive('sendAsyncRequest')->
             once()->
             with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($promiseMock);
@@ -145,7 +149,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
 
         $responseBody = ['results' => 'failed'];
 
-        $this->resource->httpClient->shouldReceive('sendAsyncRequest')->
+        $this->clientMock->shouldReceive('sendAsyncRequest')->
             once()->
             with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($promiseMock);
@@ -205,7 +209,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
     {
         $promiseMock = Mockery::mock('Http\Promise\Promise');
 
-        $this->resource->httpClient->shouldReceive('sendAsyncRequest')->
+        $this->clientMock->shouldReceive('sendAsyncRequest')->
             once()->
             with(Mockery::type('GuzzleHttp\Psr7\Request'))->
             andReturn($promiseMock);
@@ -220,7 +224,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testUnsupportedAsyncRequest()
     {
@@ -252,8 +256,24 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
 
     public function testSetHttpClient()
     {
-        $this->resource->setHttpClient($this->clientMock);
-        $this->assertEquals($this->clientMock, self::$utils->getProperty($this->resource, 'httpClient'));
+        $mock = Mockery::mock(HttpClient::class);
+        $this->resource->setHttpClient($mock);
+        $this->assertEquals($mock, self::$utils->getProperty($this->resource, 'httpClient'));
+    }
+
+    public function testSetHttpAsyncClient()
+    {
+        $mock = Mockery::mock(HttpAsyncClient::class);
+        $this->resource->setHttpClient($mock);
+        $this->assertEquals($mock, self::$utils->getProperty($this->resource, 'httpClient'));
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testSetHttpClientException()
+    {
+        $this->resource->setHttpClient(new \stdClass());
     }
 
     public function testSetOptionsStringKey()
@@ -264,11 +284,19 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testSetBadOptions()
     {
         self::$utils->setProperty($this->resource, 'options', []);
         $this->resource->setOptions(['not' => 'SPARKPOST_API_KEY']);
+    }
+
+    public function testSetMessageFactory()
+    {
+        $messageFactory = Mockery::mock(MessageFactory::class);
+        $this->resource->setMessageFactory($messageFactory);
+
+        $this->assertEquals($messageFactory, self::$utils->getMethod('getMessageFactory')->invoke($this->resource));
     }
 }

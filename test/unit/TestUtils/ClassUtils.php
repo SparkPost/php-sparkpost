@@ -18,9 +18,9 @@ class ClassUtils
      *
      * @param string $name
      *
-     * @return ReflectionMethod
+     * @return \ReflectionMethod
      */
-    public function getMethod($method)
+    public function getMethod($name)
     {
         $method = $this->class->getMethod($name);
         $method->setAccessible(true);
@@ -33,10 +33,10 @@ class ClassUtils
      *
      * This is needed to mock the GuzzleHttp\Client responses
      *
-     * @param string $name
-     * @param {*}
+     * @param object $instance
+     * @param string $property
      *
-     * @return ReflectionMethod
+     * @return mixed
      */
     public function getProperty($instance, $property)
     {
@@ -50,10 +50,10 @@ class ClassUtils
      *
      * This is needed to mock the GuzzleHttp\Client responses
      *
-     * @param string $name
-     * @param {*}
      *
-     * @return ReflectionMethod
+     * @param object $instance
+     * @param string $property
+     * @param mixed $value
      */
     public function setProperty($instance, $property, $value)
     {
