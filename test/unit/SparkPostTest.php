@@ -2,6 +2,9 @@
 
 namespace SparkPost\Test;
 
+use Http\Client\HttpAsyncClient;
+use Http\Client\HttpClient;
+use Http\Message\MessageFactory;
 use SparkPost\SparkPost;
 use SparkPost\SparkPostPromise;
 use GuzzleHttp\Promise\FulfilledPromise as GuzzleFulfilledPromise;
@@ -12,6 +15,7 @@ use SparkPost\Test\TestUtils\ClassUtils;
 
 class SparkPostTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var ClassUtils */
     private static $utils;
     private $clientMock;
     /** @var SparkPost */
@@ -220,7 +224,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testUnsupportedAsyncRequest()
     {
@@ -252,8 +256,24 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
 
     public function testSetHttpClient()
     {
-        $this->resource->setHttpClient($this->clientMock);
-        $this->assertEquals($this->clientMock, self::$utils->getProperty($this->resource, 'httpClient'));
+        $mock = Mockery::mock(HttpClient::class);
+        $this->resource->setHttpClient($mock);
+        $this->assertEquals($mock, self::$utils->getProperty($this->resource, 'httpClient'));
+    }
+
+    public function testSetHttpAsyncClient()
+    {
+        $mock = Mockery::mock(HttpAsyncClient::class);
+        $this->resource->setHttpClient($mock);
+        $this->assertEquals($mock, self::$utils->getProperty($this->resource, 'httpClient'));
+    }
+
+    /**
+     * @expectedException \Exception
+     */
+    public function testSetHttpClientException()
+    {
+        $this->resource->setHttpClient(new \stdClass());
     }
 
     public function testSetOptionsStringKey()
@@ -264,11 +284,19 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testSetBadOptions()
     {
         self::$utils->setProperty($this->resource, 'options', []);
         $this->resource->setOptions(['not' => 'SPARKPOST_API_KEY']);
+    }
+
+    public function testSetMessageFactory()
+    {
+        $messageFactory = Mockery::mock(MessageFactory::class);
+        $this->resource->setMessageFactory($messageFactory);
+
+        $this->assertEquals($messageFactory, self::$utils->getMethod('getMessageFactory')->invoke($this->resource));
     }
 }
