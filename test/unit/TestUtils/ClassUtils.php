@@ -53,7 +53,7 @@ class ClassUtils
      *
      * @param object $instance
      * @param string $property
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function setProperty($instance, $property, $value)
     {
