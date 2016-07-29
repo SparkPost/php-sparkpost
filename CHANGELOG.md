@@ -8,6 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - [#131](https://github.com/SparkPost/php-sparkpost/pull/131) removed any dependency on Guzzle by replacing it with `MessageFactoryDiscovery`
 
+## [2.0.2] - 2016-07-28
+### Fixed
+- [#131](https://github.com/SparkPost/php-sparkpost/pull/131) removed any dependency on Guzzle by replacing it with `MessageFactoryDiscovery`
+
 
 ## [2.0.1] - 2016-06-29
 ### Fixed

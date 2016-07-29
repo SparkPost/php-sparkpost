@@ -13,7 +13,7 @@ class SparkPost
     /**
      * @var string Library version, used for setting User-Agent.
      */
-    private $version = '2.0.2';
+    private $version = '2.0.3';
 
     /**
      * @var HttpClient|HttpAsyncClient used to make requests.
