@@ -3,7 +3,7 @@
          xsi:noNamespaceSchemaLocation='http://schema.phpunit.de/4.5/phpunit.xsd'
          backupGlobals='true'
          backupStaticAttributes='false'
-         bootstrap='test/unit/bootstrap.php'
+         bootstrap='./vendor/autoload.php'
          cacheTokens='false'
          colors='always'
          convertErrorsToExceptions='true'
@@ -24,15 +24,23 @@
          timeoutForLargeTests='60'
          verbose='false'>
 
+    <testsuites>
+        <testsuite name="Unit tests">
+            <directory suffix="Test.php">./test/unit</directory>
+        </testsuite>
+    </testsuites>
 
-  <logging>
-    <log type='coverage-html' target='test/output/report'/>
-    <log type='coverage-clover' target='test/output/clover.xml'/>
-  </logging>
-  <filter>
-        <blacklist>
-              <directory>./vendor</directory>
-              <directory>./test</directory>
-        </blacklist>
+    <logging>
+        <log type='coverage-html' target='test/output/report'/>
+        <log type='coverage-clover' target='test/output/clover.xml'/>
+    </logging>
+    <filter>
+        <whitelist>
+            <directory>./</directory>
+            <exclude>
+                <directory>./test</directory>
+                <directory>./vendor</directory>
+            </exclude>
+        </whitelist>
     </filter>
 </phpunit>
