@@ -34,6 +34,7 @@
         <log type='coverage-html' target='test/output/report'/>
         <log type='coverage-clover' target='test/output/clover.xml'/>
     </logging>
+    
     <filter>
         <whitelist>
             <directory>./</directory>
