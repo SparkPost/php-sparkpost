@@ -7,3 +7,4 @@ examples/example-options.json
 .idea
 /composer.phar
 test.php
+composer.lock
