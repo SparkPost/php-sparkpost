@@ -16,7 +16,7 @@ $httpClient = new GuzzleAdapter(new Client());
 $sparky = new SparkPost($httpClient, $options);
 
 $promise = $sparky->transmissions->post([
-    'content' => [ 'template_id' => 'TEMPLATE_ID'],
+    'content' => ['template_id' => 'TEMPLATE_ID'],
     'substitution_data' => ['name' => 'YOUR_FIRST_NAME'],
     'recipients' => [
         [

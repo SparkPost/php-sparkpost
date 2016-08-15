@@ -26,7 +26,7 @@ $promise = $sparky->transmissions->post([
         'text' => 'Congratulations, {{name}}! You just sent an email to everyone on your recipient list!',
     ],
     'substitution_data' => ['name' => 'YOUR_FIRST_NAME'],
-    'recipients' => ['list_id' => 'RECIPIENT_LIST_ID']
+    'recipients' => ['list_id' => 'RECIPIENT_LIST_ID'],
 ]);
 
 try {
