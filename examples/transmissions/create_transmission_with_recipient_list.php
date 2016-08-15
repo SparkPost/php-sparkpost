@@ -19,21 +19,14 @@ $promise = $sparky->transmissions->post([
     'content' => [
         'from' => [
             'name' => 'SparkPost Team',
-            'email' => 'from@sparkpostbox.com',
+            'email' => 'from@test.spappteam.com',
         ],
-        'subject' => 'First Mailing From PHP',
-        'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing!</p></body></html>',
-        'text' => 'Congratulations, {{name}}! You just sent your very first mailing!',
+        'subject' => 'Mailing With Recipient List From PHP',
+        'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent an email to everyone on your recipient list!</p></body></html>',
+        'text' => 'Congratulations, {{name}}! You just sent an email to everyone on your recipient list!',
     ],
     'substitution_data' => ['name' => 'YOUR_FIRST_NAME'],
-    'recipients' => [
-        [
-            'address' => [
-                'name' => 'YOUR_NAME',
-                'email' => 'YOUR_EMAIL',
-            ],
-        ],
-    ],
+    'recipients' => ['list_id' => 'RECIPIENT_LIST_ID']
 ]);
 
 try {

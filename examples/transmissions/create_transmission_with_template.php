@@ -16,37 +16,13 @@ $httpClient = new GuzzleAdapter(new Client());
 $sparky = new SparkPost($httpClient, $options);
 
 $promise = $sparky->transmissions->post([
-    'content' => [
-        'from' => [
-            'name' => 'SparkPost Team',
-            'email' => 'from@sparkpostbox.com',
-        ],
-        'subject' => 'Mailing With CC and BCC From PHP',
-        'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent your very first mailing with CC and BCC recipients!</p></body></html>',
-        'text' => 'Congratulations, {{name}}! You just sent your very first mailing with CC and BCC recipients!',
-    ],
+    'content' => [ 'template_id' => 'TEMPLATE_ID'],
     'substitution_data' => ['name' => 'YOUR_FIRST_NAME'],
     'recipients' => [
         [
             'address' => [
                 'name' => 'YOUR_NAME',
                 'email' => 'YOUR_EMAIL',
-            ],
-        ],
-    ],
-    'cc' => [
-        [
-            'address' => [
-                'name' => 'ANOTHER_NAME',
-                'email' => 'ANOTHER_EMAIL',
-            ],
-        ],
-    ],
-    'bcc' => [
-        [
-            'address' => [
-                'name' => 'AND_ANOTHER_NAME',
-                'email' => 'AND_ANOTHER_EMAIL',
             ],
         ],
     ],
