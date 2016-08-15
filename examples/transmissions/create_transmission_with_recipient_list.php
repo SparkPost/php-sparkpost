@@ -19,7 +19,7 @@ $promise = $sparky->transmissions->post([
     'content' => [
         'from' => [
             'name' => 'SparkPost Team',
-            'email' => 'from@test.spappteam.com',
+            'email' => 'from@sparkpostbox.com',
         ],
         'subject' => 'Mailing With Recipient List From PHP',
         'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent an email to everyone on your recipient list!</p></body></html>',
