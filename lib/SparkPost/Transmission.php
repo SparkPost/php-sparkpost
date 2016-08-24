@@ -49,7 +49,7 @@ class Transmission extends Resource
     private function formatBlindCarbonCopy($payload)
     {
 
-        //If there's a list of BCC recipients, move then into the correct format
+        //If there's a list of BCC recipients, move them into the correct format
         if (isset($payload['bcc'])) {
             $payload = $this->addListToRecipients($payload, 'bcc');
         }
