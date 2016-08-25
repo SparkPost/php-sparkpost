@@ -16,7 +16,9 @@ class Transmission extends Resource
      */
     public function post($payload = [], $headers = [])
     {
-        $payload = $this->formatPayload($payload);
+        if (isset($payload['recipients']) && !isset($payload['recipients']['list_id'])) {
+            $payload = $this->formatPayload($payload);
+        }
 
         return parent::post($payload, $headers);
     }
@@ -26,7 +28,7 @@ class Transmission extends Resource
      *
      * @param array $payload - the request body
      *
-     * @return array - the modified request body 
+     * @return array - the modified request body
      */
     public function formatPayload($payload)
     {
@@ -42,12 +44,12 @@ class Transmission extends Resource
      *
      * @param array $payload - the request body
      *
-     * @return array - the modified request body 
+     * @return array - the modified request body
      */
     private function formatBlindCarbonCopy($payload)
     {
 
-        //If there's a list of BCC recipients, move then into the correct format
+        //If there's a list of BCC recipients, move them into the correct format
         if (isset($payload['bcc'])) {
             $payload = $this->addListToRecipients($payload, 'bcc');
         }
@@ -60,7 +62,7 @@ class Transmission extends Resource
      *
      * @param array $payload - the request body
      *
-     * @return array - the modified request body 
+     * @return array - the modified request body
      */
     private function formatCarbonCopy($payload)
     {
@@ -86,7 +88,7 @@ class Transmission extends Resource
      *
      * @param array $payload - the request body
      *
-     * @return array - the modified request body 
+     * @return array - the modified request body
      */
     private function formatShorthandRecipients($payload)
     {
@@ -107,7 +109,7 @@ class Transmission extends Resource
      * @param array $payload  - the request body
      * @param array $listName - the name of the array in the payload to be moved to the recipients list
      *
-     * @return array - the modified request body 
+     * @return array - the modified request body
      */
     private function addListToRecipients($payload, $listName)
     {
@@ -132,9 +134,9 @@ class Transmission extends Resource
 
     /**
      * Takes the shorthand form of an email address and converts it to the long form.
-     * 
+     *
      * @param $address - the shorthand form of an email address "Name <Email address>"
-     * 
+     *
      * @return array - the longhand form of an email address [ "name" => "John", "email" => "john@exmmple.com" ]
      */
     private function toAddressObject($address)
@@ -159,7 +161,7 @@ class Transmission extends Resource
 
     /**
      * Takes the longhand form of an email address and converts it to the shorthand form.
-     * 
+     *
      * @param $address - the longhand form of an email address [ "name" => "John", "email" => "john@exmmple.com" ]
      * @param string - the shorthand form of an email address "Name <Email address>"
      */
@@ -179,7 +181,7 @@ class Transmission extends Resource
 
     /**
      * Checks if a string is an email.
-     * 
+     *
      * @param string $email - a string that might be an email address
      * @param bool - true if the given string is an email
      */

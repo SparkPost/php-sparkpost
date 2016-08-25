@@ -145,6 +145,31 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testPostWithRecipientList()
+    {
+        $postTransmissionPayload = $this->postTransmissionPayload;
+        $postTransmissionPayload['recipients'] = ['list_id' => 'SOME_LIST_ID'];
+
+        $responseMock = Mockery::mock('Psr\Http\Message\ResponseInterface');
+        $responseBodyMock = Mockery::mock();
+
+        $responseBody = ['results' => 'yay'];
+
+        $this->clientMock->shouldReceive('sendRequest')->
+            once()->
+            with(Mockery::type('GuzzleHttp\Psr7\Request'))->
+            andReturn($responseMock);
+
+        $responseMock->shouldReceive('getStatusCode')->andReturn(200);
+        $responseMock->shouldReceive('getBody')->andReturn($responseBodyMock);
+        $responseBodyMock->shouldReceive('__toString')->andReturn(json_encode($responseBody));
+
+        $response = $this->resource->transmissions->post();
+
+        $this->assertEquals($responseBody, $response->getBody());
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
     public function testDelete()
     {
         $responseMock = Mockery::mock('Psr\Http\Message\ResponseInterface');
