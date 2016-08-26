@@ -4,11 +4,9 @@ namespace SparkPost\Test;
 
 use SparkPost\SparkPost;
 use Mockery;
-use SparkPost\Test\TestUtils\ClassUtils;
 
 class TransmissionTest extends \PHPUnit_Framework_TestCase
 {
-    private static $utils;
     private $clientMock;
     /** @var SparkPost */
     private $resource;
@@ -59,7 +57,6 @@ class TransmissionTest extends \PHPUnit_Framework_TestCase
         $this->clientMock = Mockery::mock('Http\Adapter\Guzzle6\Client');
 
         $this->resource = new SparkPost($this->clientMock, ['key' => 'SPARKPOST_API_KEY', 'async' => false]);
-        self::$utils = new ClassUtils($this->resource);
     }
 
     public function tearDown()

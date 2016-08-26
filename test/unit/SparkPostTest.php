@@ -5,18 +5,16 @@ namespace SparkPost\Test;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
 use Http\Message\MessageFactory;
+use Nyholm\NSA;
 use SparkPost\SparkPost;
 use SparkPost\SparkPostPromise;
 use GuzzleHttp\Promise\FulfilledPromise as GuzzleFulfilledPromise;
 use GuzzleHttp\Promise\RejectedPromise as GuzzleRejectedPromise;
 use Http\Adapter\Guzzle6\Promise as GuzzleAdapterPromise;
 use Mockery;
-use SparkPost\Test\TestUtils\ClassUtils;
 
 class SparkPostTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var ClassUtils */
-    private static $utils;
     private $clientMock;
     /** @var SparkPost */
     private $resource;
@@ -50,7 +48,6 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
         $this->clientMock = Mockery::mock('Http\Adapter\Guzzle6\Client');
 
         $this->resource = new SparkPost($this->clientMock, ['key' => 'SPARKPOST_API_KEY']);
-        self::$utils = new ClassUtils($this->resource);
     }
 
     public function tearDown()
@@ -239,7 +236,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
             'Custom-Header' => 'testing',
         ]);
 
-        $version = self::$utils->getProperty($this->resource, 'version');
+        $version = NSA::getProperty($this->resource, 'version');
 
         $this->assertEquals('SPARKPOST_API_KEY', $headers['Authorization']);
         $this->assertEquals('application/json', $headers['Content-Type']);
@@ -258,14 +255,14 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
     {
         $mock = Mockery::mock(HttpClient::class);
         $this->resource->setHttpClient($mock);
-        $this->assertEquals($mock, self::$utils->getProperty($this->resource, 'httpClient'));
+        $this->assertEquals($mock, NSA::getProperty($this->resource, 'httpClient'));
     }
 
     public function testSetHttpAsyncClient()
     {
         $mock = Mockery::mock(HttpAsyncClient::class);
         $this->resource->setHttpClient($mock);
-        $this->assertEquals($mock, self::$utils->getProperty($this->resource, 'httpClient'));
+        $this->assertEquals($mock, NSA::getProperty($this->resource, 'httpClient'));
     }
 
     /**
@@ -279,7 +276,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
     public function testSetOptionsStringKey()
     {
         $this->resource->setOptions('SPARKPOST_API_KEY');
-        $options = self::$utils->getProperty($this->resource, 'options');
+        $options = NSA::getProperty($this->resource, 'options');
         $this->assertEquals('SPARKPOST_API_KEY', $options['key']);
     }
 
@@ -288,7 +285,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
      */
     public function testSetBadOptions()
     {
-        self::$utils->setProperty($this->resource, 'options', []);
+        NSA::setProperty($this->resource, 'options', []);
         $this->resource->setOptions(['not' => 'SPARKPOST_API_KEY']);
     }
 
@@ -297,6 +294,6 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
         $messageFactory = Mockery::mock(MessageFactory::class);
         $this->resource->setMessageFactory($messageFactory);
 
-        $this->assertEquals($messageFactory, self::$utils->getMethod('getMessageFactory')->invoke($this->resource));
+        $this->assertEquals($messageFactory, NSA::invokeMethod($this->resource, 'getMessageFactory'));
     }
 }
