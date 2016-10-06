@@ -168,7 +168,6 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 $httpClient = new GuzzleAdapter(new Client());
 $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 
-$sparky = new SparkPost($httpClient, $options);
 $promise = $sparky->transmissions->post([
     'content' => [
         'from' => [
@@ -205,6 +204,7 @@ $promise = $sparky->transmissions->post([
         ],
     ],
 ]);
+?>
 ```
 
 ### Send An API Call Using The Base Request Function
@@ -226,6 +226,7 @@ $promise = $sparky->request('GET', 'metrics/ip-pools', [
     'timezone' => 'America/New_York',
     'limit' => '5',
 ]);
+?>
 ```
 
 
