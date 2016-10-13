@@ -37,7 +37,7 @@
     
     <filter>
         <whitelist>
-            <directory>./</directory>
+            <directory>./lib</directory>
             <exclude>
                 <directory>./test</directory>
                 <directory>./vendor</directory>
