@@ -2,7 +2,7 @@
 
 namespace SparkPost;
 
-class Transmission extends Resource
+class Transmission extends ResourceBase
 {
     public function __construct(SparkPost $sparkpost)
     {
