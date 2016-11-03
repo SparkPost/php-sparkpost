@@ -51,7 +51,7 @@ requiring a request library.  This means that your application will need to pass
 a request adapter to the constructor of the SparkPost Library.  We use the [HTTPlug](https://github.com/php-http/httplug) in SparkPost. Please visit their repo for a list of supported [clients and adapters](http://docs.php-http.org/en/latest/clients.html).  If you don't currently use a request library, you will
 need to require one and create a client from it and pass it along. The example below uses the GuzzleHttp Client Library.
 
-An Client can be setup like so:
+A Client can be setup like so:
 
 ```php
 <?php
