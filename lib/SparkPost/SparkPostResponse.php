@@ -22,7 +22,7 @@ class SparkPostResponse implements ResponseInterface
      *
      * @param ResponseInterface $response
      */
-    public function __construct(ResponseInterface $response, $request)
+    public function __construct(ResponseInterface $response, $request = null)
     {
         $this->response = $response;
         $this->request = $request;

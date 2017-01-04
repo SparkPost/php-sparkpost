@@ -21,7 +21,7 @@ class SparkPostException extends \Exception
      *
      * @param Exception $exception - the exception to be wrapped
      */
-    public function __construct(\Exception $exception, $request)
+    public function __construct(\Exception $exception, $request = null)
     {
         $this->request = $request;
 

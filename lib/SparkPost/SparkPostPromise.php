@@ -21,7 +21,7 @@ class SparkPostPromise implements HttpPromise
      *
      * @param HttpPromise $promise
      */
-    public function __construct(HttpPromise $promise, $request)
+    public function __construct(HttpPromise $promise, $request = null)
     {
         $this->promise = $promise;
         $this->request = $request;
