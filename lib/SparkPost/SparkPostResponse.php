@@ -4,6 +4,7 @@ namespace SparkPost;
 
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\StreamInterface as StreamInterface;
+use Psr\Http\Message\RequestInterface as RequestInterface;
 
 class SparkPostResponse implements ResponseInterface
 {
@@ -13,13 +14,28 @@ class SparkPostResponse implements ResponseInterface
     private $response;
 
     /**
+     * Array with the request values sent
+     */
+    private $request;
+
+    /**
      * set the response to be wrapped.
      *
      * @param ResponseInterface $response
      */
-    public function __construct(ResponseInterface $response)
+    public function __construct(ResponseInterface $response, $request)
     {
         $this->response = $response;
+        $this->request = $request;
+    }
+
+    /**
+     * Returns the request values sent
+     *
+     * @return Array $request
+     */
+    public function getRequest() {
+        return $this->request;
     }
 
     /**
