@@ -3,6 +3,7 @@
 namespace SparkPost;
 
 use Http\Promise\Promise as HttpPromise;
+use Psr\Http\Message\RequestInterface as RequestInterface;
 
 class SparkPostPromise implements HttpPromise
 {
@@ -12,13 +13,19 @@ class SparkPostPromise implements HttpPromise
     private $promise;
 
     /**
+     * Array with the request values sent
+     */
+    private $request;
+
+    /**
      * set the promise to be wrapped.
      *
      * @param HttpPromise $promise
      */
-    public function __construct(HttpPromise $promise)
+    public function __construct(HttpPromise $promise, $request)
     {
         $this->promise = $promise;
+        $this->request = $request;
     }
 
     /**
@@ -29,13 +36,15 @@ class SparkPostPromise implements HttpPromise
      */
     public function then(callable $onFulfilled = null, callable $onRejected = null)
     {
-        return $this->promise->then(function ($response) use ($onFulfilled) {
+        $request = $this->request;
+
+        return $this->promise->then(function ($response) use ($onFulfilled, $request) {
             if (isset($onFulfilled)) {
-                $onFulfilled(new SparkPostResponse($response));
+                $onFulfilled(new SparkPostResponse($response, $request));
             }
-        }, function ($exception) use ($onRejected) {
+        }, function ($exception) use ($onRejected, $request) {
             if (isset($onRejected)) {
-                $onRejected(new SparkPostException($exception));
+                $onRejected(new SparkPostException($exception, $request));
             }
         });
     }
@@ -64,9 +73,9 @@ class SparkPostPromise implements HttpPromise
         try {
             $response = $this->promise->wait($unwrap);
 
-            return $response ? new SparkPostResponse($response) : $response;
+            return $response ? new SparkPostResponse($response, $this->request) : $response;
         } catch (\Exception $exception) {
-            throw new SparkPostException($exception);
+            throw new SparkPostException($exception, $this->request);
         }
     }
 }
