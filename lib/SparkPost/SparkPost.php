@@ -95,7 +95,7 @@ class SparkPost
     public function syncRequest($method = 'GET', $uri = '', $payload = [], $headers = [])
     {
         $requestValues = $this->buildRequestValues($method, $uri, $payload, $headers);
-        $request = $this->buildRequest($requestValues);
+        $request = call_user_func_array(array($this, 'buildRequestInstance'), $requestValues);
 
         try {
             return new SparkPostResponse($this->httpClient->sendRequest($request), $this->ifDebug($requestValues));
@@ -118,7 +118,7 @@ class SparkPost
     {
         if ($this->httpClient instanceof HttpAsyncClient) {
             $requestValues = $this->buildRequestValues($method, $uri, $payload, $headers);
-            $request = call_user_func_array(array($this, 'buildRequest'), $requestValues);
+            $request = call_user_func_array(array($this, 'buildRequestInstance'), $requestValues);
 
             return new SparkPostPromise($this->httpClient->sendAsyncRequest($request), $this->ifDebug($requestValues));
         } else {
@@ -172,9 +172,22 @@ class SparkPost
      *
      * @return RequestInterface
      */
-    public function buildRequest($method, $uri, $headers, $body)
+    public function buildRequestInstance($method, $uri, $headers, $body)
     {
         return $this->getMessageFactory()->createRequest($method, $uri, $headers, $body);
+    }
+
+    /**
+     * Build RequestInterface from given params.
+     *
+     * @param array $requestValues
+     *
+     * @return RequestInterface
+     */
+    public function buildRequest($method, $uri, $payload, $headers)
+    {
+        $requestValues = $this->buildRequestValues($method, $uri, $payload, $headers);
+        return call_user_func_array(array($this, 'buildRequestInstance'), $requestValues);
     }
 
     /**
