@@ -3,8 +3,7 @@
 namespace SparkPost;
 
 /**
- * Class ResourceBase
- * @package SparkPost
+ * Class ResourceBase.
  */
 class ResourceBase
 {

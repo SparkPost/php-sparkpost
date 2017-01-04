@@ -17,8 +17,8 @@ $sparky = new SparkPost($httpClient, $options);
 
 $promise = $sparky->request('POST', 'templates/TEMPLATE_ID/preview?draft=true', [
     'substitution_data' => [
-        'some_key' => 'some_value'
-    ]
+        'some_key' => 'some_value',
+    ],
 ]);
 
 try {

@@ -3,7 +3,6 @@
 namespace SparkPost;
 
 use Http\Promise\Promise as HttpPromise;
-use Psr\Http\Message\RequestInterface as RequestInterface;
 
 class SparkPostPromise implements HttpPromise
 {
@@ -13,7 +12,7 @@ class SparkPostPromise implements HttpPromise
     private $promise;
 
     /**
-     * Array with the request values sent
+     * Array with the request values sent.
      */
     private $request;
 

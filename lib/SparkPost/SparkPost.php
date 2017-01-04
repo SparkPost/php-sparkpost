@@ -11,12 +11,12 @@ use Psr\Http\Message\RequestInterface;
 class SparkPost
 {
     /**
-     * @var string Library version, used for setting User-Agent.
+     * @var string Library version, used for setting User-Agent
      */
     private $version = '2.0.3';
 
     /**
-     * @var HttpClient|HttpAsyncClient used to make requests.
+     * @var HttpClient|HttpAsyncClient used to make requests
      */
     private $httpClient;
 
@@ -26,7 +26,7 @@ class SparkPost
     private $messageFactory;
 
     /**
-     * @var array Options for requests.
+     * @var array Options for requests
      */
     private $options;
 
@@ -40,11 +40,11 @@ class SparkPost
         'key' => '',
         'version' => 'v1',
         'async' => true,
-        'debug' => false
+        'debug' => false,
     ];
 
     /**
-     * @var Transmission Instance of Transmission class.
+     * @var Transmission Instance of Transmission class
      */
     public $transmissions;
 
@@ -161,14 +161,15 @@ class SparkPost
             'method' => $method,
             'url' => $url,
             'headers' => $headers,
-            'body' => $body
+            'body' => $body,
         ];
     }
 
     /**
-     * Build RequestInterface from given params
+     * Build RequestInterface from given params.
      *
      * @param array $requestValues
+     *
      * @return RequestInterface
      */
     public function buildRequest($method, $uri, $headers, $body)
@@ -266,9 +267,10 @@ class SparkPost
     }
 
     /**
-     * Returns the given value if debugging, an empty instance otherwise
+     * Returns the given value if debugging, an empty instance otherwise.
      *
      * @param any $param
+     *
      * @return any $param
      */
     private function ifDebug($param)

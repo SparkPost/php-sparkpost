@@ -16,7 +16,7 @@ $httpClient = new GuzzleAdapter(new Client());
 $sparky = new SparkPost($httpClient, $options);
 
 $promise = $sparky->request('GET', 'message-events', [
-    'campaign_ids' => 'CAMPAIGN_ID'
+    'campaign_ids' => 'CAMPAIGN_ID',
 ]);
 
 try {

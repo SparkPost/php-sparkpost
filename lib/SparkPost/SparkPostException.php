@@ -12,7 +12,7 @@ class SparkPostException extends \Exception
     private $body = null;
 
     /**
-     * Array with the request values sent
+     * Array with the request values sent.
      */
     private $request;
 
@@ -37,11 +37,12 @@ class SparkPostException extends \Exception
     }
 
     /**
-     * Returns the request values sent
+     * Returns the request values sent.
      *
-     * @return Array $request
+     * @return array $request
      */
-    public function getRequest() {
+    public function getRequest()
+    {
         return $this->request;
     }
 

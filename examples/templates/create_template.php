@@ -16,12 +16,12 @@ $httpClient = new GuzzleAdapter(new Client());
 $sparky = new SparkPost($httpClient, $options);
 
 $promise = $sparky->request('POST', 'templates', [
-  "name" => "PHP example template",
-  "content" => [
-    "from" => "from@YOUR_DOMAIN",
-    "subject" => "Your Subject",
-    "html" => "<b>Write your message here.</b>"
-  ]
+  'name' => 'PHP example template',
+  'content' => [
+    'from' => 'from@YOUR_DOMAIN',
+    'subject' => 'Your Subject',
+    'html' => '<b>Write your message here.</b>',
+  ],
 ]);
 
 try {

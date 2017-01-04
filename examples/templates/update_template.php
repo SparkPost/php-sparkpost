@@ -17,8 +17,8 @@ $sparky = new SparkPost($httpClient, $options);
 
 $promise = $sparky->request('PUT', 'templates/TEMPLATE_ID', [
     'options' => [
-        'open_tracking' => true
-    ]
+        'open_tracking' => true,
+    ],
 ]);
 
 try {
