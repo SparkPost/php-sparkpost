@@ -12,12 +12,19 @@ class SparkPostException extends \Exception
     private $body = null;
 
     /**
+     * Array with the request values sent.
+     */
+    private $request;
+
+    /**
      * Sets up the custom exception and copies over original exception values.
      *
      * @param Exception $exception - the exception to be wrapped
      */
-    public function __construct(\Exception $exception)
+    public function __construct(\Exception $exception, $request = null)
     {
+        $this->request = $request;
+
         $message = $exception->getMessage();
         $code = $exception->getCode();
         if ($exception instanceof HttpException) {
@@ -27,6 +34,16 @@ class SparkPostException extends \Exception
         }
 
         parent::__construct($message, $code, $exception->getPrevious());
+    }
+
+    /**
+     * Returns the request values sent.
+     *
+     * @return array $request
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**

@@ -13,13 +13,29 @@ class SparkPostResponse implements ResponseInterface
     private $response;
 
     /**
+     * Array with the request values sent.
+     */
+    private $request;
+
+    /**
      * set the response to be wrapped.
      *
      * @param ResponseInterface $response
      */
-    public function __construct(ResponseInterface $response)
+    public function __construct(ResponseInterface $response, $request = null)
     {
         $this->response = $response;
+        $this->request = $request;
+    }
+
+    /**
+     * Returns the request values sent.
+     *
+     * @return array $request
+     */
+    public function getRequest()
+    {
+        return $this->request;
     }
 
     /**

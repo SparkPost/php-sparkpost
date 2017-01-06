@@ -99,6 +99,14 @@ class SparkPostResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->responseMock->withoutHeader($param), $sparkpostResponse->withoutHeader($param));
     }
 
+    public function testGetRequest()
+    {
+        $request = ['some' => 'request'];
+        $this->responseMock->shouldReceive('getRequest')->andReturn($request);
+        $sparkpostResponse = new SparkPostResponse($this->responseMock, $request);
+        $this->assertEquals($sparkpostResponse->getRequest(), $request);
+    }
+
     public function testWithBody()
     {
         $param = Mockery::mock('Psr\Http\Message\StreamInterface');

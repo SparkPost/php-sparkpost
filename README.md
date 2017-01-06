@@ -100,7 +100,11 @@ $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
     * Type: `Boolean`
     * Default: `true`
     * `async` defines if the `request` function sends an asynchronous or synchronous request. If your client does not support async requests set this to `false`
-
+* `options.debug`
+    * Required: No
+    * Type: `Boolean`
+    * Default: `false`
+    * If `debug` is true, then then all `SparkPostResponse` and `SparkPostException` instances will return any array of the request values through the function `getRequest`
 
 ## Methods
 ### request(method, uri [, payload [, headers]])
@@ -299,6 +303,8 @@ An exception will be thrown in two cases: there is a problem with the request or
     * Returns the exception message
 * **getBody()**
     * If there is a response body it returns it as an `Array`. Otherwise it returns `null`.
+* **getRequest()**
+    * Returns an array with the request values `method`, `url`, `headers`, `body` when `debug` is `true`
 
 
 ### Contributing
