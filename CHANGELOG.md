@@ -4,6 +4,25 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.1.0] - 2017-01-09
+### Added
+- [#161](https://github.com/SparkPost/php-sparkpost/pull/161) added example for sending email with attachment and simplified the examples setup
+- [#159](https://github.com/SparkPost/php-sparkpost/pull/159) added `debug` option for seeing the full request sent to SparkPost
+- [#151](https://github.com/SparkPost/php-sparkpost/pull/151) added packagist badges
+- [#139](https://github.com/SparkPost/php-sparkpost/pull/139) added examples for message events and templates
+
+### Changed
+- [#150](https://github.com/SparkPost/php-sparkpost/issues/150) renamed the `Resource` class to `ResourceBase` since resource soft reserved in php 7
+- [#137](https://github.com/SparkPost/php-sparkpost/pull/137) cleaned up tests and post install scripts
+- [#138](https://github.com/SparkPost/php-sparkpost/pull/138) added PHP 7.1 as a test environment
+
+### Fixed
+- [#156](https://github.com/SparkPost/php-sparkpost/pull/156) fixed typo in README.md
+- [#152](https://github.com/SparkPost/php-sparkpost/issues/152) fixed propagation of coverage tests to coveralls.io
+- [#147](https://github.com/SparkPost/php-sparkpost/pull/147) fixed examples in README.md
+- [#139](https://github.com/SparkPost/php-sparkpost/pull/139) fixed the ability to send using recipient lists
+- Issue[#141](https://github.com/SparkPost/php-sparkpost/issues/141) removed form feeds from the JSON body sent to the API
+
 ## [2.0.3] - 2016-07-28
 ### Fixed
 - Issue [#135](https://github.com/SparkPost/php-sparkpost/issues/135) reported `Http\Discovery\NotFoundException` caused by 2.0.2 update.
@@ -78,7 +97,8 @@ This major release included a complete refactor of the library to be a thin HTTP
 ### Fixed
 - README now has proper code blocks denoting PHP language
 
-[unreleased]: https://github.com/sparkpost/php-sparkpost/compare/2.0.3...HEAD
+[unreleased]: https://github.com/sparkpost/php-sparkpost/compare/2.1.0...HEAD
+[2.1.0]: https://github.com/sparkpost/php-sparkpost/compare/2.0.3...2.1.0
 [2.0.3]: https://github.com/sparkpost/php-sparkpost/compare/2.0.2...2.0.3
 [2.0.2]: https://github.com/sparkpost/php-sparkpost/compare/2.0.1...2.0.2
 [2.0.1]: https://github.com/sparkpost/php-sparkpost/compare/2.0.0...2.0.1
