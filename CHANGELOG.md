@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [2.1.0] - 2017-01-09
 ### Added
-- [#161](https://github.com/SparkPost/php-sparkpost/pull/161) added example for sending email with attachment
+- [#161](https://github.com/SparkPost/php-sparkpost/pull/161) added example for sending email with attachment and simplified the examples setup
 - [#159](https://github.com/SparkPost/php-sparkpost/pull/159) added `debug` option for seeing the full request sent to SparkPost
 - [#151](https://github.com/SparkPost/php-sparkpost/pull/151) added packagist badges
 - [#139](https://github.com/SparkPost/php-sparkpost/pull/139) added examples for message events and templates
