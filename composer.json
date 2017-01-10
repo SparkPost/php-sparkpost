@@ -9,8 +9,6 @@
   ],
   "minimum-stability": "stable",
   "scripts": {
-    "post-install-cmd": "./post-install.sh",
-    "post-update-cmd": "./post-install.sh",
     "test": "./vendor/bin/phpunit",
     "fix-style": "php-cs-fixer fix ."
   },

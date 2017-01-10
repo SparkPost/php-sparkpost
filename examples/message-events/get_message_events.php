@@ -10,10 +10,7 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 $httpClient = new GuzzleAdapter(new Client());
 
-/*
- * configure options in example-options.json
- */
-$sparky = new SparkPost($httpClient, $options);
+$sparky = new SparkPost($httpClient, ["key" => "YOUR_API_KEY",]);
 
 $promise = $sparky->request('GET', 'message-events', [
     'campaign_ids' => 'CAMPAIGN_ID',
