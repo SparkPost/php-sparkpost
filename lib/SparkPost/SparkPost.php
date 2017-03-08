@@ -242,6 +242,8 @@ class SparkPost
      * Sets $httpClient to be used for request.
      *
      * @param HttpClient|HttpAsyncClient $httpClient - the client to be used for request
+     *
+     * @return SparkPost
      */
     public function setHttpClient($httpClient)
     {
@@ -250,12 +252,16 @@ class SparkPost
         }
 
         $this->httpClient = $httpClient;
+        
+        return $this;
     }
 
     /**
      * Sets the options from the param and defaults for the SparkPost object.
      *
      * @param array $options - either an string API key or an array of options
+     *
+     * @return SparkPost
      */
     public function setOptions($options)
     {
@@ -277,6 +283,8 @@ class SparkPost
                 $this->options[$option] = $value;
             }
         }
+        
+        return $this;
     }
 
     /**
