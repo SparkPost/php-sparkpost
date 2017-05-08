@@ -44,7 +44,7 @@ require 'vendor/autoload.php';
 use SparkPost\SparkPost;
 ```
 
-**Note:** To use the SparkPost API without composer see the example in [issue #164](https://github.com/SparkPost/php-sparkpost/issues/164#issuecomment-289888237).
+**Note:** Without composer the costs outweight the benefits of using the PHP client library. A simple function like the one in [issue #164](https://github.com/SparkPost/php-sparkpost/issues/164#issuecomment-289888237) wraps the SparkPost API and makes it easy to use the API without resolving the composer dependencies. 
 
 ## Setting up a Request Adapter
 
