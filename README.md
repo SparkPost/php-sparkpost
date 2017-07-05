@@ -102,6 +102,11 @@ $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
     * Type: `Boolean`
     * Default: `true`
     * `async` defines if the `request` function sends an asynchronous or synchronous request. If your client does not support async requests set this to `false`
+* `options.retries`
+    * Required: No
+    * Type: `Number`
+    * Default: `0`
+    * `retries` controls how many API call attempts the client makes after receiving a 5xx response
 * `options.debug`
     * Required: No
     * Type: `Boolean`
