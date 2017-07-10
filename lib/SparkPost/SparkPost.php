@@ -41,6 +41,7 @@ class SparkPost
         'version' => 'v1',
         'async' => true,
         'debug' => false,
+        'retries' => 0
     ];
 
     /**
@@ -97,11 +98,27 @@ class SparkPost
         $requestValues = $this->buildRequestValues($method, $uri, $payload, $headers);
         $request = call_user_func_array(array($this, 'buildRequestInstance'), $requestValues);
 
+        $retries = $this->options['retries'];
         try {
-            return new SparkPostResponse($this->httpClient->sendRequest($request), $this->ifDebug($requestValues));
+            if ($retries > 0) {
+              $resp = $this->syncReqWithRetry($request, $retries);
+            } else {
+              $resp = $this->httpClient->sendRequest($request);
+            }
+            return new SparkPostResponse($resp, $this->ifDebug($requestValues));
         } catch (\Exception $exception) {
             throw new SparkPostException($exception, $this->ifDebug($requestValues));
         }
+    }
+
+    private function syncReqWithRetry($request, $retries)
+    {
+        $resp = $this->httpClient->sendRequest($request);
+        $status = $resp->getStatusCode();
+        if ($status >= 500 && $status <= 599 && $retries > 0) {
+          return $this->syncReqWithRetry($request, $retries-1);
+        }
+        return $resp;
     }
 
     /**
@@ -120,10 +137,26 @@ class SparkPost
             $requestValues = $this->buildRequestValues($method, $uri, $payload, $headers);
             $request = call_user_func_array(array($this, 'buildRequestInstance'), $requestValues);
 
-            return new SparkPostPromise($this->httpClient->sendAsyncRequest($request), $this->ifDebug($requestValues));
+            $retries = $this->options['retries'];
+            if ($retries > 0) {
+                return new SparkPostPromise($this->asyncReqWithRetry($request, $retries), $this->ifDebug($requestValues));
+            } else {
+                return new SparkPostPromise($this->httpClient->sendAsyncRequest($request), $this->ifDebug($requestValues));
+            }
         } else {
             throw new \Exception('Your http client does not support asynchronous requests. Please use a different client or use synchronous requests.');
         }
+    }
+
+    private function asyncReqWithRetry($request, $retries)
+    {
+        return $this->httpClient->sendAsyncRequest($request)->then(function($response) use ($request, $retries) {
+            $status = $response->getStatusCode();
+            if ($status >= 500 && $status <= 599 && $retries > 0) {
+                return $this->asyncReqWithRetry($request, $retries-1);
+            }
+            return $response;
+        });
     }
 
     /**
@@ -252,7 +285,7 @@ class SparkPost
         }
 
         $this->httpClient = $httpClient;
-        
+
         return $this;
     }
 
@@ -283,7 +316,7 @@ class SparkPost
                 $this->options[$option] = $value;
             }
         }
-        
+
         return $this;
     }
 
