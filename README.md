@@ -111,7 +111,7 @@ $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
     * Required: No
     * Type: `Boolean`
     * Default: `false`
-    * If `debug` is true, then then all `SparkPostResponse` and `SparkPostException` instances will return any array of the request values through the function `getRequest`
+    * If `debug` is true, then all `SparkPostResponse` and `SparkPostException` instances will return any array of the request values through the function `getRequest`
 
 ## Methods
 ### request(method, uri [, payload [, headers]])
