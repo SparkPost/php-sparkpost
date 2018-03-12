@@ -298,6 +298,9 @@ $promise->then(
 );
 
 echo "I will print out before the promise is fulfilled";
+
+// You can combine multiple promises using \GuzzleHttp\Promise\all() and other functions from the library.
+$promise->wait();
 ```
 
 ## Handling Exceptions
