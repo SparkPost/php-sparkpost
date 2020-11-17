@@ -76,7 +76,7 @@ class ResourceBase
      *
      * @return SparkPostPromise or SparkPostResponse depending on sync or async request
      */
-    public function request($method = 'GET', $uri = '', $payload = [], $headers = [])
+    public function request($method = 'GET', $uri = '', $payload = [], $headers = [], $another_uri = false)
     {
         if (is_array($uri)) {
             $headers = $payload;
@@ -84,8 +84,9 @@ class ResourceBase
             $uri = '';
         }
 
-        $uri = $this->endpoint.'/'.$uri;
+        $uri = ($another_uri === false)?$this->endpoint.'/'.$uri:$another_uri;
 
         return $this->sparkpost->request($method, $uri, $payload, $headers);
     }
+
 }

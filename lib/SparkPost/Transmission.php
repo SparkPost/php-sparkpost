@@ -24,6 +24,32 @@ class Transmission extends ResourceBase
     }
 
     /**
+     * Get message events by date and by date/id
+     * @param $date - date at format 2020-11-11T08:00
+     * @param int $message_id - message id by information
+     * @param string $email_to - filter at events by emailt_to
+     * @return SparkPostPromise
+     */
+    public function getEvents($date, $message_id = 0, $email_to = '') {
+
+        $add_to_search = '';
+        if ($message_id > 0) {
+
+            $add_to_search.=  '&transmissions='.$message_id;
+
+        }
+
+        if (!empty($email_to)) {
+
+            $add_to_search.=  '&recipients='.$email_to;
+
+        }
+
+        return $this->request('GET', '', [], [], 'events/message?from='.$date.$add_to_search);
+
+    }
+
+    /**
      * Runs the given payload through the formatting functions.
      *
      * @param array $payload - the request body
