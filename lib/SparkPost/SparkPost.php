@@ -50,6 +50,16 @@ class SparkPost
     public $transmissions;
 
     /**
+     * @var RecepientValidation Instance of RecepinetValidation class
+     */
+    public $recepientValidation;
+
+    /**
+     * @var RecepientList Instance of RecepinetList class
+     */
+    public $recepientList;
+
+    /**
      * Sets up the SparkPost instance.
      *
      * @param HttpClient $httpClient - An httplug client or adapter
@@ -338,6 +348,8 @@ class SparkPost
     private function setupEndpoints()
     {
         $this->transmissions = new Transmission($this);
+        $this->recepientValidation = new RecepientValidation($this);
+        $this->recepientList = new RecepientList($this);
     }
 
     /**
