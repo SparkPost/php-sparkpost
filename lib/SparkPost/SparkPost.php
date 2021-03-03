@@ -184,12 +184,8 @@ class SparkPost
         $url = $this->getUrl($uri, $params);
         $headers = $this->getHttpHeaders($headers);
 
-        // Sparkpost API will not tolerate form feed in JSON.
-        $jsonReplace = [
-            '\f' => '',
-        ];
-        $body = strtr(json_encode($body), $jsonReplace);
-
+        // old form-feed workaround now removed
+        $body = json_encode($body);
         return [
             'method' => $method,
             'url' => $url,
