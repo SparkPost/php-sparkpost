@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
+## [2.2.1] - 2021-03-08
+
+- [#198](https://github.com/SparkPost/php-sparkpost/pull/198)
+- [#191](https://github.com/SparkPost/php-sparkpost/pull/191)
+
 ## [2.2.0] - 2019-06-04
 - [#187](https://github.com/SparkPost/php-sparkpost/pull/169) Updated composer.json
 - [#169](https://github.com/SparkPost/php-sparkpost/pull/169) Optional automatic retry on 5xx
@@ -103,7 +108,8 @@ This major release included a complete refactor of the library to be a thin HTTP
 ### Fixed
 - README now has proper code blocks denoting PHP language
 
-[unreleased]: https://github.com/sparkpost/php-sparkpost/compare/2.2.0...HEAD
+[unreleased]: https://github.com/sparkpost/php-sparkpost/compare/2.2.1...HEAD
+[2.2.1]: https://github.com/sparkpost/php-sparkpost/compare/2.2.0...2.2.1
 [2.2.0]: https://github.com/sparkpost/php-sparkpost/compare/2.1.0...2.2.0
 [2.1.0]: https://github.com/sparkpost/php-sparkpost/compare/2.0.3...2.1.0
 [2.0.3]: https://github.com/sparkpost/php-sparkpost/compare/2.0.2...2.0.3

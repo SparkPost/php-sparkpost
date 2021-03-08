@@ -56,6 +56,17 @@ Http\Discovery\Exception\PuliUnavailableException: Puli Factory is not available
 
 [This is usual](http://docs.php-http.org/en/latest/discovery.html#puli-factory-is-not-available). Puli is not required to use the library. You can resume running after the exception.
 
+You can prevent the exception, by setting the discovery strategies, prior to creating the adapter object:
+```php
+// Prevent annoying "Puli exception" during work with xdebug / IDE
+// See https://github.com/getsentry/sentry-php/issues/801
+\Http\Discovery\ClassDiscovery::setStrategies([
+        // \Http\Discovery\Strategy\PuliBetaStrategy::class, // Deliberately disabled
+        \Http\Discovery\Strategy\CommonClassesStrategy::class,
+        \Http\Discovery\Strategy\CommonPsr17ClassesStrategy::class,
+]);
+```
+
 ## Setting up a Request Adapter
 
 Because of dependency collision, we have opted to use a request adapter rather than
