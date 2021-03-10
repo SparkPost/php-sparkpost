@@ -13,7 +13,7 @@ use GuzzleHttp\Promise\RejectedPromise as GuzzleRejectedPromise;
 use Http\Adapter\Guzzle6\Promise as GuzzleAdapterPromise;
 use Mockery;
 
-class SparkPostTest extends \PHPUnit_Framework_TestCase
+class SparkPostTest extends \PHPUnit\Framework\TestCase
 {
     private $clientMock;
     /** @var SparkPost */
@@ -50,7 +50,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
      *
      * @see PHPUnit_Framework_TestCase::setUp()
      */
-    public function setUp()
+    public function setUp() : void
     {
         // response mock up
         $responseBodyMock = Mockery::mock();
@@ -87,7 +87,7 @@ class SparkPostTest extends \PHPUnit_Framework_TestCase
         $this->resource = new SparkPost($this->clientMock, ['key' => 'SPARKPOST_API_KEY']);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         Mockery::close();
     }

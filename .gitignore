@@ -7,3 +7,5 @@ test/output/
 /composer.phar
 test.php
 .php_cs.cache
+phpunit.xml.dist.bak
+.phpunit.result.cache
