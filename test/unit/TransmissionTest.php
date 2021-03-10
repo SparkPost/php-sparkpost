@@ -64,11 +64,11 @@ class TransmissionTest extends \PHPUnit\Framework\TestCase
         Mockery::close();
     }
 
-    /**
-     * @expectedException Exception
-     */
     public function testInvalidEmailFormat()
     {
+        // Needed instead of comment annotation since PHPUnit 7.5: https://github.com/sebastianbergmann/phpunit/issues/3332
+        $this->expectException(\Exception::class);
+
         $this->postTransmissionPayload['recipients'][] = [
             'address' => 'invalid email format',
         ];

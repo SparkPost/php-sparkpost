@@ -299,11 +299,11 @@ class SparkPostTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->promiseMock->getState(), $promise->getState());
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testUnsupportedAsyncRequest()
     {
+        // Needed instead of comment annotation since PHPUnit 7.5: https://github.com/sebastianbergmann/phpunit/issues/3332
+        $this->expectException(\Exception::class);
+
         $this->resource->setHttpClient(Mockery::mock('Http\Client\HttpClient'));
 
         $this->resource->asyncRequest('POST', 'transmissions', $this->postTransmissionPayload);
@@ -344,11 +344,10 @@ class SparkPostTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($mock, NSA::getProperty($this->resource, 'httpClient'));
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testSetHttpClientException()
     {
+        // Needed instead of comment annotation since PHPUnit 7.5: https://github.com/sebastianbergmann/phpunit/issues/3332
+        $this->expectException(\Exception::class);
         $this->resource->setHttpClient(new \stdClass());
     }
 
@@ -359,11 +358,11 @@ class SparkPostTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('SPARKPOST_API_KEY', $options['key']);
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testSetBadOptions()
     {
+        // Needed instead of comment annotation since PHPUnit 7.5: https://github.com/sebastianbergmann/phpunit/issues/3332
+        $this->expectException(\Exception::class);
+
         NSA::setProperty($this->resource, 'options', []);
         $this->resource->setOptions(['not' => 'SPARKPOST_API_KEY']);
     }

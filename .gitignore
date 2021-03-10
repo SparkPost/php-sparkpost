@@ -9,3 +9,5 @@ test.php
 .php_cs.cache
 phpunit.xml.dist.bak
 .phpunit.result.cache
+.vscode/launch.json
+.DS_Store
