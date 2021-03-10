@@ -11,6 +11,7 @@ install:
   - composer install --no-interaction
 script:
   - mkdir -p test/output/report
+  - export XDEBUG_MODE=coverage
   - composer test
 after_script:
   - php vendor/bin/coveralls
