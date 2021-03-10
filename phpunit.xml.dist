@@ -11,7 +11,7 @@
          convertWarningsToExceptions='true'
          forceCoversAnnotation='false'
          mapTestClassNameToCoveredClassName='false'
-         printerClass='PHPUnit_TextUI_ResultPrinter'
+         printerClass='PHPUnit\\TextUI\\ResultPrinter'
          processIsolation='false'
          stopOnError='false'
          stopOnFailure='false'
@@ -34,7 +34,7 @@
         <log type='coverage-html' target='test/output/report'/>
         <log type='coverage-clover' target='test/output/clover.xml'/>
     </logging>
-    
+
     <filter>
         <whitelist>
             <directory>./lib</directory>
