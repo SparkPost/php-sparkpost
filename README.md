@@ -11,7 +11,7 @@
 
 The official PHP library for using [the SparkPost REST API](https://developers.sparkpost.com/api/).
 
-> Note: our automated tests are updated to cover PHP versions 7.3 and 7.4. Older versions *may* also work; use previous library releases where necessary.
+> Our automated tests now cover PHP versions 7.3 and 7.4, in line with [this](https://www.php.net/supported-versions.php). Older versions *may* also work; use previous library releases where necessary.
 
 Before using this library, you must have a valid API Key. To get an API Key, please log in to your SparkPost account and generate one in the Settings page.
 
