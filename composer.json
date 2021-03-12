@@ -9,7 +9,8 @@
   ],
   "minimum-stability": "stable",
   "scripts": {
-    "test": "./vendor/bin/phpunit"
+    "test": "./vendor/bin/phpunit",
+    "fix-style": "php-cs-fixer fix ."
   },
   "require": {
     "php": "^7.1 || ^8.0",
