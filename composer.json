@@ -9,7 +9,7 @@
   ],
   "minimum-stability": "stable",
   "scripts": {
-    "test": "./vendor/bin/phpunit",
+    "test": "XDEBUG_MODE=coverage ./vendor/bin/phpunit",
     "fix-style": "php-cs-fixer fix ."
   },
   "require": {
