@@ -5,4 +5,5 @@
 test/output/
 .idea
 /composer.phar
+composer.lock
 test.php
