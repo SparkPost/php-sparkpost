@@ -201,9 +201,9 @@ class SparkPost
      *
      * @return RequestInterface
      */
-    public function buildRequestInstance($method, $uri, $headers, $body)
+    public function buildRequestInstance($method, $url, $headers, $body)
     {
-        return $this->getMessageFactory()->createRequest($method, $uri, $headers, $body);
+        return $this->getMessageFactory()->createRequest($method, $url, $headers, $body);
     }
 
     /**
