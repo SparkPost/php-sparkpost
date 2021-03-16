@@ -24,11 +24,41 @@ curl -sS https://getcomposer.org/installer | php
 
 Add composer install directory to $PATH `~/.composer/vendor/bin/`
 
-#### Install PHPUnit for Testing
-```
-composer global require "phpunit/phpunit=4.8.*"
+### phpenv
+
+[phpenv](https://github.com/phpenv/phpenv-installer) is useful for testing locally across different PHP versions.
+
+### Developing your app against a local version of the SparkPost library
+
+If you're working on the library and your app together, you can tell Composer to get `php-sparkpost` from a local path. With a directory structure such as:
+
+home
+ - php-sparkpost
+ - my-app
+    - composer.json
+    - .. etc
+
+Use the following for `my-app/composer.json`:
+```json
+{
+    "name": "sparkpost/php_simple_email_send",
+    "description": "a small test program to send an email",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../php-sparkpost"
+        }
+    ],
+    "require": {
+        "php-http/guzzle6-adapter": "^1.1",
+        "guzzlehttp/guzzle": "^6.0",
+        "sparkpost/sparkpost": "dev-master"
+    }
+}
 ```
 
+
+### Memory
 We recommend increasing PHP’s memory limit, by default it uses 128MB.  We ran into some issues during local development without doing so.  You can do this by editing your php.ini file and modifying `memory_limit`.  We set ours to `memory_limit = 1024M`.
 
 #### Install XDebug for code coverage generation
@@ -68,6 +98,7 @@ Once you are setup for local development:
 
 ## Releasing
 
-* Update version information in composer.json during development.
-* Once its been merged down, create a release tag in git.
+* Update version in the [library](https://github.com/SparkPost/php-sparkpost/blob/eeb6ba971584fcc4c12fd69247c6b24df7827af5/lib/SparkPost/SparkPost.php#L16) during development. This is used in the `user_agent` of your requests.
+
+* Once it's been merged down, create a release tag in git.
 * Composer will automatically pickup the new tag and present it as a release.
