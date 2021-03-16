@@ -298,7 +298,7 @@ The API calls either return a `SparkPostPromise` or `SparkPostResponse` dependin
 ```php
 $sparky->setOptions(['async' => false]);
 try {
-    $response = $sparky->transmissions->get();
+    $response = ... // YOUR API CALL GOES HERE
 
     echo $response->getStatusCode()."\n";
     print_r($response->getBody())."\n";
@@ -314,7 +314,7 @@ Asynchronous an be handled in two ways: by passing callbacks or waiting for the 
 ##### Wait (Synchronous)
 ```php
 
-$promise = // YOUR API CALL GOES HERE
+$promise = ... // YOUR API CALL GOES HERE
 
 try {
     $response = $promise->wait();
@@ -330,7 +330,7 @@ echo "I will print out after the promise is fulfilled";
 
 ##### Then (Asynchronous)
 ```php
-$promise = // YOUR API CALL GOES HERE
+$promise = ... // YOUR API CALL GOES HERE
 
 $promise->then(
     // Success callback
