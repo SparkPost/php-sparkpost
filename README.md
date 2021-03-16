@@ -143,7 +143,7 @@ $sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
 * `uri`
     * Required: Yes
     * Type: `String`
-    * The URI to recieve the request
+    * The URI to receive the request
 * `payload`
     * Required: No
     * Type: `Array`
@@ -177,11 +177,11 @@ Sends an asynchronous request to the SparkPost API and returns a `SparkPostPromi
     * `payload.cc`
         * Required: No
         * Type: `Array`
-        * Recipients to recieve a carbon copy of the transmission
+        * Recipients to receive a carbon copy of the transmission
     * `payload.bcc`
         * Required: No
         * Type: `Array`
-        * Recipients to descreetly recieve a carbon copy of the transmission
+        * Recipients to discreetly receive a carbon copy of the transmission
 
 ## Examples
 
@@ -196,9 +196,8 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 $httpClient = new GuzzleAdapter(new Client());
 // Good practice to not have API key literals in code - set an environment variable instead
-$sparky = new SparkPost($httpClient, ['key' => getenv('SPARKPOST_API_KEY')]);
 // For simple example, use synchronous model
-$sparky->setOptions(['async' => false]);
+$sparky = new SparkPost($httpClient, ['key' => getenv('SPARKPOST_API_KEY'), 'async' => false]);
 
 try {
     $response = $sparky->transmissions->post([
@@ -299,7 +298,7 @@ The API calls either return a `SparkPostPromise` or `SparkPostResponse` dependin
 ```php
 $sparky->setOptions(['async' => false]);
 try {
-    $response = $sparky->transmissions->get(); //TODO: Change this. Transmissions no longer supports GET call
+    $response = $sparky->transmissions->get();
 
     echo $response->getStatusCode()."\n";
     print_r($response->getBody())."\n";
@@ -314,7 +313,8 @@ catch (\Exception $e) {
 Asynchronous an be handled in two ways: by passing callbacks or waiting for the promise to be fulfilled. Waiting acts like synchronous request.
 ##### Wait (Synchronous)
 ```php
-$promise = $sparky->transmissions->get(); //TODO: Change this. Transmissions no longer supports GET call
+
+$promise = // YOUR API CALL GOES HERE
 
 try {
     $response = $promise->wait();
@@ -330,7 +330,7 @@ echo "I will print out after the promise is fulfilled";
 
 ##### Then (Asynchronous)
 ```php
-$promise = $sparky->transmissions->get(); //TODO: Change this. Transmissions no longer supports GET call
+$promise = // YOUR API CALL GOES HERE
 
 $promise->then(
     // Success callback
