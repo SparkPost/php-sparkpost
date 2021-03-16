@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 
 ## [2.3.0] - 2021-03-16
-- [#201](https://github.com/SparkPost/php-sparkpost/pull/200) Update examples, README
+- [#201](https://github.com/SparkPost/php-sparkpost/pull/201) Update examples, README
 - [#200](https://github.com/SparkPost/php-sparkpost/pull/200) PHP 8 support
 
 ## [2.2.1] - 2021-03-08
