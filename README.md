@@ -183,8 +183,6 @@ Sends an asynchronous request to the SparkPost API and returns a `SparkPostPromi
         * Type: `Array`
         * Recipients to descreetly recieve a carbon copy of the transmission
 
-For complete list of endpoints, refer to [API documentation](https://developers.sparkpost.com/api/).
-
 ## Examples
 
 ### Send An Email Using The Transmissions Endpoint
@@ -269,6 +267,7 @@ More examples [here](./examples/):
 - get (with retry logic)
 
 ### Send An API Call Using The Base Request Function
+
 We provide a base request function to access any of our API resources.
 ```php
 <?php
@@ -279,16 +278,19 @@ use GuzzleHttp\Client;
 use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 $httpClient = new GuzzleAdapter(new Client());
-$sparky = new SparkPost($httpClient, ['key'=>'YOUR_API_KEY']);
+$sparky = new SparkPost($httpClient, [
+    'key' => getenv('SPARKPOST_API_KEY'),
+    'async' => false]);
 
-$promise = $sparky->request('GET', 'metrics/ip-pools', [
-    'from' => '2014-12-01T09:00',
-    'to' => '2015-12-01T08:00',
-    'timezone' => 'America/New_York',
-    'limit' => '5',
-]);
+$webhookId = 'afd20f50-865a-11eb-ac38-6d7965d56459';
+$response = $sparky->request('DELETE', 'webhooks/' . $webhookId);
+print($response->getStatusCode());
 ?>
 ```
+
+> Be sure to not have a leading `/` in your resource URI.
+
+For complete list of resources, refer to [API documentation](https://developers.sparkpost.com/api/).
 
 ## Handling Responses
 The API calls either return a `SparkPostPromise` or `SparkPostResponse` depending on if `async` is `true` or `false`
