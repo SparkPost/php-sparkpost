@@ -7,3 +7,9 @@ test/output/
 /composer.phar
 composer.lock
 test.php
+.php-version
+.gitignore
+.phpunit.result.cache
+.DS_Store
+.gitignore
+.vscode/launch.json

@@ -170,12 +170,9 @@ Sends an asynchronous request to the SparkPost API and returns a `SparkPostPromi
     *  Type: `Array`
     * See constructor
 
-
+---
 ## Endpoints
 ### transmissions
-* **get([transmissionID] [, payload])**
-    * `transmissionID` - see `uri` request options
-    * `payload` - see request options
 * **post(payload)**
     * `payload` - see request options
     * `payload.cc`
@@ -186,8 +183,8 @@ Sends an asynchronous request to the SparkPost API and returns a `SparkPostPromi
         * Required: No
         * Type: `Array`
         * Recipients to descreetly recieve a carbon copy of the transmission
-* **delete(transmissionID)**
-    * `transmissionID` - see `uri` request options
+
+For complete list of endpoints, refer to [API documentation](https://developers.sparkpost.com/api/).
 
 ## Examples
 
@@ -252,6 +249,26 @@ var_dump($results);
 ?>
 ```
 
+More examples [here](./examples/):
+### Transmission
+- Create with attachment
+- Create with recipient list
+- Create with cc and bcc
+- Create with template
+- Create
+- Delete (scheduled transmission by campaign_id *only*)
+
+### Template
+- Create
+- Get
+- Get (list) all
+- Update
+- Delete
+
+### Message Events
+- get
+- get (with retry logic)
+
 ### Send An API Call Using The Base Request Function
 We provide a base request function to access any of our API resources.
 ```php
@@ -273,7 +290,6 @@ $promise = $sparky->request('GET', 'metrics/ip-pools', [
 ]);
 ?>
 ```
-
 
 ## Handling Responses
 The API calls either return a `SparkPostPromise` or `SparkPostResponse` depending on if `async` is `true` or `false`

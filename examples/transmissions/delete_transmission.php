@@ -10,9 +10,13 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 $httpClient = new GuzzleAdapter(new Client());
 
-$sparky = new SparkPost($httpClient, ["key" => "YOUR_API_KEY"]);
+// In these examples, fetch API key from environment variable
+$sparky = new SparkPost($httpClient, ["key" => getenv('SPARKPOST_API_KEY')]);
 
-$promise = $sparky->transmissions->delete('TRANSMISSION_ID');
+// Delete *scheduled* transmissions (only) by *campaign ID* (only)
+// See https://developers.sparkpost.com/api/transmissions/#transmissions-delete-delete-a-scheduled-transmission
+
+$promise = $sparky->transmissions->delete('?campaign_id=white_christmas');
 
 try {
     $response = $promise->wait();

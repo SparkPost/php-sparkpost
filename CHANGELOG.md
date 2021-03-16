@@ -4,13 +4,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
 
-## [2.2.1] - 2021-03-08
+- [#200](https://github.com/SparkPost/php-sparkpost/pull/200) PHP 8 support
 
-- [#198](https://github.com/SparkPost/php-sparkpost/pull/198)
-- [#191](https://github.com/SparkPost/php-sparkpost/pull/191)
+## [2.2.1] - 2021-03-08
+- [#198](https://github.com/SparkPost/php-sparkpost/pull/198) Address #197: No longer need formfeed replacement. README work.
+- [#191](https://github.com/SparkPost/php-sparkpost/pull/191) Updating License
 
 ## [2.2.0] - 2019-06-04
-- [#187](https://github.com/SparkPost/php-sparkpost/pull/169) Updated composer.json
+- [#187](https://github.com/SparkPost/php-sparkpost/pull/187) Updated composer.json
 - [#169](https://github.com/SparkPost/php-sparkpost/pull/169) Optional automatic retry on 5xx
 - [#166](https://github.com/SparkPost/php-sparkpost/pull/166/files) Quick fix for using the API without composer
 - [#149](https://github.com/SparkPost/php-sparkpost/pull/149) Setters should return current object
