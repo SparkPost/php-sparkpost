@@ -249,7 +249,7 @@ var_dump($results);
 ```
 
 More examples [here](./examples/):
-### Transmission
+### [Transmissions](./examples/transmissions/)
 - Create with attachment
 - Create with recipient list
 - Create with cc and bcc
@@ -257,14 +257,14 @@ More examples [here](./examples/):
 - Create
 - Delete (scheduled transmission by campaign_id *only*)
 
-### Template
+### [Templates](./examples/templates/)
 - Create
 - Get
 - Get (list) all
 - Update
 - Delete
 
-### Message Events
+### [Message Events](./examples/message-events/)
 - get
 - get (with retry logic)
 
