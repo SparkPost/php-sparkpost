@@ -170,7 +170,6 @@ Sends an asynchronous request to the SparkPost API and returns a `SparkPostPromi
     *  Type: `Array`
     * See constructor
 
----
 ## Endpoints
 ### transmissions
 * **post(payload)**
