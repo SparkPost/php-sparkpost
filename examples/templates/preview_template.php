@@ -10,9 +10,12 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 $httpClient = new GuzzleAdapter(new Client());
 
-$sparky = new SparkPost($httpClient, ["key" => "YOUR_API_KEY"]);
+// In these examples, fetch API key from environment variable
+$sparky = new SparkPost($httpClient, ["key" => getenv('SPARKPOST_API_KEY')]);
 
-$promise = $sparky->request('POST', 'templates/TEMPLATE_ID/preview?draft=true', [
+$template_id = "PHP-example-template";
+
+$promise = $sparky->request('POST', "templates/$template_id/preview?draft=true", [
     'substitution_data' => [
         'some_key' => 'some_value',
     ],

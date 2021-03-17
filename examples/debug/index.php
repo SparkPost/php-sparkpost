@@ -14,8 +14,8 @@ $httpClient = new GuzzleAdapter(new Client());
  * configure options in example-options.json
  */
 $sparky = new SparkPost($httpClient, [
-    "key" => "YOUR_API_KEY",
-    // This will expose your API KEY - do not use this in production.
+    "key" => getenv('SPARKPOST_API_KEY'),
+    // fetch API KEY from environment variable
     "debug" => true
 ]);
 

@@ -10,18 +10,23 @@ use Http\Adapter\Guzzle6\Client as GuzzleAdapter;
 
 $httpClient = new GuzzleAdapter(new Client());
 
-$sparky = new SparkPost($httpClient, ["key" => "YOUR_API_KEY"]);
+// In these examples, fetch API key from environment variable
+$sparky = new SparkPost($httpClient, ["key" => getenv('SPARKPOST_API_KEY')]);
 
 $filePath = dirname(__FILE__).'/';
 $fileName = 'sparkpost.png';
 $fileType = mime_content_type($filePath.$fileName);
 $fileData = base64_encode(file_get_contents($filePath.$fileName));
 
+// put your own sending domain and test recipient address here
+$sending_domain = "steve2-test.trymsys.net";
+$your_email = "bob@sink.sparkpostmail.com";
+
 $promise = $sparky->transmissions->post([
     'content' => [
         'from' => [
             'name' => 'SparkPost Team',
-            'email' => 'from@sparkpostbox.com',
+            'email' => "from@$sending_domain",
         ],
         'subject' => 'Mailing With Attachment From PHP',
         'html' => '<html><body><h1>Congratulations, {{name}}!</h1><p>You just sent an email with an attachment!</p></body></html>',
@@ -39,7 +44,7 @@ $promise = $sparky->transmissions->post([
         [
             'address' => [
                 'name' => 'YOUR_NAME',
-                'email' => 'YOUR_EMAIL',
+                'email' => $your_email,
             ],
         ],
     ],
