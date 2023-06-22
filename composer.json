@@ -1,5 +1,5 @@
 {
-  "name": "sparkpost/sparkpost",
+  "name": "wherebyus/sparkpost",
   "description": "Client library for interfacing with the SparkPost API.",
   "license": "MIT",
   "authors": [
