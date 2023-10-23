@@ -39,6 +39,15 @@ class SparkPostResponse implements ResponseInterface
         return $this->request;
     }
 
+    /**
+     * Gets the body in json format.
+     *
+     * @return array Decoded body.
+     */
+    public function getBodyAsJson() : array {
+        return json_decode($this->getBody()->getContents(), true);
+    }
+
     public function getBody() : StreamInterface
     {
         return $this->response->getBody();
