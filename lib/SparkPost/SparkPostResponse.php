@@ -2,7 +2,6 @@
 
 namespace SparkPost;
 
-use GuzzleHttp\Psr7\Stream;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\ResponseInterface as ResponseInterface;
 use Psr\Http\Message\StreamInterface as StreamInterface;
@@ -40,19 +39,9 @@ class SparkPostResponse implements ResponseInterface
         return $this->request;
     }
 
-    /**
-     * Returns the body.
-     *
-     * @return array $body - the json decoded body from the http response
-     */
     public function getBody() : StreamInterface
     {
-        $body = $this->response->getBody();
-        $body_string = $body->__toString();
-
-        $json = json_decode($body_string, true);
-
-        return new Stream($json);
+        return $this->response->getBody();
     }
 
     /**
